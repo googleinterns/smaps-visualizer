@@ -1,0 +1,6 @@
+{
+    "clang-format.fallbackStyle": "Google",
+    "clang-format.language.java.style": "Google",
+    "clang-format.language.java.fallbackStyle": "Google",
+    "editor.formatOnSave": true,
+}

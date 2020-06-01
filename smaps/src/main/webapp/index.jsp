@@ -17,22 +17,25 @@ limitations under the License.
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.google.smaps.Homepage" %>
 <html>
+
 <head>
-  <link href='//fonts.googleapis.com/css?family=Marmelad' rel='stylesheet' type='text/css'>
-  <title>Smaps Visualizer</title>
+    <link href='//fonts.googleapis.com/css?family=Marmelad' rel='stylesheet' type='text/css'>
+    <title>Smaps Visualizer</title>
 </head>
+
 <body>
     <h1>Welcome to the Smaps Visualizer</h1>
 
-  <p><%= Homepage.getInfo() %></p>
-  <table>
-    <tr>
-      <td colspan="2" style="font-weight:bold;">Available Servlets:</td>
-    </tr>
-    <tr>
-      <td><a href='/home'>Home for our App Engine</a></td>
-    </tr>
-  </table>
+    <p><%= Homepage.getProjInfo() %></p>
+    <table>
+        <tr>
+            <td colspan="2" style="font-weight:bold;">Available Servlets:</td>
+        </tr>
+        <tr>
+            <td><a href='/home'>App Engine System Information</a></td>
+        </tr>
+    </table>
 
 </body>
+
 </html>

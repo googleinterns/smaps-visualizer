@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/** Servlet fires up homepage. */
 @WebServlet(name = "Homepage", value = "/home")
 public class Homepage extends HttpServlet {
   @Override
@@ -30,11 +31,13 @@ public class Homepage extends HttpServlet {
     Properties properties = System.getProperties();
 
     response.setContentType("text/plain");
-    response.getWriter().println("Home - Standard using " + SystemProperty.version.get() + " Java "
-        + properties.get("java.specification.version"));
+    response.getWriter().println("Info - Standard using Java "
+        + properties.get("java.specification.version") + " on " + properties.get("os.name")
+        + " with App Engine " + SystemProperty.version.get());
   }
 
-  public static String getInfo() {
-    return ("This application is developed by Maggie Anderson and Sophie Bohr.");
+  /** Returns project description. */
+  public static String getProjInfo() {
+    return "This application takes a process' smap dump and creates useful charts/visualizations from it.";
   }
 }

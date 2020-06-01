@@ -34,7 +34,6 @@ import org.mockito.MockitoAnnotations;
 /**
  * Unit tests for {@link Homepage}.
  */
-
 @RunWith(JUnit4.class)
 public class HomepageTest {
   private static final String FAKE_URL = "fake.fk/home";
@@ -71,14 +70,15 @@ public class HomepageTest {
     servletUnderTest.doGet(mockRequest, mockResponse);
 
     // We expect our homepage response.
-    assertThat(responseWriter.toString()).named("Homepage response").contains("Home - Standard ");
+    assertThat(responseWriter.toString()).named("Homepage response").contains("Info - Standard ");
   }
 
   @Test
-  public void HomepageInfo_test() {
-    String result = Homepage.getInfo();
+  public void homepageProjInfo() {
+    String result = Homepage.getProjInfo();
     assertThat(result)
-        .named("Homepage.getInfo")
-        .containsMatch("This application is developed by Maggie Anderson and Sophie Bohr.");
+        .named("Homepage.getProjInfo")
+        .containsMatch(
+            "This application takes a process' smap dump and creates useful charts/visualizations from it.");
   }
 }

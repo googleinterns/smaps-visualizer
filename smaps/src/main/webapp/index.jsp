@@ -25,14 +25,22 @@ limitations under the License.
 
 <body>
     <h1>Welcome to the Smaps Visualizer</h1>
-
     <p><%= Homepage.getProjInfo() %></p>
+
+    <h4>Smaps Dump File Upload</h4>
+    <form action="/home" method="POST" enctype="multipart/form-data">
+        <input type="file" name="fileToUpload" />
+        <input type="submit" value="Submit" />
+    </form>
+
+    <br />
+
     <table>
         <tr>
             <td colspan="2" style="font-weight:bold;">Available Servlets:</td>
         </tr>
         <tr>
-            <td><a href='/home'>App Engine System Information</a></td>
+            <td><a href='/home'>Uploaded File</a></td>
         </tr>
     </table>
 

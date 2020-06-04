@@ -15,25 +15,15 @@
  */
 package com.google.smaps;
 
-import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
 
-import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 @RunWith(JUnit4.class)
 public class RegionTest {
@@ -41,7 +31,7 @@ public class RegionTest {
 
   @Before
   public void setUp() throws Exception {
-    // Set up a fake Region object
+    // Sets up a fake Region object.
     List<String> flags = new ArrayList<>(Arrays.asList("mr", "mw", "me", "sd"));
     mockRegion = Region.create("16ec0000000", "16efa600000", "rw-p", 956416, 4, 8, 0, 0, 16, 0, 44,
         0, 8, 20516, 0, 256, 512, 0, 0, 0, 262144, 0, 0, 0, flags);
@@ -49,7 +39,7 @@ public class RegionTest {
 
   @Test
   public void RegionTest() {
-    // Test each field was set properly
+    // Tests each field was set properly.
     String startLoc = mockRegion.startLoc();
     assertEquals(startLoc, "16ec0000000");
 
@@ -125,5 +115,9 @@ public class RegionTest {
     List<String> vmFlags = mockRegion.vmFlags();
     List<String> expectedVmFlags = new ArrayList<>(Arrays.asList("mr", "mw", "me", "sd"));
     assertEquals(vmFlags, expectedVmFlags);
+
+    Region expectedRegion = Region.create("16ec0000000", "16efa600000", "rw-p", 956416, 4, 8, 0, 0,
+        16, 0, 44, 0, 8, 20516, 0, 256, 512, 0, 0, 0, 262144, 0, 0, 0, expectedVmFlags);
+    assertEquals(expectedRegion, mockRegion);
   }
 }

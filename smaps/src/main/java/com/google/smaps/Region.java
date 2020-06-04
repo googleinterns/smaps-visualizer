@@ -16,7 +16,6 @@
 package com.google.smaps;
 
 import com.google.auto.value.AutoValue;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,32 +23,6 @@ import java.util.List;
  */
 @AutoValue
 abstract class Region {
-  private String startLoc;
-  private String endLoc;
-  private String permissions;
-  private long size;
-  private long kernelPageSize;
-  private long mmuPageSize;
-  private long rss;
-  private long pss;
-  private long sharedClean;
-  private long sharedDirty;
-  private long privateClean;
-  private long privateDirty;
-  private long referenced;
-  private long anonymous;
-  private long lazyFree;
-  private long anonHugePages;
-  private long shmemHugePages;
-  private long shmemPmdMapped;
-  private long sharedHugetlb;
-  private long privateHugetlb;
-  private long hugePFNMap;
-  private long swap;
-  private long swapPss;
-  private long locked;
-  private List<String> vmFlags;
-
   static Region create(String startLoc, String endLoc, String permissions, long size,
       long kernelPageSize, long mmuPageSize, long rss, long pss, long sharedClean, long sharedDirty,
       long privateClean, long privateDirty, long referenced, long anonymous, long lazyFree,
@@ -62,6 +35,7 @@ abstract class Region {
         hugePFNMap, swap, swapPss, locked, vmFlags);
   }
 
+  // TODO(sophbohr22): Add Javadoc comments for each of these fields.
   abstract String startLoc();
   abstract String endLoc();
   abstract String permissions();

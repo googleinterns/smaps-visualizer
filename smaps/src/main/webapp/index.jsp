@@ -19,23 +19,26 @@ limitations under the License.
 <html>
 
 <head>
-    <link href='//fonts.googleapis.com/css?family=Marmelad' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link href='/css/style.css' rel='stylesheet' type='text/css'>
     <title>Smaps Visualizer</title>
 </head>
 
 <body>
-    <h1>Welcome to the Smaps Visualizer</h1>
+    <div class="roboto center">
+        <div id="smaps-title">
+            <span class="gblue">s</span>
+            <span class="gred">m</span>
+            <span class="gyellow">a</span>
+            <span class="gblue">p</span>
+            <span class="ggreen">s</span>
+        </div>
+        <p id="visualizer-title" class="ggray">Visualizer</p>
 
-    <p><%= Homepage.getProjInfo() %></p>
-    <table>
-        <tr>
-            <td colspan="2" style="font-weight:bold;">Available Servlets:</td>
-        </tr>
-        <tr>
-            <td><a href='/home'>App Engine System Information</a></td>
-        </tr>
-    </table>
+        <p><%= Homepage.getProjInfo() %></p>
 
+        <p>Available Servlets: <a href='/home'>App Engine System Information</a></p>
+    </div>
 </body>
 
 </html>

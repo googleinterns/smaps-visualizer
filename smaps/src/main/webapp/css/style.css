@@ -13,3 +13,25 @@
 .ggreen {
     color: #0F9D58;
 }
+
+.ggray {
+    color: #5f6368;
+}
+
+.roboto {
+    font-family: 'Roboto', sans-serif;
+}
+
+.center {
+    text-align: center;
+    align-content: center;
+}
+
+#smaps-title {
+    font-size: 3em;
+}
+
+#visualizer-title {
+    font-size: 3.5em;
+    margin: 0em;
+}

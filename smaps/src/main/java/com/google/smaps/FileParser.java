@@ -18,6 +18,7 @@ package com.google.smaps;
 import com.google.auto.value.AutoValue;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -61,14 +62,13 @@ abstract class FileParser {
         } else {
           // this is the last line in the region, vmflags
           if (line.contains("VmFlags")) {
+            String flagsLine = line.substring(9);
+            String[] flagsArray = flagsLine.split(" ");
+            List<String> flags = Arrays.asList(flagsArray);
+            region.setVmFlags(flags);
+
             Region r = region.build();
             regions.add(r);
-
-            System.out.println("=================================");
-            System.out.println("Size: " + r.size());
-            System.out.println("Kernel Size: " + r.kernelPageSize());
-            System.out.println("MMU: " + r.mmuPageSize());
-            System.out.println("Rss: " + r.rss());
 
             nextRegion = true;
           } else {
@@ -95,7 +95,6 @@ abstract class FileParser {
               case "Rss":
                 region.setRss(value);
                 break;
-                /*
               case "Pss":
                 region.setPss(value);
                 break;
@@ -114,17 +113,46 @@ abstract class FileParser {
               case "Referenced":
                 region.setReferenced(value);
                 break;
-                */
+              case "Anonymous":
+                region.setAnonymous(value);
+                break;
+              case "LazyFree":
+                region.setLazyFree(value);
+                break;
+              case "AnonHugePages":
+                region.setAnonHugePages(value);
+                break;
+              case "ShmemHugePages":
+                region.setShmemHugePages(value);
+                break;
+              case "ShmemPmdMapped":
+                region.setShmemPmdMapped(value);
+                break;
+              case "Shared_Hugetlb":
+                region.setSharedHugetlb(value);
+                break;
+              case "Private_Hugetlb":
+                region.setPrivateHugetlb(value);
+                break;
+              case "HugePFNMap":
+                region.setHugePFNMap(value);
+                break;
+              case "Swap":
+                region.setSwap(value);
+                break;
+              case "SwapPss":
+                region.setSwapPss(value);
+                break;
+              case "Locked":
+                region.setLocked(value);
+                break;
               default:
+                // ignore the ones we don't know, as default, maybe add to a list?
                 System.out.println("NOT BEING ADDED - " + field);
             }
           }
         }
       }
-
-      // ignore the ones we don't know, as default
-
-      // keep going until you see vmflags, then the next line is the new region
 
       sc.close();
     } catch (FileNotFoundException e) {

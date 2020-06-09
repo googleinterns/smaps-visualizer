@@ -28,19 +28,68 @@ import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
 public class FileParserTest {
-  // private FileParser mockDumpParser;
+  private List<Region> regions;
 
   @Before
   public void setUp() throws Exception {
-    File dump =
-        new File("/usr/local/google/home/sophbohr/SmapsProject/smaps-visualizer/smaps-full.txt");
-    List<Region> regions = FileParser.getRegionList(dump);
+    // Creates regions list from smaps-full.txt file.
+    File dump = new File("../smaps-full.txt");
+    regions = FileParser.getRegionList(dump);
   }
 
   @Test
-  public void FileParserTest() {
-    String path1 = "I am sophie.";
-    String path2 = "I am sophie.";
-    assertEquals(path1, path2); // FIXME: make a real test here
+  public void numberRegions() {
+    // Tests the correct number of regions were added to list.
+    int expectedNum = 1072;
+    int num = regions.size();
+    assertEquals(expectedNum, num);
+  }
+
+  @Test
+  public void firstRegionAlloc() {
+    // Tests the first region was set properly in the list.
+    Region firstR = regions.get(0);
+    String startLoc = firstR.startLoc();
+    String endLoc = firstR.endLoc();
+    long size = firstR.size();
+    List<String> vmFlags = firstR.vmFlags();
+    List<String> expectedVmFlags = new ArrayList<>(Arrays.asList("mr", "mw", "me", "sd"));
+
+    assertEquals(startLoc, "16ec0000000");
+    assertEquals(endLoc, "16efa600000");
+    assertEquals(size, 956416);
+    assertEquals(vmFlags, expectedVmFlags);
+  }
+
+  @Test
+  public void middleRegionAlloc() {
+    // Tests the middle region was set properly in the list.
+    Region middleR = regions.get(535);
+    String startLoc = middleR.startLoc();
+    String endLoc = middleR.endLoc();
+    long size = middleR.size();
+    List<String> vmFlags = middleR.vmFlags();
+    List<String> expectedVmFlags = new ArrayList<>(Arrays.asList("mr", "mw", "me", "ac", "sd"));
+
+    assertEquals(startLoc, "7fd143cee000");
+    assertEquals(endLoc, "7fd143dee000");
+    assertEquals(size, 1024);
+    assertEquals(vmFlags, expectedVmFlags);
+  }
+
+  @Test
+  public void lastRegionAlloc() {
+    // Tests the last region was set properly in the list.
+    Region lastR = regions.get(1071);
+    String startLoc = lastR.startLoc();
+    String endLoc = lastR.endLoc();
+    long size = lastR.size();
+    List<String> vmFlags = lastR.vmFlags();
+    List<String> expectedVmFlags = new ArrayList<>(Arrays.asList("rd", "ex"));
+
+    assertEquals(startLoc, "ffffffffff600000");
+    assertEquals(endLoc, "ffffffffff601000");
+    assertEquals(size, 4);
+    assertEquals(vmFlags, expectedVmFlags);
   }
 }

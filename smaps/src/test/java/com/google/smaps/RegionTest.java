@@ -40,33 +40,31 @@ public class RegionTest {
     region.setKernelPageSize(4);
     region.setMmuPageSize(8);
     region.setRss(0);
-    /*
-region.setPss(0);
-region.setSharedClean(16);
-region.setSharedDirty(0);
-region.setPrivateClean(44);
-region.setPrivateDirty(0);
-region.setReferenced(8);
-region.setAnonymous(20516);
-region.setLazyFree(0);
-region.setAnonHugePages(256);
-region.setShmemHugePages(512);
-region.setShmemPmdMapped(0);
-region.setSharedHugetlb(0);
-region.setPrivateHugetlb(0);
-region.setHugePFNMap(262144);
-region.setSwap(0);
-region.setSwapPss(0);
-region.setLocked(0);
-List<String> flags = new ArrayList<>(Arrays.asList("mr", "mw", "me", "sd"));
-region.setVmFlags(flags);
-*/
+    region.setPss(0);
+    region.setSharedClean(16);
+    region.setSharedDirty(0);
+    region.setPrivateClean(44);
+    region.setPrivateDirty(0);
+    region.setReferenced(8);
+    region.setAnonymous(20516);
+    region.setLazyFree(0);
+    region.setAnonHugePages(256);
+    region.setShmemHugePages(512);
+    region.setShmemPmdMapped(0);
+    region.setSharedHugetlb(0);
+    region.setPrivateHugetlb(0);
+    region.setHugePFNMap(262144);
+    region.setSwap(0);
+    region.setSwapPss(0);
+    region.setLocked(0);
+    List<String> flags = new ArrayList<>(Arrays.asList("mr", "mw", "me", "sd"));
+    region.setVmFlags(flags);
 
     r = region.build();
   }
 
   @Test
-  public void RegionTest() {
+  public void regionCreation() {
     // Tests each field was set properly.
     String startLoc = r.startLoc();
     assertEquals(startLoc, "16ec0000000");
@@ -88,61 +86,60 @@ region.setVmFlags(flags);
 
     long rss = r.rss();
     assertEquals(rss, 0);
-    /*
-       long pss = r.pss();
-       assertEquals(pss, 0);
 
-       long sharedClean = r.sharedClean();
-       assertEquals(sharedClean, 16);
+    long pss = r.pss();
+    assertEquals(pss, 0);
 
-       long sharedDirty = r.sharedDirty();
-       assertEquals(sharedDirty, 0);
+    long sharedClean = r.sharedClean();
+    assertEquals(sharedClean, 16);
 
-       long privateClean = r.privateClean();
-       assertEquals(privateClean, 44);
+    long sharedDirty = r.sharedDirty();
+    assertEquals(sharedDirty, 0);
 
-       long privateDirty = r.privateDirty();
-       assertEquals(privateDirty, 0);
+    long privateClean = r.privateClean();
+    assertEquals(privateClean, 44);
 
-       long referenced = r.referenced();
-       assertEquals(referenced, 8);
+    long privateDirty = r.privateDirty();
+    assertEquals(privateDirty, 0);
 
-              long anonymous = r.anonymous();
-              assertEquals(anonymous, 20516);
+    long referenced = r.referenced();
+    assertEquals(referenced, 8);
 
-              long lazyFree = r.lazyFree();
-              assertEquals(lazyFree, 0);
+    long anonymous = r.anonymous();
+    assertEquals(anonymous, 20516);
 
-              long anonHugePages = r.anonHugePages();
-              assertEquals(anonHugePages, 256);
+    long lazyFree = r.lazyFree();
+    assertEquals(lazyFree, 0);
 
-              long shmemHugePages = r.shmemHugePages();
-              assertEquals(shmemHugePages, 512);
+    long anonHugePages = r.anonHugePages();
+    assertEquals(anonHugePages, 256);
 
-              long shmemPmdMapped = r.shmemPmdMapped();
-              assertEquals(shmemPmdMapped, 0);
+    long shmemHugePages = r.shmemHugePages();
+    assertEquals(shmemHugePages, 512);
 
-              long sharedHugetlb = r.sharedHugetlb();
-              assertEquals(sharedHugetlb, 0);
+    long shmemPmdMapped = r.shmemPmdMapped();
+    assertEquals(shmemPmdMapped, 0);
 
-              long privateHugetlb = r.privateHugetlb();
-              assertEquals(privateHugetlb, 0);
+    long sharedHugetlb = r.sharedHugetlb();
+    assertEquals(sharedHugetlb, 0);
 
-              long hugePFNMap = r.hugePFNMap();
-              assertEquals(hugePFNMap, 262144);
+    long privateHugetlb = r.privateHugetlb();
+    assertEquals(privateHugetlb, 0);
 
-              long swap = r.swap();
-              assertEquals(swap, 0);
+    long hugePFNMap = r.hugePFNMap();
+    assertEquals(hugePFNMap, 262144);
 
-              long swapPss = r.swapPss();
-              assertEquals(swapPss, 0);
+    long swap = r.swap();
+    assertEquals(swap, 0);
 
-              long locked = r.locked();
-              assertEquals(locked, 0);
+    long swapPss = r.swapPss();
+    assertEquals(swapPss, 0);
 
-              List<String> vmFlags = r.vmFlags();
-              List<String> expectedVmFlags = new ArrayList<>(Arrays.asList("mr", "mw", "me", "sd"));
-              assertEquals(vmFlags, expectedVmFlags);
-              */
+    long locked = r.locked();
+    assertEquals(locked, 0);
+
+    List<String> vmFlags = r.vmFlags();
+    List<String> expectedVmFlags = new ArrayList<>(Arrays.asList("mr", "mw", "me", "sd"));
+    assertEquals(vmFlags, expectedVmFlags);
   }
 }

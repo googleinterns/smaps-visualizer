@@ -23,18 +23,6 @@ import java.util.List;
  */
 @AutoValue
 abstract class Region {
-  static Region create(String startLoc, String endLoc, String permissions, long size,
-      long kernelPageSize, long mmuPageSize, long rss, long pss, long sharedClean, long sharedDirty,
-      long privateClean, long privateDirty, long referenced, long anonymous, long lazyFree,
-      long anonHugePages, long shmemHugePages, long shmemPmdMapped, long sharedHugetlb,
-      long privateHugetlb, long hugePFNMap, long swap, long swapPss, long locked,
-      List<String> vmFlags) {
-    return new AutoValue_Region(startLoc, endLoc, permissions, size, kernelPageSize, mmuPageSize,
-        rss, pss, sharedClean, sharedDirty, privateClean, privateDirty, referenced, anonymous,
-        lazyFree, anonHugePages, shmemHugePages, shmemPmdMapped, sharedHugetlb, privateHugetlb,
-        hugePFNMap, swap, swapPss, locked, vmFlags);
-  }
-
   // TODO(sophbohr22): Add Javadoc comments for each of these fields.
   abstract String startLoc();
   abstract String endLoc();
@@ -43,22 +31,62 @@ abstract class Region {
   abstract long kernelPageSize();
   abstract long mmuPageSize();
   abstract long rss();
-  abstract long pss();
-  abstract long sharedClean();
-  abstract long sharedDirty();
-  abstract long privateClean();
-  abstract long privateDirty();
-  abstract long referenced();
-  abstract long anonymous();
-  abstract long lazyFree();
-  abstract long anonHugePages();
-  abstract long shmemHugePages();
-  abstract long shmemPmdMapped();
-  abstract long sharedHugetlb();
-  abstract long privateHugetlb();
-  abstract long hugePFNMap();
-  abstract long swap();
-  abstract long swapPss();
-  abstract long locked();
-  abstract List<String> vmFlags();
+  /*
+abstract long pss();
+abstract long sharedClean();
+abstract long sharedDirty();
+abstract long privateClean();
+abstract long privateDirty();
+abstract long referenced();
+
+abstract long anonymous();
+abstract long lazyFree();
+abstract long anonHugePages();
+abstract long shmemHugePages();
+abstract long shmemPmdMapped();
+abstract long sharedHugetlb();
+abstract long privateHugetlb();
+abstract long hugePFNMap();
+abstract long swap();
+abstract long swapPss();
+abstract long locked();
+abstract List<String> vmFlags();
+*/
+
+  static Builder builder() {
+    return new AutoValue_Region.Builder();
+  }
+
+  @AutoValue.Builder
+  abstract static class Builder {
+    abstract Builder setStartLoc(String value);
+    abstract Builder setEndLoc(String value);
+    abstract Builder setPermissions(String permissions);
+    abstract Builder setSize(long value);
+    abstract Builder setKernelPageSize(long value);
+    abstract Builder setMmuPageSize(long value);
+    abstract Builder setRss(long value);
+    /*
+abstract Builder setPss(long value);
+abstract Builder setSharedClean(long value);
+abstract Builder setSharedDirty(long value);
+abstract Builder setPrivateClean(long value);
+abstract Builder setPrivateDirty(long value);
+abstract Builder setReferenced(long value);
+
+abstract Builder setAnonymous(long value);
+abstract Builder setLazyFree(long value);
+abstract Builder setAnonHugePages(long value);
+abstract Builder setShmemHugePages(long value);
+abstract Builder setShmemPmdMapped(long value);
+abstract Builder setSharedHugetlb(long value);
+abstract Builder setPrivateHugetlb(long value);
+abstract Builder setHugePFNMap(long value);
+abstract Builder setSwap(long value);
+abstract Builder setSwapPss(long value);
+abstract Builder setLocked(long value);
+abstract Builder setVmFlags(List<String> value);
+*/
+    abstract Region build();
+  }
 }

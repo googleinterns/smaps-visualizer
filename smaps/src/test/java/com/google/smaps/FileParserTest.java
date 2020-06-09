@@ -18,7 +18,6 @@ package com.google.smaps;
 import static org.junit.Assert.*;
 
 import java.io.File;
-import java.lang.IllegalArgumentException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -57,9 +56,8 @@ public class FileParserTest {
   @Test
   public void numberRegions() {
     // Tests the correct number of regions were added to list.
-    int expectedNum = 1072;
     int num = regions.size();
-    assertEquals(expectedNum, num);
+    assertEquals(1072, num);
   }
 
   @Test
@@ -73,11 +71,11 @@ public class FileParserTest {
     List<String> vmFlags = firstR.vmFlags();
     List<String> expectedVmFlags = new ArrayList<>(Arrays.asList("mr", "mw", "me", "sd"));
 
-    assertEquals(startLoc, "16ec0000000");
-    assertEquals(endLoc, "16efa600000");
-    assertEquals(pathname, "");
-    assertEquals(size, 956416);
-    assertEquals(vmFlags, expectedVmFlags);
+    assertEquals("16ec0000000", startLoc);
+    assertEquals("16efa600000", endLoc);
+    assertEquals("", pathname);
+    assertEquals(956416, size);
+    assertEquals(expectedVmFlags, vmFlags);
   }
 
   @Test
@@ -92,11 +90,11 @@ public class FileParserTest {
     List<String> expectedVmFlags =
         new ArrayList<>(Arrays.asList("rd", "wr", "sh", "mr", "mw", "me", "ms", "lo", "sd"));
 
-    assertEquals(startLoc, "7fd148000000");
-    assertEquals(endLoc, "7fd148200000");
-    assertEquals(pathname, "/memfd:mmapped-unicorn_memfd (deleted)");
-    assertEquals(size, 2048);
-    assertEquals(vmFlags, expectedVmFlags);
+    assertEquals("7fd148000000", startLoc);
+    assertEquals("7fd148200000", endLoc);
+    assertEquals("/memfd:mmapped-unicorn_memfd (deleted)", pathname);
+    assertEquals(2048, size);
+    assertEquals(expectedVmFlags, vmFlags);
   }
 
   @Test
@@ -110,10 +108,10 @@ public class FileParserTest {
     List<String> vmFlags = lastR.vmFlags();
     List<String> expectedVmFlags = new ArrayList<>(Arrays.asList("rd", "ex"));
 
-    assertEquals(startLoc, "ffffffffff600000");
-    assertEquals(endLoc, "ffffffffff601000");
-    assertEquals(pathname, "[vsyscall]");
-    assertEquals(size, 4);
-    assertEquals(vmFlags, expectedVmFlags);
+    assertEquals("ffffffffff600000", startLoc);
+    assertEquals("ffffffffff601000", endLoc);
+    assertEquals("[vsyscall]", pathname);
+    assertEquals(4, size);
+    assertEquals(expectedVmFlags, vmFlags);
   }
 }

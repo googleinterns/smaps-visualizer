@@ -71,91 +71,91 @@ public class RegionTest {
   public void regionCreation() {
     // Tests each field was set properly.
     String startLoc = r.startLoc();
-    assertEquals(startLoc, "16ec0000000");
+    assertEquals("16ec0000000", startLoc);
 
     String endLoc = r.endLoc();
-    assertEquals(endLoc, "16efa600000");
+    assertEquals("16efa600000", endLoc);
 
     String permissions = r.permissions();
-    assertEquals(permissions, "rw-p");
+    assertEquals("rw-p", permissions);
 
     String offset = r.offset();
-    assertEquals(offset, "001a1000");
+    assertEquals("001a1000", offset);
 
     String device = r.device();
-    assertEquals(device, "08:01");
+    assertEquals("08:01", device);
 
     long inode = r.inode();
-    assertEquals(inode, 7700);
+    assertEquals(7700, inode);
 
     String pathname = r.pathname();
-    assertEquals(pathname, "/memfd:stan (deleted)");
+    assertEquals("/memfd:stan (deleted)", pathname);
 
     long size = r.size();
-    assertEquals(size, 956416);
+    assertEquals(956416, size);
 
     long kernelPageSize = r.kernelPageSize();
-    assertEquals(kernelPageSize, 4);
+    assertEquals(4, kernelPageSize);
 
     long mmuPageSize = r.mmuPageSize();
-    assertEquals(mmuPageSize, 8);
+    assertEquals(8, mmuPageSize);
 
     long rss = r.rss();
-    assertEquals(rss, 0);
+    assertEquals(0, rss);
 
     long pss = r.pss();
-    assertEquals(pss, 0);
+    assertEquals(0, pss);
 
     long sharedClean = r.sharedClean();
-    assertEquals(sharedClean, 16);
+    assertEquals(16, sharedClean);
 
     long sharedDirty = r.sharedDirty();
-    assertEquals(sharedDirty, 0);
+    assertEquals(0, sharedDirty);
 
     long privateClean = r.privateClean();
-    assertEquals(privateClean, 44);
+    assertEquals(44, privateClean);
 
     long privateDirty = r.privateDirty();
-    assertEquals(privateDirty, 0);
+    assertEquals(0, privateDirty);
 
     long referenced = r.referenced();
-    assertEquals(referenced, 8);
+    assertEquals(8, referenced);
 
     long anonymous = r.anonymous();
-    assertEquals(anonymous, 20516);
+    assertEquals(20516, anonymous);
 
     long lazyFree = r.lazyFree();
-    assertEquals(lazyFree, 0);
+    assertEquals(0, lazyFree);
 
     long anonHugePages = r.anonHugePages();
-    assertEquals(anonHugePages, 256);
+    assertEquals(256, anonHugePages);
 
     long shmemHugePages = r.shmemHugePages();
-    assertEquals(shmemHugePages, 512);
+    assertEquals(512, shmemHugePages);
 
     long shmemPmdMapped = r.shmemPmdMapped();
-    assertEquals(shmemPmdMapped, 0);
+    assertEquals(0, shmemPmdMapped);
 
     long sharedHugetlb = r.sharedHugetlb();
-    assertEquals(sharedHugetlb, 0);
+    assertEquals(0, sharedHugetlb);
 
     long privateHugetlb = r.privateHugetlb();
-    assertEquals(privateHugetlb, 0);
+    assertEquals(0, privateHugetlb);
 
     long hugePFNMap = r.hugePFNMap();
-    assertEquals(hugePFNMap, 262144);
+    assertEquals(262144, hugePFNMap);
 
     long swap = r.swap();
-    assertEquals(swap, 0);
+    assertEquals(0, swap);
 
     long swapPss = r.swapPss();
-    assertEquals(swapPss, 0);
+    assertEquals(0, swapPss);
 
     long locked = r.locked();
-    assertEquals(locked, 0);
+    assertEquals(0, locked);
 
     List<String> vmFlags = r.vmFlags();
     List<String> expectedVmFlags = new ArrayList<>(Arrays.asList("mr", "mw", "me", "sd"));
-    assertEquals(vmFlags, expectedVmFlags);
+    assertEquals(expectedVmFlags, vmFlags);
   }
 }

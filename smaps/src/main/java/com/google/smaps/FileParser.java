@@ -30,6 +30,7 @@ import java.util.Scanner;
 @AutoValue
 abstract class FileParser {
   static List<Region> getRegionList(String filePathName) {
+    // list to hold all the regions of the dump
     List<Region> regions = new ArrayList<Region>();
 
     try {
@@ -52,7 +53,6 @@ abstract class FileParser {
 
       while (sc.hasNextLine()) {
         String line = sc.nextLine();
-
         if (nextRegion) {
           // make a new region builder for every region.
           region = Region.builder();
@@ -83,7 +83,7 @@ abstract class FileParser {
             }
           }
 
-          // set all region fields.
+          // set fields.
           region.setStartLoc(startLoc);
           region.setEndLoc(endLoc);
           region.setPermissions(permissions);
@@ -102,7 +102,7 @@ abstract class FileParser {
             List<String> flags = Arrays.asList(flagsArray);
             region.setVmFlags(flags);
 
-            // this is the last line in region, so build the region and add to list.
+            // this is the last line in region, so build the region and add to regions list.
             Region r = region.build();
             regions.add(r);
             nextRegion = true;
@@ -111,6 +111,7 @@ abstract class FileParser {
             String fieldLine = line.replaceAll("\\s", "");
             int colonIndex = fieldLine.indexOf(':');
             String field = fieldLine.substring(0, colonIndex);
+
             // remove all non-digit chars from the rest of the string to get the value.
             String restOfLine = fieldLine.substring(colonIndex);
             String valueStr = restOfLine.replaceAll("\\D", "");
@@ -191,11 +192,9 @@ abstract class FileParser {
     } catch (IllegalArgumentException e) {
       // TODO(sophbohr22): implement logging to print exception to user.
       System.out.println("Incorrect file type, must be .txt.");
-      e.printStackTrace();
     } catch (FileNotFoundException e) {
       // TODO(sophbohr22): implement logging to print exception to user.
       System.out.println("File not found.");
-      e.printStackTrace();
     }
     return regions;
   }

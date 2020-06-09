@@ -27,6 +27,10 @@ abstract class Region {
   abstract String startLoc();
   abstract String endLoc();
   abstract String permissions();
+  abstract String offset();
+  abstract String device();
+  abstract long inode();
+  abstract String pathname();
   abstract long size();
   abstract long kernelPageSize();
   abstract long mmuPageSize();
@@ -58,7 +62,11 @@ abstract class Region {
   abstract static class Builder {
     abstract Builder setStartLoc(String value);
     abstract Builder setEndLoc(String value);
-    abstract Builder setPermissions(String permissions);
+    abstract Builder setPermissions(String value);
+    abstract Builder setOffset(String value);
+    abstract Builder setDevice(String value);
+    abstract Builder setInode(long value);
+    abstract Builder setPathname(String value);
     abstract Builder setSize(long value);
     abstract Builder setKernelPageSize(long value);
     abstract Builder setMmuPageSize(long value);

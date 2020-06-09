@@ -36,6 +36,10 @@ public class RegionTest {
     region.setStartLoc("16ec0000000");
     region.setEndLoc("16efa600000");
     region.setPermissions("rw-p");
+    region.setOffset("001a1000");
+    region.setDevice("08:01");
+    region.setInode(7700);
+    region.setPathname("/memfd:stan (deleted)");
     region.setSize(956416);
     region.setKernelPageSize(4);
     region.setMmuPageSize(8);
@@ -74,6 +78,18 @@ public class RegionTest {
 
     String permissions = r.permissions();
     assertEquals(permissions, "rw-p");
+
+    String offset = r.offset();
+    assertEquals(offset, "001a1000");
+
+    String device = r.device();
+    assertEquals(device, "08:01");
+
+    long inode = r.inode();
+    assertEquals(inode, 7700);
+
+    String pathname = r.pathname();
+    assertEquals(pathname, "/memfd:stan (deleted)");
 
     long size = r.size();
     assertEquals(size, 956416);

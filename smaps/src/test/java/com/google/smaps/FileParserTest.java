@@ -26,6 +26,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+/**
+ * Unit tests for {@link FileParser}.
+ */
 @RunWith(JUnit4.class)
 public class FileParserTest {
   private List<Region> regions;
@@ -33,23 +36,24 @@ public class FileParserTest {
   @Before
   public void setUp() throws Exception {
     // Creates regions list from smaps-full.txt file.
-    String filePathName = "../smaps-full.txt";
-    regions = FileParser.getRegionList(filePathName);
+    String filePathname = "../smaps-full.txt";
+    regions = FileParser.getRegionList(filePathname);
   }
 
   @Test
   public void fileNotFound() {
-    // Tests an exception is caught for nonexistent file, and ensures list is empty.
-    String wrongFilePathName = "../fakeFile.txt";
-    List<Region> list = FileParser.getRegionList(wrongFilePathName);
+    // Tests that an empty list is successfully returned with nonexistent file.
+    String nonexistentFilePathname = "../fake-file.txt";
+    List<Region> list = FileParser.getRegionList(nonexistentFilePathname);
     assertEquals(0, list.size());
   }
 
   @Test
-  public void illegalFileType() {
-    // Tests an exception is caught for wrong file type, and ensures list is empty.
-    String wrongFilePathName = "../README.md";
-    List<Region> list = FileParser.getRegionList(wrongFilePathName);
+  public void wrongFileFormat() {
+    // Tests that an empty list is successfully returned with a file that has too few parameters on
+    // first line.
+    String wrongFormatFilePathname = "../smaps-wrong-format.txt";
+    List<Region> list = FileParser.getRegionList(wrongFormatFilePathname);
     assertEquals(0, list.size());
   }
 
@@ -64,6 +68,7 @@ public class FileParserTest {
   public void firstRegionAlloc() {
     // Tests the first region was set properly in the list.
     Region firstR = regions.get(0);
+    int lineNumber = firstR.lineNumber();
     String startLoc = firstR.startLoc();
     String endLoc = firstR.endLoc();
     String pathname = firstR.pathname();
@@ -71,6 +76,7 @@ public class FileParserTest {
     List<String> vmFlags = firstR.vmFlags();
     List<String> expectedVmFlags = new ArrayList<>(Arrays.asList("mr", "mw", "me", "sd"));
 
+    assertEquals(1, lineNumber);
     assertEquals("16ec0000000", startLoc);
     assertEquals("16efa600000", endLoc);
     assertEquals("", pathname);
@@ -82,6 +88,7 @@ public class FileParserTest {
   public void middleRegionAlloc() {
     // Tests a middle region was set properly in the list.
     Region middleR = regions.get(641);
+    int lineNumber = middleR.lineNumber();
     String startLoc = middleR.startLoc();
     String endLoc = middleR.endLoc();
     String pathname = middleR.pathname();
@@ -90,6 +97,7 @@ public class FileParserTest {
     List<String> expectedVmFlags =
         new ArrayList<>(Arrays.asList("rd", "wr", "sh", "mr", "mw", "me", "ms", "lo", "sd"));
 
+    assertEquals(14744, lineNumber);
     assertEquals("7fd148000000", startLoc);
     assertEquals("7fd148200000", endLoc);
     assertEquals("/memfd:mmapped-unicorn_memfd (deleted)", pathname);
@@ -101,6 +109,7 @@ public class FileParserTest {
   public void lastRegionAlloc() {
     // Tests the last region was set properly in the list.
     Region lastR = regions.get(1071);
+    int lineNumber = lastR.lineNumber();
     String startLoc = lastR.startLoc();
     String endLoc = lastR.endLoc();
     String pathname = lastR.pathname();
@@ -108,6 +117,7 @@ public class FileParserTest {
     List<String> vmFlags = lastR.vmFlags();
     List<String> expectedVmFlags = new ArrayList<>(Arrays.asList("rd", "ex"));
 
+    assertEquals(24634, lineNumber);
     assertEquals("ffffffffff600000", startLoc);
     assertEquals("ffffffffff601000", endLoc);
     assertEquals("[vsyscall]", pathname);

@@ -25,6 +25,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+/**
+ * Unit tests for {@link Region}.
+ */
 @RunWith(JUnit4.class)
 public class RegionTest {
   private Region r;
@@ -33,6 +36,7 @@ public class RegionTest {
   public void setUp() throws Exception {
     // Sets up a fake Region object.
     Region.Builder region = Region.builder();
+    region.setLineNumber(1);
     region.setStartLoc("16ec0000000");
     region.setEndLoc("16efa600000");
     region.setPermissions("rw-p");
@@ -70,92 +74,37 @@ public class RegionTest {
   @Test
   public void regionCreation() {
     // Tests each field was set properly.
-    String startLoc = r.startLoc();
-    assertEquals("16ec0000000", startLoc);
+    assertEquals(1, r.lineNumber());
+    assertEquals("16ec0000000", r.startLoc());
+    assertEquals("16efa600000", r.endLoc());
+    assertEquals("rw-p", r.permissions());
+    assertEquals("001a1000", r.offset());
+    assertEquals("08:01", r.device());
+    assertEquals(7700, r.inode());
+    assertEquals("/memfd:stan (deleted)", r.pathname());
+    assertEquals(956416, r.size());
+    assertEquals(4, r.kernelPageSize());
+    assertEquals(8, r.mmuPageSize());
+    assertEquals(0, r.rss());
+    assertEquals(0, r.pss());
+    assertEquals(16, r.sharedClean());
+    assertEquals(0, r.sharedDirty());
+    assertEquals(44, r.privateClean());
+    assertEquals(0, r.privateDirty());
+    assertEquals(8, r.referenced());
+    assertEquals(20516, r.anonymous());
+    assertEquals(0, r.lazyFree());
+    assertEquals(256, r.anonHugePages());
+    assertEquals(512, r.shmemHugePages());
+    assertEquals(0, r.shmemPmdMapped());
+    assertEquals(0, r.sharedHugetlb());
+    assertEquals(0, r.privateHugetlb());
+    assertEquals(262144, r.hugePFNMap());
+    assertEquals(0, r.swap());
+    assertEquals(0, r.swapPss());
+    assertEquals(0, r.locked());
 
-    String endLoc = r.endLoc();
-    assertEquals("16efa600000", endLoc);
-
-    String permissions = r.permissions();
-    assertEquals("rw-p", permissions);
-
-    String offset = r.offset();
-    assertEquals("001a1000", offset);
-
-    String device = r.device();
-    assertEquals("08:01", device);
-
-    long inode = r.inode();
-    assertEquals(7700, inode);
-
-    String pathname = r.pathname();
-    assertEquals("/memfd:stan (deleted)", pathname);
-
-    long size = r.size();
-    assertEquals(956416, size);
-
-    long kernelPageSize = r.kernelPageSize();
-    assertEquals(4, kernelPageSize);
-
-    long mmuPageSize = r.mmuPageSize();
-    assertEquals(8, mmuPageSize);
-
-    long rss = r.rss();
-    assertEquals(0, rss);
-
-    long pss = r.pss();
-    assertEquals(0, pss);
-
-    long sharedClean = r.sharedClean();
-    assertEquals(16, sharedClean);
-
-    long sharedDirty = r.sharedDirty();
-    assertEquals(0, sharedDirty);
-
-    long privateClean = r.privateClean();
-    assertEquals(44, privateClean);
-
-    long privateDirty = r.privateDirty();
-    assertEquals(0, privateDirty);
-
-    long referenced = r.referenced();
-    assertEquals(8, referenced);
-
-    long anonymous = r.anonymous();
-    assertEquals(20516, anonymous);
-
-    long lazyFree = r.lazyFree();
-    assertEquals(0, lazyFree);
-
-    long anonHugePages = r.anonHugePages();
-    assertEquals(256, anonHugePages);
-
-    long shmemHugePages = r.shmemHugePages();
-    assertEquals(512, shmemHugePages);
-
-    long shmemPmdMapped = r.shmemPmdMapped();
-    assertEquals(0, shmemPmdMapped);
-
-    long sharedHugetlb = r.sharedHugetlb();
-    assertEquals(0, sharedHugetlb);
-
-    long privateHugetlb = r.privateHugetlb();
-    assertEquals(0, privateHugetlb);
-
-    long hugePFNMap = r.hugePFNMap();
-    assertEquals(262144, hugePFNMap);
-
-    long swap = r.swap();
-    assertEquals(0, swap);
-
-    long swapPss = r.swapPss();
-    assertEquals(0, swapPss);
-
-    long locked = r.locked();
-    assertEquals(0, locked);
-
-    List<String> vmFlags = r.vmFlags();
     List<String> expectedVmFlags = new ArrayList<>(Arrays.asList("mr", "mw", "me", "sd"));
-    assertEquals(expectedVmFlags, vmFlags);
+    assertEquals(expectedVmFlags, r.vmFlags());
   }
 }

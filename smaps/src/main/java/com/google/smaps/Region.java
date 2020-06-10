@@ -24,6 +24,7 @@ import java.util.List;
 @AutoValue
 abstract class Region {
   // TODO(sophbohr22): Add Javadoc comments for each of these fields.
+  abstract int lineNumber();
   abstract String startLoc();
   abstract String endLoc();
   abstract String permissions();
@@ -60,6 +61,7 @@ abstract class Region {
 
   @AutoValue.Builder
   abstract static class Builder {
+    abstract Builder setLineNumber(int value);
     abstract Builder setStartLoc(String value);
     abstract Builder setEndLoc(String value);
     abstract Builder setPermissions(String value);

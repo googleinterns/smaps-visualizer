@@ -30,14 +30,13 @@ import java.util.Scanner;
 @AutoValue
 abstract class FileParser {
   static List<Region> getRegionList(String filePathName) {
-    // list to hold all the regions of the dump
-    List<Region> regions = new ArrayList<Region>();
+    List<Region> regions = new ArrayList<Region>(); // holds all regions of smaps dump
 
     try {
-      // create the file.
+      // Create the file.
       File dump = new File(filePathName);
 
-      // ensure file is a text file.
+      // Ensure file is a text file.
       String fileName = dump.getName();
       String fileExt = fileName.substring(fileName.length() - 4);
       if (!fileExt.equals(".txt")) {
@@ -48,33 +47,33 @@ abstract class FileParser {
       Scanner sc = new Scanner(dump);
       Region.Builder region = Region.builder();
 
-      // indicates whether a new region is being evaluated at each iteration.
+      // Indicates whether a new region is being evaluated at each iteration.
       boolean nextRegion = true;
 
       while (sc.hasNextLine()) {
         String line = sc.nextLine();
         if (nextRegion) {
-          // make a new region builder for every region.
+          // Make a new region builder for every region.
           region = Region.builder();
 
-          // remove extra space between inode and pathname, replace with one space.
+          // Remove extra space between inode and pathname, replace with one space.
           String spaceLine = line.replaceAll("\\s+", " ");
 
-          // place all fields of first line into array.
+          // Place all fields of first line into array.
           String[] attributes = spaceLine.split(" ");
 
-          // split the address range by the hyphen.
+          // Split the address range by the hyphen.
           String[] addressBounds = attributes[0].split("-");
           String startLoc = addressBounds[0];
           String endLoc = addressBounds[1];
 
-          // define all other fields.
+          // Define all other fields.
           String permissions = attributes[1];
           String offset = attributes[2];
           String device = attributes[3];
           long inode = Long.parseLong(attributes[4]);
 
-          // if pathname exists, add it and any other details.
+          // If pathname exists, add it and any other details.
           String pathname = "";
           if (attributes.length > 5) {
             pathname += attributes[5];
@@ -83,7 +82,7 @@ abstract class FileParser {
             }
           }
 
-          // set fields.
+          // Set fields.
           region.setStartLoc(startLoc);
           region.setEndLoc(endLoc);
           region.setPermissions(permissions);
@@ -92,32 +91,32 @@ abstract class FileParser {
           region.setInode(inode);
           region.setPathname(pathname);
 
-          // no longer a new region for the next iteration.
+          // No longer a new region for the next iteration.
           nextRegion = false;
         } else {
           if (line.contains("VmFlags")) {
-            // get just the flags.
+            // Get just the flags.
             String flagsLine = line.substring(9);
             String[] flagsArray = flagsLine.split(" ");
             List<String> flags = Arrays.asList(flagsArray);
             region.setVmFlags(flags);
 
-            // this is the last line in region, so build the region and add to regions list.
+            // This is the last line in region, so build the region and add to regions list.
             Region r = region.build();
             regions.add(r);
             nextRegion = true;
           } else {
-            // get the name of the field.
+            // Get the name of the field.
             String fieldLine = line.replaceAll("\\s", "");
             int colonIndex = fieldLine.indexOf(':');
             String field = fieldLine.substring(0, colonIndex);
 
-            // remove all non-digit chars from the rest of the string to get the value.
+            // Remove all non-digit chars from the rest of the string to get the value.
             String restOfLine = fieldLine.substring(colonIndex);
             String valueStr = restOfLine.replaceAll("\\D", "");
             long value = Long.parseLong(valueStr);
 
-            // set the value to the field.
+            // Set the value to the field.
             switch (field) {
               case "Size":
                 region.setSize(value);

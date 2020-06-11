@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * Takes in an smap dump text file and produces a list of the regions of that file. {@link Region}
+ * Takes in an smaps dump text file and produces a list of the {@link Region} objects of that file.
  *
  * TODO(sophbohr22): implement data integrity check for all fields.
  */

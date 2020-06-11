@@ -25,99 +25,86 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+/**
+ * Unit tests for {@link Region}.
+ */
 @RunWith(JUnit4.class)
 public class RegionTest {
-  private Region mockRegion;
+  private Region r;
 
   @Before
   public void setUp() throws Exception {
     // Sets up a fake Region object.
+    Region.Builder region = Region.builder();
+    region.setLineNumber(1);
+    region.setStartLoc("16ec0000000");
+    region.setEndLoc("16efa600000");
+    region.setPermissions("rw-p");
+    region.setOffset("001a1000");
+    region.setDevice("08:01");
+    region.setInode(7700);
+    region.setPathname("/memfd:stan (deleted)");
+    region.setSize(956416);
+    region.setKernelPageSize(4);
+    region.setMmuPageSize(8);
+    region.setRss(0);
+    region.setPss(0);
+    region.setSharedClean(16);
+    region.setSharedDirty(0);
+    region.setPrivateClean(44);
+    region.setPrivateDirty(0);
+    region.setReferenced(8);
+    region.setAnonymous(20516);
+    region.setLazyFree(0);
+    region.setAnonHugePages(256);
+    region.setShmemHugePages(512);
+    region.setShmemPmdMapped(0);
+    region.setSharedHugetlb(0);
+    region.setPrivateHugetlb(0);
+    region.setHugePFNMap(262144);
+    region.setSwap(0);
+    region.setSwapPss(0);
+    region.setLocked(0);
     List<String> flags = new ArrayList<>(Arrays.asList("mr", "mw", "me", "sd"));
-    mockRegion = Region.create("16ec0000000", "16efa600000", "rw-p", 956416, 4, 8, 0, 0, 16, 0, 44,
-        0, 8, 20516, 0, 256, 512, 0, 0, 0, 262144, 0, 0, 0, flags);
+    region.setVmFlags(flags);
+
+    r = region.build();
   }
 
   @Test
-  public void RegionTest() {
+  public void regionCreation() {
     // Tests each field was set properly.
-    String startLoc = mockRegion.startLoc();
-    assertEquals(startLoc, "16ec0000000");
+    assertEquals(1, r.lineNumber());
+    assertEquals("16ec0000000", r.startLoc());
+    assertEquals("16efa600000", r.endLoc());
+    assertEquals("rw-p", r.permissions());
+    assertEquals("001a1000", r.offset());
+    assertEquals("08:01", r.device());
+    assertEquals(7700, r.inode());
+    assertEquals("/memfd:stan (deleted)", r.pathname());
+    assertEquals(956416, r.size());
+    assertEquals(4, r.kernelPageSize());
+    assertEquals(8, r.mmuPageSize());
+    assertEquals(0, r.rss());
+    assertEquals(0, r.pss());
+    assertEquals(16, r.sharedClean());
+    assertEquals(0, r.sharedDirty());
+    assertEquals(44, r.privateClean());
+    assertEquals(0, r.privateDirty());
+    assertEquals(8, r.referenced());
+    assertEquals(20516, r.anonymous());
+    assertEquals(0, r.lazyFree());
+    assertEquals(256, r.anonHugePages());
+    assertEquals(512, r.shmemHugePages());
+    assertEquals(0, r.shmemPmdMapped());
+    assertEquals(0, r.sharedHugetlb());
+    assertEquals(0, r.privateHugetlb());
+    assertEquals(262144, r.hugePFNMap());
+    assertEquals(0, r.swap());
+    assertEquals(0, r.swapPss());
+    assertEquals(0, r.locked());
 
-    String endLoc = mockRegion.endLoc();
-    assertEquals(endLoc, "16efa600000");
-
-    String permissions = mockRegion.permissions();
-    assertEquals(permissions, "rw-p");
-
-    long size = mockRegion.size();
-    assertEquals(size, 956416);
-
-    long kernelPageSize = mockRegion.kernelPageSize();
-    assertEquals(kernelPageSize, 4);
-
-    long mmuPageSize = mockRegion.mmuPageSize();
-    assertEquals(mmuPageSize, 8);
-
-    long rss = mockRegion.rss();
-    assertEquals(rss, 0);
-
-    long pss = mockRegion.pss();
-    assertEquals(pss, 0);
-
-    long sharedClean = mockRegion.sharedClean();
-    assertEquals(sharedClean, 16);
-
-    long sharedDirty = mockRegion.sharedDirty();
-    assertEquals(sharedDirty, 0);
-
-    long privateClean = mockRegion.privateClean();
-    assertEquals(privateClean, 44);
-
-    long privateDirty = mockRegion.privateDirty();
-    assertEquals(privateDirty, 0);
-
-    long referenced = mockRegion.referenced();
-    assertEquals(referenced, 8);
-
-    long anonymous = mockRegion.anonymous();
-    assertEquals(anonymous, 20516);
-
-    long lazyFree = mockRegion.lazyFree();
-    assertEquals(lazyFree, 0);
-
-    long anonHugePages = mockRegion.anonHugePages();
-    assertEquals(anonHugePages, 256);
-
-    long shmemHugePages = mockRegion.shmemHugePages();
-    assertEquals(shmemHugePages, 512);
-
-    long shmemPmdMapped = mockRegion.shmemPmdMapped();
-    assertEquals(shmemPmdMapped, 0);
-
-    long sharedHugetlb = mockRegion.sharedHugetlb();
-    assertEquals(sharedHugetlb, 0);
-
-    long privateHugetlb = mockRegion.privateHugetlb();
-    assertEquals(privateHugetlb, 0);
-
-    long hugePFNMap = mockRegion.hugePFNMap();
-    assertEquals(hugePFNMap, 262144);
-
-    long swap = mockRegion.swap();
-    assertEquals(swap, 0);
-
-    long swapPss = mockRegion.swapPss();
-    assertEquals(swapPss, 0);
-
-    long locked = mockRegion.locked();
-    assertEquals(locked, 0);
-
-    List<String> vmFlags = mockRegion.vmFlags();
     List<String> expectedVmFlags = new ArrayList<>(Arrays.asList("mr", "mw", "me", "sd"));
-    assertEquals(vmFlags, expectedVmFlags);
-
-    Region expectedRegion = Region.create("16ec0000000", "16efa600000", "rw-p", 956416, 4, 8, 0, 0,
-        16, 0, 44, 0, 8, 20516, 0, 256, 512, 0, 0, 0, 262144, 0, 0, 0, expectedVmFlags);
-    assertEquals(expectedRegion, mockRegion);
+    assertEquals(expectedVmFlags, r.vmFlags());
   }
 }

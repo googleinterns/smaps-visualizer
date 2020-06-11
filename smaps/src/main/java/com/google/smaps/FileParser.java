@@ -25,6 +25,8 @@ import java.util.Scanner;
 
 /**
  * Takes in an smap dump text file and produces a list of the regions of that file. {@link Region}
+ *
+ * TODO(sophbohr22): implement data integrity check for all fields.
  */
 class FileParser {
   static List<Region> getRegionList(String filePathname) {
@@ -43,7 +45,8 @@ class FileParser {
     return regions;
   }
 
-  static void parseFile(String filePathname, List<Region> regions) throws FileNotFoundException {
+  static void parseFile(String filePathname, List<Region> regions)
+      throws FileNotFoundException, IllegalArgumentException {
     // Create the file.
     File dump = new File(filePathname);
     Scanner sc = new Scanner(dump);
@@ -90,7 +93,7 @@ class FileParser {
         if (attributes.length > 5) {
           pathname += attributes[5];
           for (int i = 6; i < attributes.length; i++) {
-            // if there are extra details after pathname, append to string and add space between
+            // If there are extra details after pathname, append to string and add space between.
             // ex: /memfd:stan (deleted)
             pathname += " " + attributes[i];
           }
@@ -108,44 +111,34 @@ class FileParser {
 
         // No longer a new region for the next iteration.
         nextRegion = false;
-      } else if (!nextRegion) {
-        // The parser has already read the first line of the current region, so now we can parse the
-        // different fields.
+      } else if (line.contains("VmFlags")) { // The last line of the parser is always VmFlags, so a
+                                             // special case.
+        // ex: rd ex mr mw me lo sd
+        String flagsLine = line.substring(9);
+        String[] flagsArray = flagsLine.split(" ");
+        List<String> flags = Arrays.asList(flagsArray);
+        region.setVmFlags(flags);
 
-        if (line.contains("VmFlags")) {
-          // The last line of the parser is always VmFlags, so a special case.
+        // This is the last line in region, so build the region.
+        Region r = region.build();
 
-          // ex: rd ex mr mw me lo sd
-          String flagsLine = line.substring(9);
-          String[] flagsArray = flagsLine.split(" ");
-          List<String> flags = Arrays.asList(flagsArray);
-          region.setVmFlags(flags);
+        // Add region to regions list.
+        regions.add(r);
+        nextRegion = true;
 
-          // This is the last line in region, so build the region.
-          Region r = region.build();
+      } else { // This isn't the last line of the region, so continue normally.
+        // Get the name of the field.
+        String fieldLine = line.replaceAll("\\s", "");
+        int colonIndex = fieldLine.indexOf(':');
+        String field = fieldLine.substring(0, colonIndex);
 
-          // Before adding to list, run data integrity check.
-          dataIntegrityCheck(r);
+        // Remove all non-digit chars from the rest of the string to get the value.
+        String restOfLine = fieldLine.substring(colonIndex);
+        String valueStr = restOfLine.replaceAll("\\D", "");
+        long value = Long.parseLong(valueStr);
 
-          // Add region to regions list.
-          regions.add(r);
-          nextRegion = true;
-        } else {
-          // This isn't the last line of the region, so continue normally.
-
-          // Get the name of the field.
-          String fieldLine = line.replaceAll("\\s", "");
-          int colonIndex = fieldLine.indexOf(':');
-          String field = fieldLine.substring(0, colonIndex);
-
-          // Remove all non-digit chars from the rest of the string to get the value.
-          String restOfLine = fieldLine.substring(colonIndex);
-          String valueStr = restOfLine.replaceAll("\\D", "");
-          long value = Long.parseLong(valueStr);
-
-          // Set the value to the field.
-          fillField(field, value, region);
-        }
+        // Set the value to the field.
+        fillField(field, value, region);
       }
     }
     sc.close();
@@ -220,12 +213,6 @@ class FileParser {
       default:
         // TODO(sophbohr22): implement logging to identify unknown fields to user.
     }
-    return;
-  }
-
-  static void dataIntegrityCheck(Region r) {
-    // TODO(sophbohr22): implement data integrity check on all fields of the region.
-    // ex: startLoc < endLoc, no negative numbers, etc.
     return;
   }
 }

@@ -20,24 +20,29 @@ google.charts.load('current', {'packages': ['corechart']});
 // Set a callback to run when the Google Visualization API is loaded.
 google.charts.setOnLoadCallback(drawHistogram);
 
-var data;
-var chart;
-
 /*
  * Callback that creates and populates the data table for region sizes,
  * instantiates the histogram, passes in the data, adn draws it.
  */
 function drawHistogram() {
-  data = google.visualization.arrayToDataTable([
-    ['Region Name', 'Size'], ['region 1', 500], ['region 2', 1500],
-    ['region 3', 1500], ['region 4', 0], ['region 5', 0], ['region 6', 2000]
-  ]);
+  fetch('/histogram')
+      .then((response) => {
+        return response.json();
+      })
+      .then((histogramJson) => {
+        var data = google.visualization.arrayToDataTable(histogramJson);
 
-  // Set chart options.
-  var options = {'title': 'Histogram of Region Sizes'};
+        // Set chart options.
+        var options = {
+          title: 'Histogram of Region Sizes',
+          legend: {position: 'none'},
+          hAxis: {title: 'Size in kB'},
+          vAxis: {title: 'Number of Regions'}
+        };
 
-  // Instantiate and draw our chart, passing in some options.
-  chart =
-      new google.visualization.Histogram(document.getElementById('hist_div'));
-  chart.draw(data, options);
+        // Instantiate and draw our chart, passing in some options.
+        chart = new google.visualization.Histogram(
+            document.getElementById('hist_div'));
+        chart.draw(data, options);
+      });
 }

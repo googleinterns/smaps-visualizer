@@ -1,3 +1,20 @@
+/**
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/* Colors */
 .gblue {
     color: #4285F4;
 }
@@ -15,23 +32,81 @@
 }
 
 .ggray {
-    color: #5f6368;
+    color: #5F6368;
 }
 
+/* Inputs */
+.form-control-file {
+    color: #5F6368;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Buttons */
+.btn-gray{
+    color: #5F6368;
+    border-color: #5F6368;
+    margin-bottom: 1em;
+}
+
+.btn-gray:hover {
+    color: #FFFFFF;
+    background-color: #5F6368;
+    border-color: #5F6368;
+}
+
+.btn-gray:focus {
+    box-shadow: 0 0 0 0.2rem rgba(95, 99, 104, .25);
+}
+
+.btn-blue {
+    color: #4285F4;
+    border-color: #4285F4;
+    margin-bottom: 1em;
+}
+
+.btn-blue:hover {
+    color: #FFFFFF;
+    background-color: #4285F4;
+    border-color: #4285F4;
+}
+
+.btn-blue:focus {
+    box-shadow: 0 0 0 0.2rem rgba(66, 133, 244, .25);
+
+}
+
+.btn-sm-w {
+    width: 10em;
+}
+
+/* Fonts */
 .roboto {
     font-family: 'Roboto', sans-serif;
 }
 
-.center {
-    text-align: center;
-    align-content: center;
-}
-
+/* IDs */
 #smaps-title {
     font-size: 3em;
+    margin: 0em;
+    text-align: center;
 }
 
 #visualizer-title {
     font-size: 3.5em;
     margin: 0em;
+}
+
+#appengine-info-link {
+    color: #4285F4;
+}
+
+#appengine-info-link:hover {
+    color: #185ABC;
+    text-decoration-style: underline;
+}
+
+/* Spacing */
+p {
+    margin-top: 0.3em;
+    margin-bottom: 0.3em;
 }

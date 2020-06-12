@@ -17,6 +17,9 @@ limitations under the License.
 <html>
 
 <head>
+     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+     <script src="/js/histogram.js"></script>
+
      <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -28,8 +31,7 @@ limitations under the License.
      <div class="container">
           <div class="row justify-content-md-center" style="height: 50px">
                <div class="col col-md-3">
-                    <a href="/memory-map-page.html" class="btn btn-blue btn-block">Interactive Memory
-                         Map</a>
+                    <a href="/memory-map-page.html" class="btn btn-blue btn-block">Interactive Memory Map</a>
                </div>
                <div class="col col-md-4 offset-md-1">
                     <div id="smaps-title">
@@ -51,6 +53,9 @@ limitations under the License.
           </div>
           <div class="row justify-content-md-center">
                <p id="visualizer-title" class="ggray">Visualizer</p>
+          </div>
+          <div class="row">
+               <div id="hist_div" style="width: 900px; height: 500px;"></div>
           </div>
      </div>
 </body>

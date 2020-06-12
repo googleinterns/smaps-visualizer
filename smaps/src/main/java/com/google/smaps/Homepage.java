@@ -38,6 +38,6 @@ public class Homepage extends HttpServlet {
 
   /** Returns project description. */
   public static String getProjInfo() {
-    return "This application takes a process' smap dump and creates useful charts/visualizations from it.";
+    return "This application takes a process' smaps and creates useful charts/visualizations from it.";
   }
 }

@@ -79,6 +79,6 @@ public class HomepageTest {
     assertThat(result)
         .named("Homepage.getProjInfo")
         .containsMatch(
-            "This application takes a process' smap dump and creates useful charts/visualizations from it.");
+            "This application takes a process' smaps and creates useful charts/visualizations from it.");
   }
 }

@@ -25,22 +25,26 @@ google.charts.setOnLoadCallback(drawHistogram);
  * instantiates the histogram, passes in the data, adn draws it.
  */
 function drawHistogram() {
+  // Fetch the Json object from the Histogram servlet.
   fetch('/histogram')
       .then((response) => {
         return response.json();
       })
       .then((histogramJson) => {
+        // Converts histogram Json 2D array into a data table for histogram.
         var data = google.visualization.arrayToDataTable(histogramJson);
 
         // Set chart options.
         var options = {
           title: 'Histogram of Region Sizes',
+          titleTextStyle: {color: '#5F6368', fontName: 'Roboto', fontSize: 18},
+          colors: ['#4285F4'],
           legend: {position: 'none'},
           hAxis: {title: 'Size in kB'},
           vAxis: {title: 'Number of Regions'}
         };
 
-        // Instantiate and draw our chart, passing in some options.
+        // Instantiate and draw chart, passing in some options.
         chart = new google.visualization.Histogram(
             document.getElementById('hist_div'));
         chart.draw(data, options);

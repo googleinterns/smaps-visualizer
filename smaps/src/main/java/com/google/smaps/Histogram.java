@@ -25,61 +25,38 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/histogram")
+/** Servlet retrieves histogram information and formats it for creating the chart. */
+@WebServlet(name = "Histogram", value = "/histogram")
 public class Histogram extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json");
 
-    List<Region> regionList = FileParser.getRegionList("../smaps-small.txt");
-    // Hashtable<Long, Long> regionSizesHash = makeHashtable(regionList);
+    // Data must be in the form of a 2D array to be parsed properly in histogram.js.
+    List<Region> regionList = FileParser.getRegionList("../smaps-full.txt");
     Object[][] dataArray = makeDataArray(regionList);
 
+    // Convert Java object to Json object.
     Gson gson = new Gson();
     String histogramJson = gson.toJson(dataArray);
 
+    // Write Json to histogram.js
     response.getWriter().println(histogramJson);
   }
 
-  static Hashtable<Long, Long> makeHashtable(List<Region> regionList) {
-    List<Long> keys = new ArrayList<Long>();
-    Hashtable<Long, Long> regionSizesHash = new Hashtable<Long, Long>();
-    for (int i = 0; i < regionList.size(); i++) {
-      Long key = regionList.get(i).size();
-      if (!keys.contains(key)) {
-        keys.add(key);
-        Long init = new Long(1);
-        regionSizesHash.put(key, init);
-      } else {
-        Long currCount = regionSizesHash.get(key);
-        Long newCount = currCount + 1;
-        regionSizesHash.put(key, newCount);
-
-        System.out.println("KEY: " + key + " VAL: " + newCount);
-      }
-    }
-    return regionSizesHash;
-  }
-
+  /** Creates 2D array of data for histogram */
   static Object[][] makeDataArray(List<Region> regions) {
-    // int numKeys = regionSizesHash.size();
-    // Enumeration<Long> keys = regionSizesHash.keys();
+    // Array will contain both Strings and numbers, so must be of type Object.
     Object[][] dataArray = new Object[regions.size() + 1][2];
-    dataArray[0][0] = "Name";
+    dataArray[0][0] = "Range";
     dataArray[0][1] = "Size";
 
     for (int i = 0; i < regions.size(); i++) {
-      // Object key = (Object) keys.nextElement();
       Region curR = regions.get(i);
       String range = curR.startLoc() + " - " + curR.endLoc();
-      // Object name = (Object) "Region Name";
       Object val = (Object) curR.size();
-      Object[] keyValPair = {range, val};
-      dataArray[i + 1] = keyValPair;
-    }
-
-    for (int i = 0; i < dataArray.length; i++) {
-      System.out.println(Arrays.toString(dataArray[i]));
+      Object[] pair = {range, val};
+      dataArray[i + 1] = pair;
     }
 
     return dataArray;

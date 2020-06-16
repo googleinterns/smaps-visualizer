@@ -34,31 +34,63 @@ public class Histogram extends HttpServlet {
 
     // Data must be in the form of a 2D array to be parsed properly in histogram.js.
     List<Region> regionList = FileParser.getRegionList("../smaps-full.txt");
-    Object[][] dataArray = makeDataArray(regionList);
+    List<ArrayList<Object[]>> dataArrays = makeDataArrays(regionList);
 
-    // Convert Java object to Json object.
-    Gson gson = new Gson();
-    String histogramJson = gson.toJson(dataArray);
+    // Convert Java objects to Json objects.
+    List<String> histogramJsonList = new ArrayList<String>();
+    for (ArrayList<Object[]> d : dataArrays) {
+      Gson gson = new Gson();
+      String histogramJson = gson.toJson(d);
+      histogramJsonList.add(histogramJson);
+    }
 
     // Write Json to histogram.js
-    response.getWriter().println(histogramJson);
+    response.getWriter().println(histogramJsonList);
   }
 
   /** Creates 2D array of data for histogram */
-  static Object[][] makeDataArray(List<Region> regions) {
+  static ArrayList<ArrayList<Object[]>> makeDataArrays(List<Region> regions) {
     // Array will contain both Strings and numbers, so must be of type Object.
-    Object[][] dataArray = new Object[regions.size() + 1][2];
-    dataArray[0][0] = "Range";
-    dataArray[0][1] = "Size";
+    ArrayList<Object[]> smallDataArray = new ArrayList<Object[]>();
+    ArrayList<Object[]> mediumDataArray = new ArrayList<Object[]>();
+    ArrayList<Object[]> largeDataArray = new ArrayList<Object[]>();
+    ArrayList<Object[]> xLargeDataArray = new ArrayList<Object[]>();
+    addLabels(smallDataArray);
+    addLabels(mediumDataArray);
+    addLabels(largeDataArray);
+    addLabels(xLargeDataArray);
 
     for (int i = 0; i < regions.size(); i++) {
       Region curR = regions.get(i);
       String range = curR.startLoc() + " - " + curR.endLoc();
-      Object val = (Object) curR.size();
+      Long rSize = curR.size();
+      Object val = (Object) rSize;
       Object[] pair = {range, val};
-      dataArray[i + 1] = pair;
+      if (rSize < 250) {
+        smallDataArray.add(pair);
+      } else if (rSize < 5000) {
+        mediumDataArray.add(pair);
+      } else if (rSize < 1000000) {
+        largeDataArray.add(pair);
+      } else {
+        xLargeDataArray.add(pair);
+      }
     }
 
-    return dataArray;
+    // Create a list of the all the data lists
+    ArrayList<ArrayList<Object[]>> dataArrays = new ArrayList<ArrayList<Object[]>>();
+    dataArrays.add(smallDataArray);
+    dataArrays.add(mediumDataArray);
+    dataArrays.add(largeDataArray);
+    dataArrays.add(xLargeDataArray);
+
+    return dataArrays;
+  }
+
+  static void addLabels(List<Object[]> array) {
+    Object[] labelPair = {"Range", "Size"};
+    array.add(labelPair);
+
+    return;
   }
 }

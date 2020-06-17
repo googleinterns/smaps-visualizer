@@ -21,4 +21,14 @@ limitations under the License.
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
+
+  <servlet>
+    <servlet-name>HistDash</servlet-name>
+    <servlet-class>HistDash</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>HistDash</servlet-name>
+    <url-pattern>/histdash</url-pattern>
+  </servlet-mapping>
 </web-app>

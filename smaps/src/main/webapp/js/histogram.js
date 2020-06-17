@@ -22,7 +22,6 @@ google.charts.setOnLoadCallback(drawHistogramSmall);
 google.charts.setOnLoadCallback(drawHistogramMedium);
 google.charts.setOnLoadCallback(drawHistogramLarge);
 google.charts.setOnLoadCallback(drawHistogramXLarge);
-google.charts.setOnLoadCallback(drawHistogramCustom);
 
 /*
  * Callback that creates and populates the data table for region sizes,

@@ -55,10 +55,12 @@ public class Histogram extends HttpServlet {
     ArrayList<Object[]> mediumDataArray = new ArrayList<Object[]>();
     ArrayList<Object[]> largeDataArray = new ArrayList<Object[]>();
     ArrayList<Object[]> xLargeDataArray = new ArrayList<Object[]>();
+    ArrayList<Object[]> allDataArray = new ArrayList<Object[]>();
     addLabels(smallDataArray);
     addLabels(mediumDataArray);
     addLabels(largeDataArray);
     addLabels(xLargeDataArray);
+    addLabels(allDataArray);
 
     for (int i = 0; i < regions.size(); i++) {
       Region curR = regions.get(i);
@@ -66,6 +68,8 @@ public class Histogram extends HttpServlet {
       Long rSize = curR.size();
       Object val = (Object) rSize;
       Object[] pair = {range, val};
+
+      allDataArray.add(pair);
       if (rSize < 250) {
         smallDataArray.add(pair);
       } else if (rSize < 5000) {
@@ -83,6 +87,7 @@ public class Histogram extends HttpServlet {
     dataArrays.add(mediumDataArray);
     dataArrays.add(largeDataArray);
     dataArrays.add(xLargeDataArray);
+    dataArrays.add(allDataArray);
 
     return dataArrays;
   }

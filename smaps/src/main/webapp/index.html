@@ -25,33 +25,35 @@ limitations under the License.
 </head>
 
 <body class="roboto" style="margin: 2em">
-    <div class="container">
-        <div class="row justify-content-md-center" style="height: 50px">
-            <div id="smaps-title">
-                <span class="gblue">s</span>
-                <span class="gred">m</span>
-                <span class="gyellow">a</span>
-                <span class="gblue">p</span>
-                <span class="ggreen">s</span>
+    <div class="container index-container">
+        <div class="row extended-row justify-content-md-center smaps-height">
+            <div class="col-md-12">
+                <div id="smaps-title">
+                    <span class="gblue">s</span>
+                    <span class="gred">m</span>
+                    <span class="gyellow">a</span>
+                    <span class="gblue">p</span>
+                    <span class="ggreen">s</span>
+                </div>
             </div>
         </div>
-        <div class="row justify-content-md-center">
+        <div class="row extended-row justify-content-md-center">
             <p id="visualizer-title" class="ggray">Visualizer</p>
         </div>
-        <div class="row justify-content-md-center">
+        <div class="row extended-row justify-content-md-center">
             <p>This application takes a process' smaps and creates useful charts/visualizations from it.</p>
         </div>
         <form action="/interactive-histogram.html" method="POST" enctype="multipart/form-data"
-            class="row justify-content-md-center">
-            <div class="col col-md-3 text-center">
+            class="row justify-content-md-center" id="file-upload">
+            <div class="col col-md-2 text-center">
                 <label class="btn btn-gray">
                     Select an smaps file <input type="file" name="fileToUpload" hidden>
                 </label>
             </div>
-            <div class=" col col-md-auto">
+            <div class=" col col-md-2">
                 <p>No file uploaded yet...</p>
             </div>
-            <div class="col col-md-2">
+            <div class="col col-md-1">
                 <label class="btn btn-blue btn-sm">
                     UPLOAD <input type="submit" hidden>
                 </label>

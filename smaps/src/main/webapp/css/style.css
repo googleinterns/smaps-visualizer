@@ -117,22 +117,31 @@ a.btn.btn-blue.active {
     text-decoration-style: underline;
 }
 
+#file-upload {
+    width: 112.5em;
+}
+
 /* Spacing */
 p {
     margin-top: 0.3em;
     margin-bottom: 0.3em;
 }
 
-.smaps-title-row {
+.smaps-height {
     height: 3.1em;
+}
+
+.extended-row {
     width: 112.5em;
 }
 
-.vis-title-row {
-    width: 112.5em;
+.feature-container {
+    margin-left: 20em;
+    margin-right: 20em;
 }
 
-.histogram-container {
+.index-container {
+    width: 112.5em;
     margin-left: 20em;
     margin-right: 20em;
 }

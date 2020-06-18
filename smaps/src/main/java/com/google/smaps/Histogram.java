@@ -16,10 +16,10 @@
 
 package com.google.smaps;
 
-import com.google.appengine.api.utils.SystemProperty;
 import com.google.gson.Gson;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -32,14 +32,13 @@ public class Histogram extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json");
 
-    // Data must be in the form of a 2D array to be parsed properly in FIXME:.js.
+    // Data must be in the form of a 2D array to be parsed properly in histogram.js.
     List<Region> regionList = FileParser.getRegionList("../smaps-full.txt");
     List<Object[]> histogramData = makeDataArray(regionList);
-
     Gson gson = new Gson();
     String histogramDataJson = gson.toJson(histogramData);
 
-    // Write Json to FIXME:
+    // Write Json to histogram.js
     response.getWriter().println(histogramDataJson);
   }
 
@@ -47,25 +46,18 @@ public class Histogram extends HttpServlet {
   static ArrayList<Object[]> makeDataArray(List<Region> regions) {
     // Array will contain both Strings and numbers, so must be of type Object.
     ArrayList<Object[]> dataArray = new ArrayList<Object[]>();
-    addLabels(dataArray);
+    Object[] labelPair = {"Range", "Size"};
+    dataArray.add(labelPair);
 
     for (int i = 0; i < regions.size(); i++) {
       Region curR = regions.get(i);
       String range = curR.startLoc() + " - " + curR.endLoc();
-      Long rSize = curR.size();
-      Object val = (Object) rSize;
+      Object val = (Object) curR.size();
       Object[] pair = {range, val};
 
       dataArray.add(pair);
     }
 
     return dataArray;
-  }
-
-  static void addLabels(List<Object[]> array) {
-    Object[] labelPair = {"Range", "Size"};
-    array.add(labelPair);
-
-    return;
   }
 }

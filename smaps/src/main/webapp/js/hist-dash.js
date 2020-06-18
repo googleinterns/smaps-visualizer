@@ -80,8 +80,8 @@ function drawHistogramCust() {
         var options = {
           title: 'Histogram of Region Sizes',
           titleTextStyle: {color: '#5F6368', fontName: 'Roboto', fontSize: 18},
-          width: 1300,
-          height: 1000,
+          width: 1800,
+          height: 900,
           colors: ['#4285F4'],
           legend: {position: 'none'},
           hAxis: {title: 'Size in kB'},

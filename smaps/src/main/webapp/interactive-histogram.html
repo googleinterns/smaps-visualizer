@@ -1,34 +1,22 @@
-<!--
-Copyright 2020 Google LLC
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-     https://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
--->
-<!DOCTYPE html>
 <html>
 
 <head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="/js/hist-dash.js"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href='/css/style.css' rel='stylesheet' type='text/css'>
-    <title>Interactive Memory Map</title>
+    <title>Histogram Dashboard</title>
 </head>
 
 <body class="roboto" style="margin: 2em">
     <div class="container">
         <div class="row justify-content-md-center" style="height: 50px">
             <div class="col col-md-3">
-                <a href="/charts-page.html" class="btn btn-blue btn-block">Charts and Stats</a>
+                <a href="/interactive-histogram.html" class="btn btn-blue btn-block active" role="button"
+                    aria-pressed="true">Interactive Histogram</a>
             </div>
             <div class="col col-md-4 offset-md-1">
                 <div id="smaps-title">
@@ -50,6 +38,27 @@ limitations under the License.
         </div>
         <div class="row justify-content-md-center">
             <p id="visualizer-title" class="ggray">Visualizer</p>
+        </div>
+    </div>
+    <div class="container histogram-container">
+        <div class="row">
+            <div id="dashboard-div">
+                <div id="chart-div"></div>
+                <div id="filter-div"></div>
+                <div class="row">
+                    <form class="interactive-hist-form" action='/histdash' method="POST">
+                        <div class="form-group">
+                            <label for="lower-bound">Lower size bound</label>
+                            <input type="text" class="form-control" name="lower-bound" id="lower-bound" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="upper-bound">Upper size bound</label>
+                            <input type="text" class="form-control" name="upper-bound" id="upper-bound" value="">
+                        </div>
+                        <input type="submit" class="btn btn-blue" value="Enter">
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </body>

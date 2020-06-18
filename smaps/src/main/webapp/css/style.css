@@ -54,6 +54,12 @@
     border-color: #5F6368;
 }
 
+a.btn.btn-gray.active {
+    color: #FFFFFF;
+    background-color: #5F6368;
+    border-color: #5F6368;
+}
+
 .btn-gray:focus {
     box-shadow: 0 0 0 0.2rem rgba(95, 99, 104, .25);
 }
@@ -65,6 +71,12 @@
 }
 
 .btn-blue:hover {
+    color: #FFFFFF;
+    background-color: #4285F4;
+    border-color: #4285F4;
+}
+
+a.btn.btn-blue.active {
     color: #FFFFFF;
     background-color: #4285F4;
     border-color: #4285F4;
@@ -111,13 +123,35 @@ p {
     margin-bottom: 0.3em;
 }
 
+.histogram-container {
+    margin-left: 20em;
+    margin-right: 20em;
+}
+
 /* Charts */
+#filter-div {
+    text-align: center;
+}
+
+#dashboard-div {
+    align-content: left;
+    margin: 0.5em;
+}
+
+.interactive-hist-form {
+    width: 8em;
+    margin-left: 17em;
+}
 .hist-slider {
     color: #4285F4;
     white-space: nowrap;
-
 }
 
 .hist-slider .google-visualization-controls-slider-horizontal {
-    width: 1300px;
+    width: 70em;
+}
+
+.hist-slider .google-visualization-controls-slider-thumb {
+    width: 8px;
+    background-color: #4285F4;
 }

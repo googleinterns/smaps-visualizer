@@ -26,8 +26,8 @@ import javax.servlet.http.HttpServletResponse;
 /** Servlet fires up homepage. */
 @WebServlet(name = "HistDash", value = "/histdash")
 public class HistDash extends HttpServlet {
-  Long lowerBound = 0L;
-  Long upperBound = 25000000L;
+  Long lowerBound = 4L;
+  Long upperBound = 30000000L;
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -51,6 +51,6 @@ public class HistDash extends HttpServlet {
     lowerBound = Long.parseLong(lower);
     upperBound = Long.parseLong(upper);
 
-    response.sendRedirect("/charts-dash-test.html");
+    response.sendRedirect("/interactive-histogram.html");
   }
 }

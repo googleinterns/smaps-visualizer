@@ -15,19 +15,34 @@
  */
 
 // Load the Visualization API and the histogram package.
-google.charts.load('current', {'packages': ['corechart']});
+google.charts.load('current', {'packages': ['corechart', 'controls']});
 
 // Set a callback to run when the Google Visualization API is loaded.
-google.charts.setOnLoadCallback(drawHistogramSmall);
-google.charts.setOnLoadCallback(drawHistogramMedium);
-google.charts.setOnLoadCallback(drawHistogramLarge);
-google.charts.setOnLoadCallback(drawHistogramXLarge);
+setBounds();
+google.charts.setOnLoadCallback(drawHistogramCust);
+
+var lowerBound;
+var upperBound;
+
+function setBounds() {
+  fetch('/histdash')
+      .then((response) => {
+        return response.json();
+      })
+      .then((boundsJson) => {
+        lowerBound = boundsJson[0];
+        upperBound = boundsJson[1];
+
+        document.getElementById('lower-bound').value = lowerBound;
+        document.getElementById('upper-bound').value = upperBound;
+      });
+}
 
 /*
  * Callback that creates and populates the data table for region sizes,
  * instantiates the small histogram, passes in the data, and draws it.
  */
-function drawHistogramSmall() {
+function drawHistogramCust() {
   // Fetch the Json object from the Histogram servlet.
   fetch('/histogram')
       .then((response) => {
@@ -35,114 +50,56 @@ function drawHistogramSmall() {
       })
       .then((histogramJson) => {
         // Converts histogram Json 2D array into a data table for histogram.
-        var data = google.visualization.arrayToDataTable(histogramJson[0]);
+        var data = google.visualization.arrayToDataTable(histogramJson);
+
+        // Create a dashboard.
+        var dashboard = new google.visualization.Dashboard(
+            document.getElementById('dashboard-div'));
+
+        // Create a range slider, passing some options
+        // var lowerBound = document.getElementById('lower-bound').value;
+        // var upperBound = document.getElementById('upper-bound').value;
+        var histogramRangeSlider = new google.visualization.ControlWrapper({
+          'controlType': 'NumberRangeFilter',
+          'containerId': 'filter-div',
+          'options': {
+            'filterColumnLabel': 'Size',
+            'minValue': lowerBound,
+            'maxValue': upperBound,
+            ui: {
+              cssClass: 'hist-slider',
+              snapToData: true,
+              ticks: 1,
+              unitIncrement: 5,
+              blockIncrement: 100000
+            }
+          }
+        });
 
         // Set chart options.
         var options = {
-          title: 'Histogram of Region Sizes 0-250',
+          title: 'Histogram of Region Sizes',
           titleTextStyle: {color: '#5F6368', fontName: 'Roboto', fontSize: 18},
+          width: 1800,
+          height: 900,
           colors: ['#4285F4'],
           legend: {position: 'none'},
           hAxis: {title: 'Size in kB'},
           vAxis: {title: 'Number of Regions'}
         };
 
-        // Instantiate and draw chart, passing in some options.
-        chart = new google.visualization.Histogram(
-            document.getElementById('sm-hist-div'));
-        chart.draw(data, options);
-      });
-}
+        var histogram = new google.visualization.ChartWrapper({
+          chartType: 'Histogram',
+          dataTable: data,
+          options: options,
+          containerId: 'chart-div',
+          view: {columns: [0, 1]}
+        });
 
-/*
- * Callback that creates and populates the data table for region sizes,
- * instantiates the medium histogram, passes in the data, and draws it.
- */
-function drawHistogramMedium() {
-  // Fetch the Json object from the Histogram servlet.
-  fetch('/histogram')
-      .then((response) => {
-        return response.json();
-      })
-      .then((histogramJson) => {
-        // Converts histogram Json 2D array into a data table for histogram.
-        var data = google.visualization.arrayToDataTable(histogramJson[1]);
-
-        // Set chart options.
-        var options = {
-          title: 'Histogram of Region Sizes 250-5000',
-          titleTextStyle: {color: '#5F6368', fontName: 'Roboto', fontSize: 18},
-          colors: ['#4285F4'],
-          legend: {position: 'none'},
-          hAxis: {title: 'Size in kB'},
-          vAxis: {title: 'Number of Regions'}
-        };
+        // Establish dependencies
+        dashboard.bind(histogramRangeSlider, histogram);
 
         // Instantiate and draw chart, passing in some options.
-        chart = new google.visualization.Histogram(
-            document.getElementById('md-hist-div'));
-        chart.draw(data, options);
-      });
-}
-
-/*
- * Callback that creates and populates the data table for region sizes,
- * instantiates the large histogram, passes in the data, and draws it.
- */
-function drawHistogramLarge() {
-  // Fetch the Json object from the Histogram servlet.
-  fetch('/histogram')
-      .then((response) => {
-        return response.json();
-      })
-      .then((histogramJson) => {
-        // Converts histogram Json 2D array into a data table for histogram.
-        var data = google.visualization.arrayToDataTable(histogramJson[2]);
-
-        // Set chart options.
-        var options = {
-          title: 'Histogram of Region Sizes 5000-1000000',
-          titleTextStyle: {color: '#5F6368', fontName: 'Roboto', fontSize: 18},
-          colors: ['#4285F4'],
-          legend: {position: 'none'},
-          hAxis: {title: 'Size in kB'},
-          vAxis: {title: 'Number of Regions'}
-        };
-
-        // Instantiate and draw chart, passing in some options.
-        chart = new google.visualization.Histogram(
-            document.getElementById('lg-hist-div'));
-        chart.draw(data, options);
-      });
-}
-
-/*
- * Callback that creates and populates the data table for region sizes,
- * instantiates the extra large histogram, passes in the data, and draws it.
- */
-function drawHistogramXLarge() {
-  // Fetch the Json object from the Histogram servlet.
-  fetch('/histogram')
-      .then((response) => {
-        return response.json();
-      })
-      .then((histogramJson) => {
-        // Converts histogram Json 2D array into a data table for histogram.
-        var data = google.visualization.arrayToDataTable(histogramJson[3]);
-
-        // Set chart options.
-        var options = {
-          title: 'Histogram of Region Sizes 1000000 and up',
-          titleTextStyle: {color: '#5F6368', fontName: 'Roboto', fontSize: 18},
-          colors: ['#4285F4'],
-          legend: {position: 'none'},
-          hAxis: {title: 'Size in kB'},
-          vAxis: {title: 'Number of Regions'}
-        };
-
-        // Instantiate and draw chart, passing in some options.
-        chart = new google.visualization.Histogram(
-            document.getElementById('xl-hist-div'));
-        chart.draw(data, options);
+        dashboard.draw(data, options);
       });
 }

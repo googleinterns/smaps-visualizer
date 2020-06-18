@@ -24,8 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /** Servlet fires up homepage. */
-@WebServlet(name = "HistDash", value = "/histdash")
-public class HistDash extends HttpServlet {
+@WebServlet(name = "HistogramDashboard", value = "/histdash")
+public class HistogramDashboard extends HttpServlet {
   Long lowerBound = 4L;
   Long upperBound = 30000000L;
 

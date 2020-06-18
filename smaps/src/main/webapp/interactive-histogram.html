@@ -2,7 +2,7 @@
 
 <head>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script src="/js/hist-dash.js"></script>
+    <script src="/js/histogram.js"></script>
 
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -12,8 +12,8 @@
 </head>
 
 <body class="roboto" style="margin: 2em">
-    <div class="container">
-        <div class="row justify-content-md-center" style="height: 50px">
+    <div class="container histogram-container">
+        <div class="row justify-content-md-center smaps-title-row" style="height: 50px">
             <div class="col col-md-3">
                 <a href="/interactive-histogram.html" class="btn btn-blue btn-block active" role="button"
                     aria-pressed="true">Interactive Histogram</a>
@@ -32,15 +32,13 @@
                     <a href="/index.html" class="btn btn-gray btn-sm btn-sm-w">Select another file</a>
                 </div>
                 <div class="row">
-                    <a href="/log-page.html" class="btn btn-gray btn-sm btn-sm-w">Error log</a>
+                    <a href="/error-log.html" class="btn btn-gray btn-sm btn-sm-w">Error log</a>
                 </div>
             </div>
         </div>
-        <div class="row justify-content-md-center">
+        <div class="row justify-content-md-center vis-title-row">
             <p id="visualizer-title" class="ggray">Visualizer</p>
         </div>
-    </div>
-    <div class="container histogram-container">
         <div class="row">
             <div id="dashboard-div">
                 <div id="chart-div"></div>

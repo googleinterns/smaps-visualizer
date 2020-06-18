@@ -123,6 +123,15 @@ p {
     margin-bottom: 0.3em;
 }
 
+.smaps-title-row {
+    height: 3.1em;
+    width: 112.5em;
+}
+
+.vis-title-row {
+    width: 112.5em;
+}
+
 .histogram-container {
     margin-left: 20em;
     margin-right: 20em;

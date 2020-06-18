@@ -32,35 +32,22 @@ public class Histogram extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json");
 
-    // Data must be in the form of a 2D array to be parsed properly in histogram.js.
+    // Data must be in the form of a 2D array to be parsed properly in FIXME:.js.
     List<Region> regionList = FileParser.getRegionList("../smaps-full.txt");
-    List<ArrayList<Object[]>> dataArrays = makeDataArrays(regionList);
+    List<Object[]> histogramData = makeDataArray(regionList);
 
-    // Convert Java objects to Json objects.
-    List<String> histogramJsonList = new ArrayList<String>();
-    for (ArrayList<Object[]> d : dataArrays) {
-      Gson gson = new Gson();
-      String histogramJson = gson.toJson(d);
-      histogramJsonList.add(histogramJson);
-    }
+    Gson gson = new Gson();
+    String histogramDataJson = gson.toJson(histogramData);
 
-    // Write Json to histogram.js
-    response.getWriter().println(histogramJsonList);
+    // Write Json to FIXME:
+    response.getWriter().println(histogramDataJson);
   }
 
   /** Creates 2D array of data for histogram */
-  static ArrayList<ArrayList<Object[]>> makeDataArrays(List<Region> regions) {
+  static ArrayList<Object[]> makeDataArray(List<Region> regions) {
     // Array will contain both Strings and numbers, so must be of type Object.
-    ArrayList<Object[]> smallDataArray = new ArrayList<Object[]>();
-    ArrayList<Object[]> mediumDataArray = new ArrayList<Object[]>();
-    ArrayList<Object[]> largeDataArray = new ArrayList<Object[]>();
-    ArrayList<Object[]> xLargeDataArray = new ArrayList<Object[]>();
-    ArrayList<Object[]> allDataArray = new ArrayList<Object[]>();
-    addLabels(smallDataArray);
-    addLabels(mediumDataArray);
-    addLabels(largeDataArray);
-    addLabels(xLargeDataArray);
-    addLabels(allDataArray);
+    ArrayList<Object[]> dataArray = new ArrayList<Object[]>();
+    addLabels(dataArray);
 
     for (int i = 0; i < regions.size(); i++) {
       Region curR = regions.get(i);
@@ -69,27 +56,10 @@ public class Histogram extends HttpServlet {
       Object val = (Object) rSize;
       Object[] pair = {range, val};
 
-      allDataArray.add(pair);
-      if (rSize < 250) {
-        smallDataArray.add(pair);
-      } else if (rSize < 5000) {
-        mediumDataArray.add(pair);
-      } else if (rSize < 1000000) {
-        largeDataArray.add(pair);
-      } else {
-        xLargeDataArray.add(pair);
-      }
+      dataArray.add(pair);
     }
 
-    // Create a list of the all the data lists
-    ArrayList<ArrayList<Object[]>> dataArrays = new ArrayList<ArrayList<Object[]>>();
-    dataArrays.add(smallDataArray);
-    dataArrays.add(mediumDataArray);
-    dataArrays.add(largeDataArray);
-    dataArrays.add(xLargeDataArray);
-    dataArrays.add(allDataArray);
-
-    return dataArrays;
+    return dataArray;
   }
 
   static void addLabels(List<Object[]> array) {

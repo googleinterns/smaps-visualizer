@@ -35,10 +35,15 @@
     color: #5F6368;
 }
 
-/* Inputs */
-.form-control-file {
-    color: #5F6368;
+/* General Tags */
+body {
     font-family: 'Roboto', sans-serif;
+    margin: 2em;
+}
+
+p {
+    margin-top: 0.3em;
+    margin-bottom: 0.3em;
 }
 
 /* Buttons */
@@ -54,14 +59,14 @@
     border-color: #5F6368;
 }
 
+.btn-gray:focus {
+    box-shadow: 0 0 0 0.2rem rgba(95, 99, 104, .25);
+}
+
 a.btn.btn-gray.active {
     color: #FFFFFF;
     background-color: #5F6368;
     border-color: #5F6368;
-}
-
-.btn-gray:focus {
-    box-shadow: 0 0 0 0.2rem rgba(95, 99, 104, .25);
 }
 
 .btn-blue {
@@ -76,15 +81,15 @@ a.btn.btn-gray.active {
     border-color: #4285F4;
 }
 
+.btn-blue:focus {
+    box-shadow: 0 0 0 0.2rem rgba(66, 133, 244, .25);
+
+}
+
 a.btn.btn-blue.active {
     color: #FFFFFF;
     background-color: #4285F4;
     border-color: #4285F4;
-}
-
-.btn-blue:focus {
-    box-shadow: 0 0 0 0.2rem rgba(66, 133, 244, .25);
-
 }
 
 .btn-sm-w {
@@ -117,33 +122,14 @@ a.btn.btn-blue.active {
     text-decoration-style: underline;
 }
 
-#file-upload {
-    width: 112.5em;
-}
-
 /* Spacing */
-p {
-    margin-top: 0.3em;
-    margin-bottom: 0.3em;
-}
-
 .smaps-height {
     height: 3.1em;
 }
 
-.extended-row {
-    width: 112.5em;
-}
-
-.feature-container {
-    margin-left: 20em;
-    margin-right: 20em;
-}
-
-.index-container {
-    width: 112.5em;
-    margin-left: 20em;
-    margin-right: 20em;
+.histogram-container {
+    margin-left: 0em;
+    margin-right: 0em;
 }
 
 /* Charts */
@@ -153,13 +139,12 @@ p {
 
 #dashboard-div {
     align-content: left;
-    margin: 0.5em;
 }
 
 .interactive-hist-form {
     width: 8em;
-    margin-left: 17em;
 }
+
 .hist-slider {
     color: #4285F4;
     white-space: nowrap;

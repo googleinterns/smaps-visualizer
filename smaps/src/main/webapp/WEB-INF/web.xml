@@ -23,12 +23,12 @@ limitations under the License.
   </welcome-file-list>
 
   <servlet>
-    <servlet-name>HistogramDashboard</servlet-name>
-    <servlet-class>HistogramDashboard</servlet-class>
+    <servlet-name>Histogram</servlet-name>
+    <servlet-class>Histogram</servlet-class>
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>HistogramDashboard</servlet-name>
-    <url-pattern>/histdash</url-pattern>
+    <servlet-name>Histogram</servlet-name>
+    <url-pattern>/histogram</url-pattern>
   </servlet-mapping>
 </web-app>

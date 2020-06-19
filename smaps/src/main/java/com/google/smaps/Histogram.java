@@ -42,9 +42,20 @@ public class Histogram extends HttpServlet {
     String upper = request.getParameter("upper-bound");
     postFired = true;
 
-    // Set lower and upper bound variables to be from the user input.
-    lowerBound = Long.parseLong(lower);
-    upperBound = Long.parseLong(upper);
+    // In case user entered a number with .0 as the decimal, cast to long to drop the decimal,
+    // otherwise just convert the String to a Long.
+    if (lower.contains(".")) {
+      double lowerDecimal = Double.parseDouble(lower);
+      lowerBound = (long) lowerDecimal;
+    } else {
+      lowerBound = Long.parseLong(lower);
+    }
+    if (upper.contains(".")) {
+      double upperDecimal = Double.parseDouble(upper);
+      upperBound = (long) upperDecimal;
+    } else {
+      upperBound = Long.parseLong(upper);
+    }
 
     // Reload the interactive-histogram.html.
     response.sendRedirect("/interactive-histogram.html");

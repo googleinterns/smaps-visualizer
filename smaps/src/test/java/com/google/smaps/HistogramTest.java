@@ -69,7 +69,7 @@ public class HistogramTest {
   }
 
   @Test
-  public void doGetWritesJson() throws Exception {
+  public void doGet_writesResponse() throws Exception {
     // Tests that response is named properly and holds at least the labels and min/max for the Json.
     servletUnderTest.doGet(mockRequest, mockResponse);
     assertThat(responseWriter.toString())

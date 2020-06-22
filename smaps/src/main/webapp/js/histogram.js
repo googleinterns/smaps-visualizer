@@ -22,8 +22,8 @@ setBounds();
 // Set a callback to run when the Google Visualization API is loaded.
 google.charts.setOnLoadCallback(drawHistogramCust);
 
-var lowerBound;  // lower bound of sizes, either preset or chosen by user
-var upperBound;  // upper bound of sizes, either preset or chosen by user
+var lowerBound;  // Lower bound of sizes, either preset or chosen by user.
+var upperBound;  // Upper bound of sizes, either preset or chosen by user.
 
 /*
  * Sets the global variables lowerBound and upperBound to be the
@@ -105,7 +105,7 @@ function drawHistogramCust() {
           view: {columns: [0, 1]}
         });
 
-        // Establishes dependencies
+        // Establishes dependencies.
         dashboard.bind(histogramRangeSlider, histogram);
 
         // Instantiates and draws the chart, passing in some options.

@@ -26,14 +26,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet retrieves histogram information and formats it into a Json array for creating the chart
+ * Retrieves histogram information and formats it into a Json array for creating the chart
  * and dashboard tools in histogram.js.
  */
 @WebServlet(name = "Histogram", value = "/histogram")
 public class Histogram extends HttpServlet {
-  static long lowerBound; // used to populate the lower bound text box and slider min
-  static long upperBound; // used to populate the upper bound text box and slider max
-  static boolean postFired = false; // flag indicating whether a user has entered info in textbox
+  // Used to populate the lower bound text box and slider min.
+  static long lowerBound;
+  // Used to populate the upper bound text box and slider max.
+  static long upperBound;
+  // Flag indicating whether a user has entered info in textbox.
+  static boolean postFired = false;
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -45,14 +48,12 @@ public class Histogram extends HttpServlet {
     // In case user entered a number with .0 as the decimal, cast to long to drop the decimal,
     // otherwise just convert the String to a Long.
     if (lower.contains(".")) {
-      double lowerDecimal = Double.parseDouble(lower);
-      lowerBound = (long) lowerDecimal;
+      lowerBound = (long) Double.parseDouble(lower);
     } else {
       lowerBound = Long.parseLong(lower);
     }
     if (upper.contains(".")) {
-      double upperDecimal = Double.parseDouble(upper);
-      upperBound = (long) upperDecimal;
+      upperBound = (long) Double.parseDouble(upper);
     } else {
       upperBound = Long.parseLong(upper);
     }
@@ -63,10 +64,13 @@ public class Histogram extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    // Response will be a Json.
     response.setContentType("application/json");
+
+    // TODO(sophbohr22): Change this from a hardcoded file to be the one the user uploads.
     List<Region> regionList = FileParser.getRegionList("../smaps-full.txt");
 
-    // Parse histogram data
+    // Parse histogram data.
     List<Object[]> histogramData = makeDataArray(regionList);
 
     // If the user hasn't entered custom bounds yet, use the min and max from regions list.
@@ -94,7 +98,7 @@ public class Histogram extends HttpServlet {
     response.getWriter().println(jsonList);
   }
 
-  /** Creates list of 2D Object arrays of data for histogram */
+  /** Creates list of 2D Object arrays of data for histogram. */
   static ArrayList<Object[]> makeDataArray(List<Region> regions) {
     // List must contain both Strings and numbers, so must be of type Object.
     ArrayList<Object[]> dataArray = new ArrayList<Object[]>();
@@ -117,6 +121,11 @@ public class Histogram extends HttpServlet {
 
   /** Set the two global bounds variables to be the min and max sizes of regions in the list. */
   static void setMinMax(List<Region> regions) {
+    // Ensure the list isn't empty.
+    if (regions.size() == 0) {
+      return;
+    }
+
     long min = regions.get(0).size();
     long max = regions.get(0).size();
 

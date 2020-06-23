@@ -45,18 +45,9 @@ public class Histogram extends HttpServlet {
     String upper = request.getParameter("upper-bound");
     postFired = true;
 
-    // In case user entered a number with .0 as the decimal, cast to long to drop the decimal,
-    // otherwise just convert the String to a Long.
-    if (lower.contains(".")) {
-      lowerBound = (long) Double.parseDouble(lower);
-    } else {
-      lowerBound = Long.parseLong(lower);
-    }
-    if (upper.contains(".")) {
-      upperBound = (long) Double.parseDouble(upper);
-    } else {
-      upperBound = Long.parseLong(upper);
-    }
+    // Parse the bound from user input and set to global variables
+    lowerBound = parseBound(lower);
+    upperBound = parseBound(upper);
 
     // Reload the interactive-histogram.html.
     response.sendRedirect("/interactive-histogram.html");
@@ -79,9 +70,7 @@ public class Histogram extends HttpServlet {
     }
 
     // Construct 2D array to hold the bounds.
-    long[] bounds = new long[2];
-    bounds[0] = lowerBound;
-    bounds[1] = upperBound;
+    long[] bounds = {lowerBound, upperBound};
 
     // Transfer the Java Object arrays into JavaScript Objects (Json).
     Gson boundsGson = new Gson();
@@ -96,6 +85,21 @@ public class Histogram extends HttpServlet {
 
     // Write Json to histogram.js
     response.getWriter().println(jsonList);
+  }
+
+  /**
+   * Returns the input from the forms in interactive-histogram.html parsed as a long. The bound
+   * input forms in interactive-histogram.html only allow positive integers, but accept numbers with
+   * .0, so in that case drop the decimal when parsing.
+   */
+  public long parseBound(String bound) {
+    long parsedBound;
+    if (bound.contains(".")) {
+      parsedBound = (long) Double.parseDouble(bound);
+    } else {
+      parsedBound = Long.parseLong(bound);
+    }
+    return parsedBound;
   }
 
   /** Creates list of 2D Object arrays of data for histogram. */
@@ -115,14 +119,13 @@ public class Histogram extends HttpServlet {
       Object[] pair = {range, val};
       dataArray.add(pair);
     }
-
     return dataArray;
   }
 
   /** Set the two global bounds variables to be the min and max sizes of regions in the list. */
   static void setMinMax(List<Region> regions) {
     // Ensure the list isn't empty.
-    if (regions.size() == 0) {
+    if (regions.isEmpty()) {
       return;
     }
 

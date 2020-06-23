@@ -92,7 +92,7 @@ function drawHistogramCust() {
           height: 900,
           colors: ['#4285F4'],
           legend: {position: 'none'},
-          hAxis: {title: 'Size in kB'},
+          hAxis: {title: 'Size in KiB'},
           vAxis: {title: 'Number of Regions'}
         };
 

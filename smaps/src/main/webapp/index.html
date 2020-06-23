@@ -24,15 +24,17 @@ limitations under the License.
     <title>Smaps Visualizer</title>
 </head>
 
-<body class="roboto" style="margin: 2em">
+<body>
     <div class="container">
-        <div class="row justify-content-md-center" style="height: 50px">
-            <div id="smaps-title">
-                <span class="gblue">s</span>
-                <span class="gred">m</span>
-                <span class="gyellow">a</span>
-                <span class="gblue">p</span>
-                <span class="ggreen">s</span>
+        <div class="row justify-content-md-center smaps-height">
+            <div class="col-md-12">
+                <div id="smaps-title">
+                    <span class="gblue">s</span>
+                    <span class="gred">m</span>
+                    <span class="gyellow">a</span>
+                    <span class="gblue">p</span>
+                    <span class="ggreen">s</span>
+                </div>
             </div>
         </div>
         <div class="row justify-content-md-center">
@@ -41,25 +43,22 @@ limitations under the License.
         <div class="row justify-content-md-center">
             <p>This application takes a process' smaps and creates useful charts/visualizations from it.</p>
         </div>
-        <form action="/charts-page.html" method="POST" enctype="multipart/form-data"
+        <form action="/interactive-histogram.html" method="POST" enctype="multipart/form-data"
             class="row justify-content-md-center">
-            <div class="col col-md-3 text-center">
+            <div class="col col-md-2 offset-md-3">
                 <label class="btn btn-gray">
-                    Select an smaps file <input type="file" name="fileToUpload" hidden>
+                    Select smaps file <input type="file" name="fileToUpload" hidden>
                 </label>
             </div>
-            <div class=" col col-md-auto">
+            <div class=" col col-md-2 offset-md-1">
                 <p>No file uploaded yet...</p>
             </div>
-            <div class="col col-md-2">
+            <div class="col col-md-4">
                 <label class="btn btn-blue btn-sm">
                     UPLOAD <input type="submit" hidden>
                 </label>
             </div>
         </form>
-        <div class="row justify-content-md-center fixed-bottom">
-            <p><a id="appengine-info-link" href='/home'>App Engine System Information</a></p>
-        </div>
     </div>
 </body>
 

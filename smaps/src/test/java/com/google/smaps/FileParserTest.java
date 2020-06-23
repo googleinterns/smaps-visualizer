@@ -34,7 +34,8 @@ public class FileParserTest {
   private List<Region> regions;
 
   @Before
-  public void setUp() throws Exception {
+  @Test
+  public void createRegionsList() throws Exception {
     // Creates regions list from smaps-full.txt file.
     String filePathname = "../smaps-full.txt";
     regions = FileParser.getRegionList(filePathname);

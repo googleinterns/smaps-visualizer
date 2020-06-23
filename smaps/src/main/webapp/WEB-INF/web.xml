@@ -21,4 +21,14 @@ limitations under the License.
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
+
+  <servlet>
+    <servlet-name>Histogram</servlet-name>
+    <servlet-class>Histogram</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>Histogram</servlet-name>
+    <url-pattern>/histogram</url-pattern>
+  </servlet-mapping>
 </web-app>

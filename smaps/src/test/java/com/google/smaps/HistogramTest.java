@@ -16,11 +16,13 @@
 package com.google.smaps;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.junit.After;
@@ -32,53 +34,67 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 /**
- * Unit tests for {@link Homepage}.
+ * Unit tests for {@link Histogram}.
  */
 @RunWith(JUnit4.class)
-public class HomepageTest {
-  private static final String FAKE_URL = "fake.fk/home";
-  // Set up a helper so that the ApiProxy returns a valid environment for local testing.
+public class HistogramTest {
+  private static final String FAKE_URL = "fake.fk/histogram";
   private final LocalServiceTestHelper helper = new LocalServiceTestHelper();
 
   @Mock private HttpServletRequest mockRequest;
   @Mock private HttpServletResponse mockResponse;
   private StringWriter responseWriter;
-  private Homepage servletUnderTest;
+  private Histogram servletUnderTest;
 
   @Before
   public void setUp() throws Exception {
+    // Sets up the servlet and mock request and response.
     MockitoAnnotations.initMocks(this);
     helper.setUp();
 
-    //  Set up some fake HTTP requests
+    //  Sets up some fake HTTP requests
     when(mockRequest.getRequestURI()).thenReturn(FAKE_URL);
 
-    // Set up a fake HTTP response.
+    // Sets up a fake HTTP response.
     responseWriter = new StringWriter();
     when(mockResponse.getWriter()).thenReturn(new PrintWriter(responseWriter));
 
-    servletUnderTest = new Homepage();
+    servletUnderTest = new Histogram();
   }
 
   @After
   public void tearDown() {
+    // Tears down the Servlet after tests are done.
     helper.tearDown();
   }
 
   @Test
   public void doGet_writesResponse() throws Exception {
+    // Tests that response is named properly and holds at least the labels and min/max for the Json.
     servletUnderTest.doGet(mockRequest, mockResponse);
-
-    // We expect our homepage response.
-    assertThat(responseWriter.toString()).named("Homepage response").contains("Info - Standard ");
+    assertThat(responseWriter.toString())
+        .named("Histogram response")
+        .contains("[\"Range\",\"Size\"]");
+    assertThat(responseWriter.toString()).named("Histogram response").contains("[4,20832256]");
   }
 
   @Test
-  public void homepageProjInfo() {
-    String result = Homepage.getProjInfo();
-    assertThat(result)
-        .named("Homepage.getProjInfo")
-        .containsMatch(
-            "This application takes a process' smaps and creates useful charts/visualizations from it.");
+  public void dataArray() {
+    // Tests creation of list of Object arrays for histogram from regions list.
+    String filePathname = "../smaps-full.txt";
+    List<Region> regions = FileParser.getRegionList(filePathname);
+    List<Object[]> dataArray = servletUnderTest.makeDataArray(regions);
+
+    // Checks labels.
+    assertEquals("Range", dataArray.get(0)[0]);
+    assertEquals("Size", dataArray.get(0)[1]);
+
+    // Checks first entry.
+    assertEquals("16ec0000000 - 16efa600000", dataArray.get(1)[0]);
+    assertEquals(956416L, dataArray.get(1)[1]);
+
+    // Checks last entry.
+    assertEquals("ffffffffff600000 - ffffffffff601000", dataArray.get(1072)[0]);
+    assertEquals(4L, dataArray.get(1072)[1]);
   }
 }

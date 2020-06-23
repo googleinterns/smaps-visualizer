@@ -33,7 +33,8 @@ public class RegionTest {
   private Region r;
 
   @Before
-  public void setUp() throws Exception {
+  @Test
+  public void setFields() throws Exception {
     // Sets up a fake Region object.
     Region.Builder region = Region.builder();
     region.setLineNumber(1);
@@ -72,7 +73,7 @@ public class RegionTest {
   }
 
   @Test
-  public void regionCreation() {
+  public void getFields() {
     // Tests each field was set properly.
     assertEquals(1, r.lineNumber());
     assertEquals("16ec0000000", r.startLoc());

@@ -93,13 +93,10 @@ public class Histogram extends HttpServlet {
    * .0, so in that case drop the decimal when parsing.
    */
   public long parseBound(String bound) {
-    long parsedBound;
     if (bound.contains(".")) {
-      parsedBound = (long) Double.parseDouble(bound);
-    } else {
-      parsedBound = Long.parseLong(bound);
+      return (long) Double.parseDouble(bound);
     }
-    return parsedBound;
+    return Long.parseLong(bound);
   }
 
   /** Creates list of 2D Object arrays of data for histogram. */

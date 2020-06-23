@@ -18,41 +18,70 @@ package com.google.smaps;
 import com.google.auto.value.AutoValue;
 import java.util.List;
 
-/**
- * Represents a region of memory from the dump.
- */
+/** Represents a region of memory from the dump. */
 @AutoValue
 abstract class Region {
-  // TODO(sophbohr22): Add Javadoc comments for each of these fields.
+  // The line number of the first line of the region print-out.
   abstract int lineNumber();
+  // The start of the address space.
   abstract String startLoc();
+  // The end of the address space.
   abstract String endLoc();
+  // Permissions for the region: (R)ead, (W)rite, E(X)ecute, (S)hared, (P)rivate.
   abstract String permissions();
+  // Region offset.
   abstract String offset();
+  // The device (major:minor).
   abstract String device();
+  // The inode on the device.
   abstract long inode();
+  // The file associated with this mapping, If the pathname has been unlinked, the symbolic link
+  // will contain the string '(deleted)'.
   abstract String pathname();
+  // Size of the mapping.
   abstract long size();
+  // The page size used by the kernel to back the virtual memory area.
   abstract long kernelPageSize();
+  // The page size used by the MMU.
   abstract long mmuPageSize();
+  // The amount that is currently resident in RAM.
   abstract long rss();
+  // The process' proportional share of this mapping.
   abstract long pss();
+  // Number of shared clean pages.
   abstract long sharedClean();
+  // Number of shared dirty pages.
   abstract long sharedDirty();
+  // Number of private clean pages.
   abstract long privateClean();
+  // Number of private dirty pages.
   abstract long privateDirty();
+  // The amount of memory currently marked as referenced or accessed.
   abstract long referenced();
+  // The amount of memory that does not belong to any file.
   abstract long anonymous();
+  // The amount of memory marked by madvise(2).
   abstract long lazyFree();
+  // Non-file backed huge pages mapped into user-space page tables.
   abstract long anonHugePages();
+  // Memory used by shared memory and allocated with huge pages.
   abstract long shmemHugePages();
+  // Shared memory mapped into user space with huge pages.
   abstract long shmemPmdMapped();
+  // The amount of shared memory consumed by huge pages.
   abstract long sharedHugetlb();
+  // The amount of private memory consumed by huge pages.
   abstract long privateHugetlb();
+  // Sum of the previous two fields.
   abstract long hugePFNMap();
+  // How much would-be-anonymous memory is also used, but out on swap.
   abstract long swap();
+  // Shows proportional swap share of this mapping, does not take into account swapped out page of
+  // underlying shmem objects.
   abstract long swapPss();
+  // Indicates whether the mapping is locked in memory or not.
   abstract long locked();
+  // The kernel flags associated with the virtual memory area, encoded using two-letter codes.
   abstract List<String> vmFlags();
 
   static Builder builder() {

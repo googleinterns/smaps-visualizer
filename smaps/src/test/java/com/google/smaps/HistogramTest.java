@@ -70,12 +70,11 @@ public class HistogramTest {
 
   @Test
   public void doGet_writesResponse() throws Exception {
-    // Tests that response is named properly and holds at least the labels and min/max for the Json.
+    // Tests that response is named properly and holds at least the labels for the Json.
     servletUnderTest.doGet(mockRequest, mockResponse);
     assertThat(responseWriter.toString())
         .named("Histogram response")
         .contains("[\"Range\",\"Size\"]");
-    assertThat(responseWriter.toString()).named("Histogram response").contains("[4,20832256]");
   }
 
   @Test

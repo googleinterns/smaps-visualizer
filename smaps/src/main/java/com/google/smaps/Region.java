@@ -38,23 +38,27 @@ abstract class Region {
   // The file associated with this mapping, If the pathname has been unlinked, the symbolic link
   // will contain the string '(deleted)'.
   abstract String pathname();
-  // Size of the mapping.
+  // Size of the mapping in KiB.
   abstract long size();
   // The page size used by the kernel to back the virtual memory area.
   abstract long kernelPageSize();
   // The page size used by the MMU.
   abstract long mmuPageSize();
-  // The amount that is currently resident in RAM.
+  // The amount memory that is currently resident in RAM.
   abstract long rss();
   // The process' proportional share of this mapping.
   abstract long pss();
-  // Number of shared clean pages.
+  // Number of shared clean pages - memory bytes that are shared with another process that have not
+  // been modified since their mapping.
   abstract long sharedClean();
-  // Number of shared dirty pages.
+  // Number of shared dirty pages - memory bytes that are shared with another process that have been
+  // modified since their mapping.
   abstract long sharedDirty();
-  // Number of private clean pages.
+  // Number of private clean pages - memory bytes that are not shared with another process that have
+  // not been modified since their mapping.
   abstract long privateClean();
-  // Number of private dirty pages.
+  // Number of private dirty pages - memory bytes that are not shared with another process that have
+  // been modified since their mapping.
   abstract long privateDirty();
   // The amount of memory currently marked as referenced or accessed.
   abstract long referenced();
@@ -72,7 +76,7 @@ abstract class Region {
   abstract long sharedHugetlb();
   // The amount of private memory consumed by huge pages.
   abstract long privateHugetlb();
-  // Sum of the previous two fields.
+  // Sum of the previous two fields (sharedHugetlb and privateHugetlb).
   abstract long hugePFNMap();
   // How much would-be-anonymous memory is also used, but out on swap.
   abstract long swap();
@@ -81,7 +85,8 @@ abstract class Region {
   abstract long swapPss();
   // Indicates whether the mapping is locked in memory or not.
   abstract long locked();
-  // The kernel flags associated with the virtual memory area, encoded using two-letter codes.
+  // The kernel flags associated with the virtual memory area, encoded using two-letter codes. These
+  // share a variety of details about a memory segment.
   abstract List<String> vmFlags();
 
   static Builder builder() {

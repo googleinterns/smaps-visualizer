@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -30,25 +31,26 @@ import javax.servlet.http.Part;
 import org.apache.commons.io.FileUtils;
 
 /**
- * Retrieves
+ * Retrieves the uploaded file from the user and then saves it to the tmp directory.
  */
+@MultipartConfig
 @WebServlet(name = "FileUpload", value = "/fileupload")
 public class FileUpload extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-    // Clears the temp directory of any prior upload.
-    File tempDirectory = new File("./temp");
-    FileUtils.cleanDirectory(tempDirectory);
+    // Clears the tmp directory of any prior upload.
+    File tmpDirectory = new File("./tmp");
+    FileUtils.cleanDirectory(tmpDirectory);
 
     // Gets the file chosen by the user.
     Part filePart = request.getPart("smapsFile");
 
-    // Gets the InputStream to eventually store the file in temp directory.
+    // Gets the InputStream to eventually store the file in tmp directory.
     InputStream fileInputStream = filePart.getInputStream();
 
-    // Copy the uploaded file to the server.
-    File fileToSave = new File("./temp/smaps-upload.txt");
+    // Copies the uploaded file to the server and rename it smaps-upload.txt.
+    File fileToSave = new File("./tmp/smaps-upload.txt");
     Files.copy(fileInputStream, fileToSave.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
     // Resets the postFired flag in Histogram.java so that the slider and textboxes will start with

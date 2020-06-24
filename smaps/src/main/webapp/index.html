@@ -43,26 +43,9 @@ limitations under the License.
         <div class="row justify-content-md-center">
             <p>This application takes a process' smaps and creates useful charts/visualizations from it.</p>
         </div>
-        <form action="/interactive-histogram.html" method="POST" enctype="multipart/form-data"
-            class="row justify-content-md-center">
-            <div class="col col-md-2 offset-md-3">
-                <label class="btn btn-gray">
-                    Select smaps file <input type="file" name="fileToUpload" hidden>
-                </label>
-            </div>
-            <div class=" col col-md-2 offset-md-1">
-                <p>No file uploaded yet...</p>
-            </div>
-            <div class="col col-md-4">
-                <label class="btn btn-blue btn-sm">
-                    UPLOAD <input type="submit" hidden>
-                </label>
-            </div>
-        </form>
-        <div class="row">
+        <div class="row justify-content-md-center">
             <form action="/fileupload" method="POST" enctype="multipart/form-data">
-                <input type="file" name="smapsFile">
-                <br /><br />
+                <input type="file" id="smapsFile" name="smapsFile" value="Select smaps file" />
                 <input type="submit" value="UPLOAD">
             </form>
         </div>

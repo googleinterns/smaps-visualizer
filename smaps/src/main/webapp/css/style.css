@@ -47,6 +47,10 @@ p {
 }
 
 /* Buttons */
+.btn {
+    cursor: pointer;
+}
+
 .btn-gray{
     color: #5F6368;
     border-color: #5F6368;
@@ -127,20 +131,7 @@ a.btn.btn-blue.active {
     height: 3.1em;
 }
 
-.histogram-container {
-    margin-left: 0em;
-    margin-right: 0em;
-}
-
-/* Charts */
-#filter-div {
-    text-align: center;
-}
-
-#dashboard-div {
-    align-content: left;
-}
-
+/* Histogram */
 .interactive-hist-form {
     width: 8em;
 }

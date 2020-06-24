@@ -58,8 +58,8 @@ public class Histogram extends HttpServlet {
     // Response will be a Json.
     response.setContentType("application/json");
 
-    // TODO(sophbohr22): Change this from a hardcoded file to be the one the user uploads.
-    List<Region> regionList = FileParser.getRegionList("../smaps-full.txt");
+    // Parse the file from the user upload.
+    List<Region> regionList = FileParser.getRegionList("./tmp/smaps-upload.txt");
 
     // Parse histogram data.
     List<Object[]> histogramData = makeDataArray(regionList);
@@ -85,6 +85,11 @@ public class Histogram extends HttpServlet {
 
     // Write Json to histogram.js
     response.getWriter().println(jsonList);
+  }
+
+  public static void setNewUpload() {
+    postFired = false;
+    return;
   }
 
   /**

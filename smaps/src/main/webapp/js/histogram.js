@@ -16,7 +16,6 @@
 
 // Load the Visualization API and the histogram package.
 google.charts.load('current', {'packages': ['corechart', 'controls']});
-
 // Set the bounds for the slider and text boxes.
 setBounds();
 // Set a callback to run when the Google Visualization API is loaded.
@@ -88,7 +87,6 @@ function drawHistogramCust() {
         var options = {
           title: 'Histogram of Region Sizes',
           titleTextStyle: {color: '#5F6368', fontName: 'Roboto', fontSize: 18},
-          width: 2000,
           height: 900,
           colors: ['#4285F4'],
           legend: {position: 'none'},

@@ -17,6 +17,8 @@ limitations under the License.
 <html>
 
 <head>
+    <script type="text/javascript" src="/js/index.js"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -43,22 +45,15 @@ limitations under the License.
         <div class="row justify-content-md-center">
             <p>This application takes a process' smaps and creates useful charts/visualizations from it.</p>
         </div>
-        <form action="/interactive-histogram.html" method="POST" enctype="multipart/form-data"
-            class="row justify-content-md-center">
-            <div class="col col-md-2 offset-md-3">
-                <label class="btn btn-gray">
-                    Select smaps file <input type="file" name="fileToUpload" hidden>
-                </label>
-            </div>
-            <div class=" col col-md-2 offset-md-1">
-                <p>No file uploaded yet...</p>
-            </div>
-            <div class="col col-md-4">
-                <label class="btn btn-blue btn-sm">
-                    UPLOAD <input type="submit" hidden>
-                </label>
-            </div>
-        </form>
+        <div class="row justify-content-md-center">
+            <form action="/fileupload" method="POST" enctype="multipart/form-data">
+                <input type="file" id="smapsFile" name="smapsFile" />
+                <input type="submit" value="UPLOAD SMAPS FILE">
+            </form>
+        </div>
+        <div class="row justify-content-md-center">
+            <p id="error-message" name="error-message"></p>
+        </div>
     </div>
 </body>
 

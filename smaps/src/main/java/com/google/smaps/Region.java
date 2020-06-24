@@ -44,7 +44,7 @@ abstract class Region {
   abstract long kernelPageSize();
   // The page size used by the MMU.
   abstract long mmuPageSize();
-  // The amount memory that is currently resident in RAM.
+  // The amount of memory that is currently resident in RAM.
   abstract long rss();
   // The process' proportional share of this mapping.
   abstract long pss();

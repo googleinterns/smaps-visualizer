@@ -126,6 +126,10 @@ a.btn.btn-blue.active {
     text-decoration-style: underline;
 }
 
+#error-message {
+    color: #DB4437;
+}
+
 /* Spacing */
 .smaps-height {
     height: 3.1em;

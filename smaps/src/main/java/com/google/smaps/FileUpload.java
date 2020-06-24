@@ -46,7 +46,7 @@ public class FileUpload extends HttpServlet {
     // Clears the tmp directory of any prior upload.
     File tmpDirectory = new File("./tmp");
     FileUtils.cleanDirectory(tmpDirectory);
-    // Resets the error message
+    // Resets the error message.
     errorMessage = "";
 
     // Gets the file chosen by the user.
@@ -80,9 +80,8 @@ public class FileUpload extends HttpServlet {
       throws IOException, ServletException {
     // Transfer the String into JavaScript Object (Json).
     Gson gson = new Gson();
-    // String[] errorJson = new String[1];
     String errorJson = gson.toJson(errorMessage);
-    // Write Json to index.js
+    // Write Json to index.js.
     response.getWriter().println(errorJson);
   }
 }

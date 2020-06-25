@@ -29,7 +29,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
-import org.apache.commons.io.FileUtils;
 
 /**
  * Retrieves the uploaded file from the user and then saves it to the tmp directory.
@@ -43,9 +42,6 @@ public class FileUpload extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-    // Clears the tmp directory of any prior upload.
-    File tmpDirectory = new File("./tmp");
-    FileUtils.cleanDirectory(tmpDirectory);
     // Resets the error message.
     errorMessage = "";
 
@@ -63,7 +59,7 @@ public class FileUpload extends HttpServlet {
       InputStream fileInputStream = filePart.getInputStream();
 
       // Copies the uploaded file to the server and rename it smaps-upload.txt.
-      File fileToSave = new File("./tmp/smaps-upload.txt");
+      File fileToSave = new File("/tmp/smaps-upload.txt");
       Files.copy(fileInputStream, fileToSave.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
       // Resets the postFired flag in Histogram.java so that the slider and textboxes will start

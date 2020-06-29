@@ -31,9 +31,9 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "Histogram", value = "/histogram")
 public class Histogram extends HttpServlet {
-  // Used to populate the lower bound text box and slider min, stores the user chosen bounds.
+  // Used to populate the lower bound text box and slider min, stores the user chosen lower bound.
   static long lowerBound;
-  // Used to populate the upper bound text box and slider max, stores the user chosen bounds.
+  // Used to populate the upper bound text box and slider max, stores the user chosen upper bound.
   static long upperBound;
   // Stores the minimum region size from entire address space.
   static long minBound;

@@ -44,14 +44,22 @@ public class Histogram extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Get numbers from form in interactive-histogram.html.
-    String lower = request.getParameter("lower-bound");
-    String upper = request.getParameter("upper-bound");
-    postFired = true;
+    // Check whether the reset button was clicked or not.
+    String resetButton = request.getParameter("reset-bounds-btn");
+    if (resetButton != null) {
+      // Set the bounds to be the extrema.
+      lowerBound = minBound;
+      upperBound = maxBound;
+    } else {
+      // Get numbers from form in interactive-histogram.html.
+      String lower = request.getParameter("lower-bound");
+      String upper = request.getParameter("upper-bound");
+      // Parse the bound from user input and set the bounds to the chosen bounds.
+      lowerBound = parseBound(lower);
+      upperBound = parseBound(upper);
+    }
 
-    // Parse the bound from user input and set to global variables
-    lowerBound = parseBound(lower);
-    upperBound = parseBound(upper);
+    postFired = true;
 
     // Reload the interactive-histogram.html.
     response.sendRedirect("/interactive-histogram.html");
@@ -68,27 +76,23 @@ public class Histogram extends HttpServlet {
     // Parse histogram data.
     List<Object[]> histogramData = makeDataArray(regionList);
 
-    // If the user hasn't entered custom bounds yet, use the min and max from regions list.
+    // If the user hasn't entered custom bounds yet, use the initial min and max from regions list.
     if (!postFired) {
       setMinMax(regionList);
     }
 
-    // Construct 2D array to hold the chosen bounds and extrema.
+    // Construct 2D array to hold the chosen bounds.
     long[] bounds = {lowerBound, upperBound};
-    long[] extrema = {minBound, maxBound};
 
     // Transfer the Java Object arrays into JavaScript Objects (Json).
     Gson boundsGson = new Gson();
-    Gson extremaGson = new Gson();
     Gson histGson = new Gson();
     String histogramDataJson = histGson.toJson(histogramData);
-    String extremaJson = extremaGson.toJson(extrema);
     String boundsJson = boundsGson.toJson(bounds);
 
     // Put the two Json strings into a list to send to histogram.js.
     List<String> jsonList = new ArrayList<String>();
     jsonList.add(boundsJson);
-    jsonList.add(extremaJson);
     jsonList.add(histogramDataJson);
 
     // Write Json to histogram.js

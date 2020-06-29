@@ -46,26 +46,6 @@ function setBounds() {
 }
 
 /*
- * Called from clicking "reset bounds" button from the histogram page, resets
- * the bounds in the textboxes of the graph to the total range of region sizes.
- */
-function resetBounds() {
-  fetch('/histogram')
-      .then((response) => {
-        return response.json();
-      })
-      .then((histogramJson) => {
-        // The extrema are in the second index of the Json, so histogramJson[1].
-        lowerBound = histogramJson[1][0];
-        upperBound = histogramJson[1][1];
-
-        // Set the textbox values to be the chosen bounds.
-        document.getElementById('lower-bound').value = lowerBound;
-        document.getElementById('upper-bound').value = upperBound;
-      });
-}
-
-/*
  * Callback that creates and populates the data table for region sizes,
  * instantiates the histogram, passes in the data, and draws it.
  */
@@ -79,7 +59,7 @@ function drawHistogramCust() {
         // Converts histogram Json 2D array into a data table for histogram. The
         // histogram data is in the second index of the Json, so
         // histogramJson[1].
-        var data = google.visualization.arrayToDataTable(histogramJson[2]);
+        var data = google.visualization.arrayToDataTable(histogramJson[1]);
 
         // Creates the dashboard.
         var dashboard = new google.visualization.Dashboard(

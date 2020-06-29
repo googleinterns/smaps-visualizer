@@ -31,9 +31,9 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "Histogram", value = "/histogram")
 public class Histogram extends HttpServlet {
-  // Used to populate the lower bound text box and slider min, stores the user chosen lower bound.
+  // Used to populate the lower bound text box and slider min.
   static long lowerBound;
-  // Used to populate the upper bound text box and slider max, stores the user chosen upper bound.
+  // Used to populate the upper bound text box and slider max.
   static long upperBound;
   // Stores the minimum region size from entire address space.
   static long minBound;
@@ -47,11 +47,11 @@ public class Histogram extends HttpServlet {
     // Check whether the reset button was clicked or not.
     String resetButton = request.getParameter("reset-bounds-btn");
     if (resetButton != null) {
-      // Set the bounds to be the extrema.
+      // Reset was clicked, so set the bounds to be the extrema.
       lowerBound = minBound;
       upperBound = maxBound;
     } else {
-      // Get numbers from form in interactive-histogram.html.
+      // Get user-chosen numbers from form in interactive-histogram.html.
       String lower = request.getParameter("lower-bound");
       String upper = request.getParameter("upper-bound");
       // Parse the bound from user input and set the bounds to the chosen bounds.
@@ -79,6 +79,8 @@ public class Histogram extends HttpServlet {
     // If the user hasn't entered custom bounds yet, use the initial min and max from regions list.
     if (!postFired) {
       setMinMax(regionList);
+      lowerBound = minBound;
+      upperBound = maxBound;
     }
 
     // Construct 2D array to hold the chosen bounds.
@@ -156,10 +158,8 @@ public class Histogram extends HttpServlet {
       }
     }
 
-    // Set local variables to computed extrema.
+    // Set the variables for the extrema.
     minBound = min;
     maxBound = max;
-    lowerBound = min;
-    upperBound = max;
   }
 }

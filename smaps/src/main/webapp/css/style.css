@@ -71,6 +71,7 @@ a.btn.btn-gray.active {
     color: #FFFFFF;
     background-color: #5F6368;
     border-color: #5F6368;
+    cursor: not-allowed;
 }
 
 .btn-blue {
@@ -94,6 +95,7 @@ a.btn.btn-blue.active {
     color: #FFFFFF;
     background-color: #4285F4;
     border-color: #4285F4;
+    cursor: not-allowed;
 }
 
 .btn-sm-w {

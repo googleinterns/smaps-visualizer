@@ -31,7 +31,7 @@ limitations under the License.
     <div class="container">
         <div class="row justify-content-md-center smaps-height">
             <div class="col col-md-3">
-                <a class="btn btn-blue btn-block active" role="button">Interactive Histogram</a>
+                <a class="btn btn-blue btn-block active btn-space" role="button">Interactive Histogram</a>
                 <a href="/memory-map.html" class="btn btn-blue btn-block" role="button">Memory Map
                     Visualization</a>
             </div>
@@ -61,20 +61,35 @@ limitations under the License.
                 <div id="filter-div"></div>
             </div>
         </div>
+        <form action='/histogram' method="POST">
+            <div class="form-row align-items-center">
+                <div class="col-md-2">
+                    <div class="form-group mb-2">
+                        <label for="lower-bound">Lower Size Bound</label>
+                        <input type="number" class="form-control" name="lower-bound" id="lower-bound" value="" min="0"
+                            step="1">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group mb-2">
+                        <label for="upper-bound">Upper Size Bound</label>
+                        <input type="number" class="form-control" name="upper-bound" id="upper-bound" value="" min="0"
+                            step="1">
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="form-group mb-2">
+                        <label for="submit-bounds">&nbsp;</label>
+                        <input type="submit" class="form-control btn btn-blue" name="submit-bounds" value="Enter">
+                    </div>
+                </div>
+            </div>
+        </form>
         <div class="row">
-            <form class="interactive-hist-form" action='/histogram' method="POST">
-                <div class="form-group">
-                    <label for="lower-bound">Lower size bound</label>
-                    <input type="number" class="form-control" name="lower-bound" id="lower-bound" value="" min="0"
-                        step="1">
-                </div>
-                <div class="form-group">
-                    <label for="upper-bound">Upper size bound</label>
-                    <input type="number" class="form-control" name="upper-bound" id="upper-bound" value="" min="0"
-                        step="1">
-                </div>
-                <input type="submit" class="btn btn-blue" value="Enter">
-            </form>
+            <div class="col-md-3">
+                <button class="btn btn-blue" id="reset-bounds-btn" onclick="resetBounds()">Reset Bounds to Total
+                    Range</button>
+            </div>
         </div>
     </div>
 </body>

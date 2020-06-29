@@ -54,7 +54,6 @@ p {
 .btn-gray{
     color: #5F6368;
     border-color: #5F6368;
-    margin-bottom: 1em;
 }
 
 .btn-gray:hover {
@@ -77,7 +76,6 @@ a.btn.btn-gray.active {
 .btn-blue {
     color: #4285F4;
     border-color: #4285F4;
-    margin-bottom: 1em;
 }
 
 .btn-blue:hover {
@@ -100,6 +98,10 @@ a.btn.btn-blue.active {
 
 .btn-sm-w {
     width: 10em;
+}
+
+.btn-space {
+    margin-bottom: 1em;
 }
 
 /* Fonts */
@@ -138,10 +140,6 @@ a.btn.btn-blue.active {
 }
 
 /* Histogram */
-.interactive-hist-form {
-    width: 8em;
-}
-
 .hist-slider {
     color: #4285F4;
     white-space: nowrap;

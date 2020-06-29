@@ -31,10 +31,14 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "Histogram", value = "/histogram")
 public class Histogram extends HttpServlet {
-  // Used to populate the lower bound text box and slider min.
+  // Used to populate the lower bound text box and slider min, stores the user chosen bounds.
   static long lowerBound;
-  // Used to populate the upper bound text box and slider max.
+  // Used to populate the upper bound text box and slider max, stores the user chosen bounds.
   static long upperBound;
+  // Stores the minimum region size from entire address space.
+  static long minBound;
+  // Stores the maximum region size from entire address space.
+  static long maxBound;
   // Flag indicating whether a user has entered info in textbox.
   static boolean postFired = false;
 
@@ -69,18 +73,22 @@ public class Histogram extends HttpServlet {
       setMinMax(regionList);
     }
 
-    // Construct 2D array to hold the bounds.
+    // Construct 2D array to hold the chosen bounds and extrema.
     long[] bounds = {lowerBound, upperBound};
+    long[] extrema = {minBound, maxBound};
 
     // Transfer the Java Object arrays into JavaScript Objects (Json).
     Gson boundsGson = new Gson();
+    Gson extremaGson = new Gson();
     Gson histGson = new Gson();
     String histogramDataJson = histGson.toJson(histogramData);
+    String extremaJson = extremaGson.toJson(extrema);
     String boundsJson = boundsGson.toJson(bounds);
 
     // Put the two Json strings into a list to send to histogram.js.
     List<String> jsonList = new ArrayList<String>();
     jsonList.add(boundsJson);
+    jsonList.add(extremaJson);
     jsonList.add(histogramDataJson);
 
     // Write Json to histogram.js
@@ -144,6 +152,9 @@ public class Histogram extends HttpServlet {
       }
     }
 
+    // Set local variables to computed extrema.
+    minBound = min;
+    maxBound = max;
     lowerBound = min;
     upperBound = max;
   }

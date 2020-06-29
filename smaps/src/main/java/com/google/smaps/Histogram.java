@@ -35,19 +35,31 @@ public class Histogram extends HttpServlet {
   static long lowerBound;
   // Used to populate the upper bound text box and slider max.
   static long upperBound;
+  // Stores the minimum region size from entire address space.
+  static long minBound;
+  // Stores the maximum region size from entire address space.
+  static long maxBound;
   // Flag indicating whether a user has entered info in textbox.
   static boolean postFired = false;
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Get numbers from form in interactive-histogram.html.
-    String lower = request.getParameter("lower-bound");
-    String upper = request.getParameter("upper-bound");
-    postFired = true;
+    // Check whether the reset button was clicked or not.
+    String resetButton = request.getParameter("reset-bounds-btn");
+    if (resetButton != null) {
+      // Reset was clicked, so set the bounds to be the extrema.
+      lowerBound = minBound;
+      upperBound = maxBound;
+    } else {
+      // Get user-chosen numbers from form in interactive-histogram.html.
+      String lower = request.getParameter("lower-bound");
+      String upper = request.getParameter("upper-bound");
+      // Parse the bound from user input and set the bounds to the chosen bounds.
+      lowerBound = parseBound(lower);
+      upperBound = parseBound(upper);
+    }
 
-    // Parse the bound from user input and set to global variables
-    lowerBound = parseBound(lower);
-    upperBound = parseBound(upper);
+    postFired = true;
 
     // Reload the interactive-histogram.html.
     response.sendRedirect("/interactive-histogram.html");
@@ -64,12 +76,14 @@ public class Histogram extends HttpServlet {
     // Parse histogram data.
     List<Object[]> histogramData = makeDataArray(regionList);
 
-    // If the user hasn't entered custom bounds yet, use the min and max from regions list.
+    // If the user hasn't entered custom bounds yet, use the initial min and max from regions list.
     if (!postFired) {
       setMinMax(regionList);
+      lowerBound = minBound;
+      upperBound = maxBound;
     }
 
-    // Construct 2D array to hold the bounds.
+    // Construct 2D array to hold the chosen bounds.
     long[] bounds = {lowerBound, upperBound};
 
     // Transfer the Java Object arrays into JavaScript Objects (Json).
@@ -144,7 +158,8 @@ public class Histogram extends HttpServlet {
       }
     }
 
-    lowerBound = min;
-    upperBound = max;
+    // Set the variables for the extrema.
+    minBound = min;
+    maxBound = max;
   }
 }

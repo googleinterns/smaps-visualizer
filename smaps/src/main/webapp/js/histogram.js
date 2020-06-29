@@ -21,8 +21,8 @@ setBounds();
 // Set a callback to run when the Google Visualization API is loaded.
 google.charts.setOnLoadCallback(drawHistogramCust);
 
-var lowerBound;  // Lower bound of sizes, either preset or chosen by user.
-var upperBound;  // Upper bound of sizes, either preset or chosen by user.
+var lowerBound;  // Lower bound of size that will be sent to histogram.
+var upperBound;  // Upper bound of size that will be sent to histogram.
 
 /*
  * Sets the global variables lowerBound and upperBound to be the
@@ -35,7 +35,7 @@ function setBounds() {
         return response.json();
       })
       .then((histogramJson) => {
-        // The bounds are in the first index of the Json, so histogramJson[0].
+        // These bounds are in the first index of the Json, so histogramJson[0].
         lowerBound = histogramJson[0][0];
         upperBound = histogramJson[0][1];
 

@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
  * and dashboard tools in memory-map.js.
  */
 @WebServlet(name = "MemoryMap", value = "/memorymap")
-public class Histogram extends HttpServlet {
+public class MemoryMap extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // TODO(@sophboh22): add switch options for sorting the data based on permissions, size, huge
@@ -45,7 +45,30 @@ public class Histogram extends HttpServlet {
     // Parse the file from the user upload.
     List<Region> regionList = FileParser.getRegionList("/tmp/smaps-upload.txt");
 
-    // Parse column chart data.
-    List<Object[]> colChartData = makeDataArray(regionList);
+    // Parse the memory map data.
+    List<Object[]> memoryMapData = makeDataArray(regionList);
+
+    // Transfer the Java Object arrays into JavaScript Objects (Json).
+    Gson memoryMapGson = new Gson();
+    String memoryMapJson = memoryMapGson.toJson(memoryMapData);
+
+    // Write Json to memory-map.js
+    response.getWriter().println(memoryMapJson);
+  }
+
+  /** Creates list of 2D Object arrays of data for memory map. */
+  static ArrayList<Object[]> makeDataArray(List<Region> regions) {
+    // Holds all the arrays of information for the memory map.
+    ArrayList<Object[]> dataArray = new ArrayList<Object[]>();
+
+    // Go through the regions and add range/permissions pairs to the list.
+    for (int i = 0; i < regions.size(); i++) {
+      Region curR = regions.get(i);
+      String range = curR.startLoc() + " - " + curR.endLoc();
+      Object permissions = (Object) curR.permissions();
+      Object[] pair = {range, permissions};
+      dataArray.add(pair);
+    }
+    return dataArray;
   }
 }

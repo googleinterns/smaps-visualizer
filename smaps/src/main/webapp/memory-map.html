@@ -26,7 +26,8 @@ limitations under the License.
     <title>Memory Map</title>
 </head>
 
-<body onload="drawMemoryMap()">
+<body onload="drawMemoryMap(); drawMemoryMapKey();">
+    <a id="top"></a>
     <div class="container">
         <div class="row justify-content-md-center smaps-height">
             <div class="col col-md-3">
@@ -54,9 +55,26 @@ limitations under the License.
         </div>
     </div>
     <div class="row">
-        <canvas id="myCanvas">
-            Your browser does not support the HTML5 canvas tag.</canvas>
+        <div class="col-md-auto">
+            <canvas id="memory-map-canvas">
+                Your browser does not support the HTML5 canvas tag.</canvas>
+        </div>
+        <div class="col-md-3">
+            <div class="sticky-map-key">
+                <div class="row">
+                    <div class="key-title">PERMISSIONS KEY</div>
+                </div>
+                <div class="row">
+                    <canvas id="key-canvas">Your browser does not support the HTML5 canvas tag.</canvas>
+                </div>
+                <div class="row">
+                    <a href="#top" class="btn btn-gray up-down-btn">&#8593</a>
+                    <a href="#bottom" class="btn btn-gray up-down-btn">&#8595</a>
+                </div>
+            </div>
+        </div>
     </div>
+    <a id="bottom"></a>
 </body>
 
 </html>

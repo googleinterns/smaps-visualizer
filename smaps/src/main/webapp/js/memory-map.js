@@ -31,12 +31,12 @@ function drawMemoryMap() {
         var numRegs = memoryMapJson.length;
 
         // Get the canvas for putting the region rectangles on.
-        var c = document.getElementById('myCanvas');
+        var c = document.getElementById('memory-map-canvas');
 
         // Set the canvas height to be tall enough to display all regions, plus
-        // ten more for a buffer.
-        c.width = 1000;
-        c.height = h * (numRegs + 10);
+        // five more for a buffer.
+        c.width = 550;
+        c.height = h * (numRegs + 5);
 
         // Draw all the region rectangles.
         var reg = c.getContext('2d');
@@ -54,27 +54,74 @@ function drawMemoryMap() {
 
           // Use permission to determine color to fill in the region rectangle.
           if (perms == '---p') {
-            reg.fillStyle = '#D7AEFB';
+            reg.fillStyle = '#BDC1C6';  // Gray, 400 intensity.
           } else if (perms == 'rw-p') {
-            reg.fillStyle = '#A1E4F2';
+            reg.fillStyle = '#78D9EC';  // Teal, 300 intensity.
           } else if (perms == 'r-xp') {
-            reg.fillStyle = '#FBA9D6';
+            reg.fillStyle = '#81C995';  // Green, 300 intensity.
           } else if (perms == 'r--s') {
-            reg.fillStyle = '#FDC69C';
+            reg.fillStyle = '#FCAD70';  // Orange, 300 intensity.
           } else if (perms == 'r--p') {
-            reg.fillStyle = '#FDE293'
+            reg.fillStyle = '#C58AF9';  // Purple, 300 intensity.
           } else if (perms == 'rw-s') {
-            reg.fillStyle = '#A8DAB5';
+            reg.fillStyle = '#FF8BCB';  // Pink, 300 intensity.
           } else if (perms == 'r-xs') {
-            reg.fillStyle = 'F6AEA9';
+            reg.fillStyle = '#669DF6';  // Blue, 400 intensity.
           }
           reg.fill();
 
           // Use black to draw the text within the region rectangle.
           reg.fillStyle = 'black';
-          reg.font = '15px Roboto';
+          reg.font = '16px Roboto';
           reg.fillText(text, (w / 2), y + (h / 2));
+
+          // Increase the y-coordiate to draw the next region rectangle directly
+          // below this one.
           y = y + h;
         }
       });
+}
+
+function drawMemoryMapKey() {
+  // Get the canvas for putting the key on.
+  var c = document.getElementById('key-canvas');
+
+  // Set the canvas width and height.
+  c.width = 300;
+  c.height = 220;
+
+  // The perms and colors arrays match up by index.
+  var perms = [
+    '- - - p', 'r w - p', 'r - x p', 'r - - s', 'r - - p', 'r w - s', 'r - x s'
+  ];
+  // Gray, Teal, Pink, Orange, Purple, Green, Blue.
+  var colors = [
+    '#BDC1C6', '#78D9EC', '#FF8BCB', '#FCAD70', '#C58AF9', '#81C995', '#669DF6'
+  ];
+
+  var x = 1;    // X-coordinate of the upper-left corner of the swatch.
+  var y = 1;    // Y-coordinate of the upper-left corner of the swatch.
+  var w = 135;  // Width of the swatch (pixels).
+  var h = 30;   // Height of the swatch (pixels).
+
+  // Draw all the color swatches indicating permission.
+  var swatch = c.getContext('2d');
+  for (var i = 0; i < colors.length; i++) {
+    // Use black to draw the border of the swatch with line width of 2.
+    swatch.beginPath();
+    swatch.lineWidth = '1';
+    swatch.strokeStyle = 'black';
+    swatch.rect(x, y, w, h);
+    swatch.stroke();
+
+    // Use color at index i to make the swatch for permission at index i.
+    swatch.fillStyle = colors[i];
+    swatch.fill();
+
+    // Use black to draw the text next to the swatch indicating the permission.
+    swatch.fillStyle = 'black';
+    swatch.font = '16px Roboto';
+    swatch.fillText(perms[i], 15, y + (h / 2) + 5);
+    y = y + h;
+  }
 }

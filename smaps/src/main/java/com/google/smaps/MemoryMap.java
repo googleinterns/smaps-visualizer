@@ -38,6 +38,8 @@ public class MemoryMap extends HttpServlet {
 
     // Parse the file from the user upload.
     List<Region> regionList = FileParser.getRegionList("/tmp/smaps-upload.txt");
+    // TODO(sophbohr22): Investigate if there's a way to make this regions list just once instead of
+    // having to call this method for each visualization.
 
     // Parse the memory map data.
     List<Object[]> memoryMapData = makeDataArray(regionList);

@@ -97,7 +97,7 @@ function drawMemoryMapKey() {
 
   // Gray, Teal, Pink, Orange, Purple, Green, Blue.
   var colors = [
-    '#BDC1C6', '#78D9EC', '#FF8BCB', '#FCAD70', '#C58AF9', '#81C995', '#669DF6'
+    '#BDC1C6', '#78D9EC', '#81C995', '#FCAD70', '#C58AF9', '#FF8BCB', '#669DF6'
   ];
 
   // Set the swatch size values.

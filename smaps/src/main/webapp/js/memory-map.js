@@ -27,7 +27,7 @@ function drawMemoryMap() {
         var w = 500;  // Width of the rectangle (pixels).
         var h = 40;   // Height of the rectangle (pixels).
 
-        // Get the number of regions
+        // Get the number of regions.
         var numRegs = memoryMapJson.length;
 
         // Get the canvas for putting the region rectangles on.
@@ -41,7 +41,7 @@ function drawMemoryMap() {
         // Draw all the region rectangles.
         var reg = c.getContext('2d');
         for (var i = memoryMapJson.length - 1; i >= 0; i--) {
-          // Get this region's address space and permissions.
+          // Get this region's address range and permissions.
           var text = memoryMapJson[i][0];
           var perms = memoryMapJson[i][1];
 
@@ -52,7 +52,7 @@ function drawMemoryMap() {
           reg.rect(x, y, w, h);
           reg.stroke();
 
-          // Use permission to determine color to fill in the region rectangle.
+          // Use permissions to determine color to fill in the region rectangle.
           if (perms == '---p') {
             reg.fillStyle = '#BDC1C6';  // Gray, 400 intensity.
           } else if (perms == 'rw-p') {
@@ -94,11 +94,13 @@ function drawMemoryMapKey() {
   var perms = [
     '- - - p', 'r w - p', 'r - x p', 'r - - s', 'r - - p', 'r w - s', 'r - x s'
   ];
+
   // Gray, Teal, Pink, Orange, Purple, Green, Blue.
   var colors = [
     '#BDC1C6', '#78D9EC', '#FF8BCB', '#FCAD70', '#C58AF9', '#81C995', '#669DF6'
   ];
 
+  // Set the swatch size values.
   var x = 1;    // X-coordinate of the upper-left corner of the swatch.
   var y = 1;    // Y-coordinate of the upper-left corner of the swatch.
   var w = 135;  // Width of the swatch (pixels).
@@ -118,7 +120,7 @@ function drawMemoryMapKey() {
     swatch.fillStyle = colors[i];
     swatch.fill();
 
-    // Use black to draw the text next to the swatch indicating the permission.
+    // Use black to draw the text on the swatch indicating the permission.
     swatch.fillStyle = 'black';
     swatch.font = '16px Roboto';
     swatch.fillText(perms[i], 15, y + (h / 2) + 5);

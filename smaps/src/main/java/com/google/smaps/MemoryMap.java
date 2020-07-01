@@ -26,17 +26,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Retrieves histogram information and formats it into a Json array for creating the chart
- * and dashboard tools in memory-map.js.
+ * Retrieves memory map information and formats it into a Json array for creating the memory map and
+ * key in memory-map.js.
  */
 @WebServlet(name = "MemoryMap", value = "/memorymap")
 public class MemoryMap extends HttpServlet {
-  @Override
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // TODO(@sophboh22): add switch options for sorting the data based on permissions, size, huge
-    // pages, etc.
-  }
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Response will be a Json.
@@ -52,7 +46,7 @@ public class MemoryMap extends HttpServlet {
     Gson memoryMapGson = new Gson();
     String memoryMapJson = memoryMapGson.toJson(memoryMapData);
 
-    // Write Json to memory-map.js
+    // Write Json to memory-map.js.
     response.getWriter().println(memoryMapJson);
   }
 

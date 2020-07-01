@@ -104,6 +104,11 @@ a.btn.btn-blue.active {
     margin-bottom: 1em;
 }
 
+.up-down-btn {
+    margin-right: 2.5em;
+    font-size: 1.5em;
+}
+
 /* Fonts */
 .roboto {
     font-family: 'Roboto', sans-serif;
@@ -152,4 +157,15 @@ a.btn.btn-blue.active {
 .hist-slider .google-visualization-controls-slider-thumb {
     width: 8px;
     background-color: #4285F4;
+}
+
+/* Memory Map */
+div.sticky-map-key {
+    position: sticky;
+    top: 0;
+}
+
+.key-title {
+    padding-top: 2em;
+    font-size: 1em;
 }

@@ -52,6 +52,9 @@ class FileParser {
     Scanner sc = new Scanner(dump);
     Region.Builder region = Region.builder();
 
+    // TODO(@sophbohr22): Add a defense to the parser so that files with extremely large region
+    // counts aren't allowed.
+
     // Indicates whether a new region is being evaluated at each iteration.
     boolean nextRegion = true;
 

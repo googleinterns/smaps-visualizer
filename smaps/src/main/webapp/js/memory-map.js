@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-/*
- * Creates the memory map visualization from the regions list, and colors them
+/* Creates the memory map visualization from the regions list, and colors them
  * based on the permissions.
  */
 function drawMemoryMap() {
@@ -26,9 +25,9 @@ function drawMemoryMap() {
       })
       .then((memoryMapJson) => {
         // Set the rectangle size values.
-        var x = 20;   // X-coordinate of the upper-left corner of the rectangle.
-        var y = 20;   // Y-coordinate of the upper-left corner of the rectangle.
-        var w = 500;  // Width of the rectangle (pixels).
+        var x = 5;    // X-coordinate of the upper-left corner of the rectangle.
+        var y = 5;    // Y-coordinate of the upper-left corner of the rectangle.
+        var w = 450;  // Width of the rectangle (pixels).
         var h = 40;   // Height of the rectangle (pixels).
 
         // Get the number of regions.
@@ -39,7 +38,7 @@ function drawMemoryMap() {
 
         // Set the canvas height to be tall enough to display all regions, plus
         // five more for a buffer.
-        c.width = 550;
+        c.width = 500;
         c.height = h * (numRegs + 5);
 
         // Draw all the region rectangles.
@@ -61,16 +60,47 @@ function drawMemoryMap() {
           reg.fillStyle = color;
           reg.fill();
 
-          // Use black to draw the text within the region rectangle.
-          reg.fillStyle = 'black';
-          reg.font = '16px Roboto';
-          reg.fillText(text, (w / 2), y + (h / 2));
-
           // Increase the y-coordiate to draw the next region rectangle directly
           // below this one.
           y = y + h;
         }
+
+        // Print all the addresses on top of the colored region rectangles.
+        drawText(c.width);
       });
+}
+
+/* Creates the address range text to overlay on the region rectangles. */
+function drawText(width) {
+  fetch('/memorymap')
+      .then((response) => {
+        return response.json();
+      })
+      .then((memoryMapJson) => {
+        for (var i = memoryMapJson.length - 1; i >= 0; i--) {
+          // Get this region's address range and permissions.
+          var address = memoryMapJson[i][0];
+          var perms = memoryMapJson[i][1];
+
+          if (perms == '---p') {
+            address = address + ' (Guard Band)';
+          }
+
+          var textDiv = document.getElementById('memory-map-div');
+          drawTextHelper(width, address, textDiv);
+        }
+      });
+}
+
+/* Helps the drawText function, takes in the width of the region, the text to
+ * print, and the name of the div, and prints to that div.
+ */
+function drawTextHelper(width, text, div) {
+  var paragraph = document.createElement('p');
+  paragraph.style.width = width;
+  var textNode = document.createTextNode(text);
+  paragraph.appendChild(textNode);
+  div.appendChild(paragraph);
 }
 
 /* Creates the key to indicate which color corresponds to which permissions. */

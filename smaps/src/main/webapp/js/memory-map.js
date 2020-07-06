@@ -103,7 +103,7 @@ function drawTextHelper(width, text, div) {
   // Create new <p> tag.
   var paragraph = document.createElement('p');
 
-  // Set tje width to be the same width as the region.
+  // Set the width to be the same width as the region.
   paragraph.style.width = width;
 
   // Create a text node with the address.

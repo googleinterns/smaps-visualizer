@@ -82,10 +82,14 @@ function drawText(width) {
           var address = memoryMapJson[i][0];
           var perms = memoryMapJson[i][1];
 
+          // If the region has permission ---p, add an annotation for Guard
+          // Band.
           if (perms == '---p') {
             address = address + ' (Guard Band)';
           }
 
+          // Get the div from memory-map.html and populate it with the
+          // addresses.
           var textDiv = document.getElementById('memory-map-div');
           drawTextHelper(width, address, textDiv);
         }
@@ -96,10 +100,19 @@ function drawText(width) {
  * print, and the name of the div, and prints to that div.
  */
 function drawTextHelper(width, text, div) {
+  // Create new <p> tag.
   var paragraph = document.createElement('p');
+
+  // Set tje width to be the same width as the region.
   paragraph.style.width = width;
+
+  // Create a text node with the address.
   var textNode = document.createTextNode(text);
+
+  // Add the text node to the <p> tag.
   paragraph.appendChild(textNode);
+
+  // Add the <p> tag to the div.
   div.appendChild(paragraph);
 }
 

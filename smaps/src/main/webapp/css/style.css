@@ -96,10 +96,6 @@ a.btn.btn-blue.active {
     cursor: not-allowed;
 }
 
-.btn-sm-w {
-    width: 10em;
-}
-
 .btn-space {
     margin-bottom: 1em;
 }
@@ -142,6 +138,11 @@ a.btn.btn-blue.active {
 /* Spacing */
 .smaps-height {
     height: 3.1em;
+}
+
+.header-container {
+    margin-left: 3em;
+    margin-right: 3em;
 }
 
 /* Histogram */

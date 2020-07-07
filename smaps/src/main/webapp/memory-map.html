@@ -28,31 +28,29 @@ limitations under the License.
 
 <body onload="drawMemoryMap(); drawMemoryMapKey();">
     <a id="top"></a>
-    <div class="container">
-        <div class="row justify-content-md-center smaps-height">
-            <div class="col col-md-3">
-                <a href="/interactive-histogram.html" class="btn btn-blue btn-block btn-space" role="button">Interactive
-                    Histogram</a>
-                <a class="btn btn-blue btn-block active" role="button">Memory Map Visualization</a>
-            </div>
-            <div class="col col-md-4 offset-md-1">
-                <div id="smaps-title">
-                    <span class="gblue">s</span>
-                    <span class="gred">m</span>
-                    <span class="gyellow">a</span>
-                    <span class="gblue">p</span>
-                    <span class="ggreen">s</span>
-                </div>
-            </div>
-            <div class="col col-md-2 offset-md-2">
-                <div class="row">
-                    <a href="/index.html" class="btn btn-gray btn-sm btn-sm-w">Select another file</a>
-                </div>
+    <div class="row justify-content-md-center smaps-height">
+        <div class="col-md-2">
+            <a href="/interactive-histogram.html" class="btn btn-blue btn-block btn-space" role="button">Interactive
+                Histogram</a>
+            <a class="btn btn-blue btn-block active" role="button">Memory Map Visualization</a>
+        </div>
+        <div class="col col-md-4 offset-md-2">
+            <div id="smaps-title">
+                <span class="gblue">s</span>
+                <span class="gred">m</span>
+                <span class="gyellow">a</span>
+                <span class="gblue">p</span>
+                <span class="ggreen">s</span>
             </div>
         </div>
-        <div class="row justify-content-md-center">
-            <div id="visualizer-title" class="ggray">Visualizer</div>
+        <div class="col col-md-1 offset-md-3">
+            <div class="row">
+                <a href="/index.html" class="btn btn-gray btn-block">Select another file</a>
+            </div>
         </div>
+    </div>
+    <div class="row justify-content-md-center">
+        <div id="visualizer-title" class="ggray">Visualizer</div>
     </div>
     <div class="row">
         <div class="col-md-auto" id="memory-map-div">

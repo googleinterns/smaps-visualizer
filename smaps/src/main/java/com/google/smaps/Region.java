@@ -90,7 +90,8 @@ abstract class Region {
   abstract List<String> vmFlags();
 
   static Builder builder() {
-    return new AutoValue_Region.Builder();
+    // TODO(sophbohr22): Add these set initializations for all fields.
+    return new AutoValue_Region.Builder().setShmemHugePages(0).setHugePFNMap(0);
   }
 
   @AutoValue.Builder

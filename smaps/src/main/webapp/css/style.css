@@ -105,6 +105,10 @@ a.btn.btn-blue.active {
     font-size: 1.5em;
 }
 
+#submit-address-search {
+    margin-left: 0.5em;
+}
+
 /* Fonts */
 .roboto {
     font-family: 'Roboto', sans-serif;
@@ -166,7 +170,7 @@ div.sticky-map-key {
     top: 0;
 }
 
-.key-title {
+.mini-title {
     padding-top: 2em;
     font-size: 1em;
 }

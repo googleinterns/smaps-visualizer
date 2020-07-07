@@ -28,31 +28,29 @@ limitations under the License.
 
 <body onload="drawMemoryMap(); drawMemoryMapKey();">
     <a id="top"></a>
-    <div class="container">
-        <div class="row justify-content-md-center smaps-height">
-            <div class="col col-md-3">
-                <a href="/interactive-histogram.html" class="btn btn-blue btn-block btn-space" role="button">Interactive
-                    Histogram</a>
-                <a class="btn btn-blue btn-block active" role="button">Memory Map Visualization</a>
-            </div>
-            <div class="col col-md-4 offset-md-1">
-                <div id="smaps-title">
-                    <span class="gblue">s</span>
-                    <span class="gred">m</span>
-                    <span class="gyellow">a</span>
-                    <span class="gblue">p</span>
-                    <span class="ggreen">s</span>
-                </div>
-            </div>
-            <div class="col col-md-2 offset-md-2">
-                <div class="row">
-                    <a href="/index.html" class="btn btn-gray btn-sm btn-sm-w">Select another file</a>
-                </div>
+    <div class="row justify-content-md-center smaps-height">
+        <div class="col-md-2">
+            <a href="/interactive-histogram.html" class="btn btn-blue btn-block btn-space" role="button">Interactive
+                Histogram</a>
+            <a class="btn btn-blue btn-block active" role="button">Memory Map Visualization</a>
+        </div>
+        <div class="col col-md-4 offset-md-2">
+            <div id="smaps-title">
+                <span class="gblue">s</span>
+                <span class="gred">m</span>
+                <span class="gyellow">a</span>
+                <span class="gblue">p</span>
+                <span class="ggreen">s</span>
             </div>
         </div>
-        <div class="row justify-content-md-center">
-            <div id="visualizer-title" class="ggray">Visualizer</div>
+        <div class="col col-md-1 offset-md-3">
+            <div class="row">
+                <a href="/index.html" class="btn btn-gray btn-block">Select another file</a>
+            </div>
         </div>
+    </div>
+    <div class="row justify-content-md-center">
+        <div id="visualizer-title" class="ggray">Visualizer</div>
     </div>
     <div class="row">
         <div class="col-md-auto" id="memory-map-div">
@@ -64,7 +62,7 @@ limitations under the License.
         <div class="col-md-3">
             <div class="sticky-map-key">
                 <div class="row">
-                    <div class="key-title">PERMISSIONS KEY</div>
+                    <div class="mini-title">PERMISSIONS KEY</div>
                 </div>
                 <div class="row">
                     <canvas id="key-canvas">Your browser does not support the HTML5 canvas tag.</canvas>
@@ -72,6 +70,18 @@ limitations under the License.
                 <div class="row">
                     <a href="#top" class="btn btn-gray up-down-btn">&#8593</a>
                     <a href="#bottom" class="btn btn-gray up-down-btn">&#8595</a>
+                </div>
+                <div class="row">
+                    <div class="mini-title">HEX ADDRESS SEARCH</div>
+                </div>
+                <div class="row">
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="ex: 7fd158371000">
+                        </div>
+                        <input type="submit" class="btn btn-blue" id="submit-address-search"
+                            name="submit-address-search" value="GO">
+                    </form>
                 </div>
             </div>
         </div>

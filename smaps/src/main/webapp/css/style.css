@@ -96,10 +96,6 @@ a.btn.btn-blue.active {
     cursor: not-allowed;
 }
 
-.btn-sm-w {
-    width: 10em;
-}
-
 .btn-space {
     margin-bottom: 1em;
 }
@@ -107,6 +103,10 @@ a.btn.btn-blue.active {
 .up-down-btn {
     margin-right: 2.5em;
     font-size: 1.5em;
+}
+
+#submit-address-search {
+    margin-left: 0.5em;
 }
 
 /* Fonts */
@@ -144,6 +144,11 @@ a.btn.btn-blue.active {
     height: 3.1em;
 }
 
+.header-container {
+    margin-left: 3em;
+    margin-right: 3em;
+}
+
 /* Histogram */
 .hist-slider {
     color: #4285F4;
@@ -165,7 +170,7 @@ div.sticky-map-key {
     top: 0;
 }
 
-.key-title {
+.mini-title {
     padding-top: 2em;
     font-size: 1em;
 }

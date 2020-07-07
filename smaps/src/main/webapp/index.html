@@ -28,33 +28,31 @@ limitations under the License.
 </head>
 
 <body>
-    <div class="container">
-        <div class="row justify-content-md-center smaps-height">
-            <div class="col-md-12">
-                <div id="smaps-title">
-                    <span class="gblue">s</span>
-                    <span class="gred">m</span>
-                    <span class="gyellow">a</span>
-                    <span class="gblue">p</span>
-                    <span class="ggreen">s</span>
-                </div>
+    <div class="row justify-content-md-center smaps-height">
+        <div class="col-md-12">
+            <div id="smaps-title">
+                <span class="gblue">s</span>
+                <span class="gred">m</span>
+                <span class="gyellow">a</span>
+                <span class="gblue">p</span>
+                <span class="ggreen">s</span>
             </div>
         </div>
-        <div class="row justify-content-md-center">
-            <p id="visualizer-title" class="ggray">Visualizer</p>
-        </div>
-        <div class="row justify-content-md-center">
-            <p>This application takes a process' smaps and creates useful charts/visualizations from it.</p>
-        </div>
-        <div class="row justify-content-md-center">
-            <form action="/fileupload" method="POST" enctype="multipart/form-data">
-                <input type="file" id="smapsFile" name="smapsFile" />
-                <input type="submit" value="UPLOAD SMAPS FILE">
-            </form>
-        </div>
-        <div class="row justify-content-md-center">
-            <p id="error-message" name="error-message"></p>
-        </div>
+    </div>
+    <div class="row justify-content-md-center">
+        <div id="visualizer-title" class="ggray">Visualizer</div>
+    </div>
+    <div class="row justify-content-md-center">
+        <div>This application takes a process' smaps and creates useful charts/visualizations from it.</div>
+    </div>
+    <div class="row justify-content-md-center">
+        <form action="/fileupload" method="POST" enctype="multipart/form-data">
+            <input type="file" id="smapsFile" name="smapsFile" />
+            <input type="submit" value="UPLOAD SMAPS FILE">
+        </form>
+    </div>
+    <div class="row justify-content-md-center">
+        <p id="error-message" name="error-message"></p>
     </div>
 </body>
 

@@ -71,7 +71,7 @@ public class Histogram extends HttpServlet {
     response.setContentType("application/json");
 
     // Parse the file from the user upload.
-    List<Region> regionList = FileParser.getRegionList("/tmp/smaps-upload.txt");
+    List<Region> regionList = Analyzer.getRegionList();
 
     // Parse histogram data.
     List<Object[]> histogramData = makeDataArray(regionList);

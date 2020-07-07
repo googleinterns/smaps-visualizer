@@ -79,8 +79,8 @@ public class MemoryMapTest {
   @Test
   public void dataArray() {
     // Tests creation of list of Object arrays for histogram from regions list.
-    String filePathname = "../smaps-full.txt";
-    List<Region> regions = FileParser.getRegionList(filePathname);
+    Analyzer.makeRegionList("../smaps-full.txt");
+    List<Region> regions = Analyzer.getRegionList();
     List<Object[]> dataArray = servletUnderTest.makeDataArray(regions);
 
     // Checks first entry.

@@ -29,11 +29,10 @@ import java.util.Scanner;
  * TODO(sophbohr22): implement data integrity check for all fields.
  */
 class FileParser {
-  static List<Region> getRegionList(String filePathname) {
-    List<Region> regions = new ArrayList<Region>(); // holds all regions of smaps dump
-
+  static List<Region> parseRegionList(String filePathname) {
     try {
-      parseFile(filePathname, regions);
+      List<Region> regions = parseFile(filePathname);
+      return regions;
     } catch (FileNotFoundException e) {
       // TODO(sophbohr22): implement logging to print exception to user.
       System.out.println("File not found.");
@@ -41,12 +40,14 @@ class FileParser {
       // TODO(sophbohr22): implement logging to print exception to user.
       System.out.println("File has improper formatting.");
     }
-
-    return regions;
+    return null; // FIXME: return null? what to do when broken?
   }
 
-  static void parseFile(String filePathname, List<Region> regions)
+  /* Parses the smaps file and returns a list of regions.*/
+  static List<Region> parseFile(String filePathname)
       throws FileNotFoundException, IllegalArgumentException {
+    // Holds all regions of smaps dump.
+    List<Region> regions = new ArrayList<Region>();
     // Create the file.
     File dump = new File(filePathname);
     Scanner sc = new Scanner(dump);
@@ -145,7 +146,7 @@ class FileParser {
       }
     }
     sc.close();
-    return;
+    return regions;
   }
 
   static void fillField(String field, long value, Region.Builder region) {

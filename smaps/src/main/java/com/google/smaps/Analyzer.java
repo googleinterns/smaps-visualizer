@@ -15,25 +15,51 @@
  */
 package com.google.smaps;
 
+import com.google.common.collect.Range;
+import com.google.common.collect.RangeMap;
+import com.google.common.collect.TreeRangeMap;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Takes in the data from the smaps file upload and analyzes/converts it into useful structures.
+ * Takes in the data from the smaps file upload and analyzes and converts it into useful structures.
  */
 class Analyzer {
   // Holds all regions of the smaps dump.
-  static List<Region> regions = new ArrayList<Region>();
+  static List<Region> regions;
+  // Holds the range map for the address ranges.
+  static RangeMap<BigInteger, Region> addressRangeMap;
 
-  /* Set the list of regions in this class so it can be accessed by multiple charts/visualizations.
-   */
+  /* Creates the list of regions in this class using FileParser's method so it can be accessed by
+   * multiple visualizations. */
   static void makeRegionList(String filePathname) {
     regions = FileParser.parseRegionList(filePathname);
-    return;
   }
 
-  /* Return the list of regions. */
+  /* Returns the list of regions. */
   static List<Region> getRegionList() {
     return regions;
+  }
+
+  /* Creates the address range map (interval map) with addresses as keys and the region occupying
+   * that address as the value. */
+  static void makeRangeMap(List<Region> regionsList) {
+    // Create the range map.
+    addressRangeMap = TreeRangeMap.create();
+    // Go through every region and add it to the range map.
+    for (int i = 0; i < regionsList.size(); i++) {
+      Region curR = regionsList.get(i);
+      // Parse the addresses with base 16 because they are hexadecimal.
+      BigInteger start = new BigInteger(curR.startLoc(), 16);
+      BigInteger end = new BigInteger(curR.endLoc(), 16);
+      // Put the region into the range map with the address range (inclusive, exclusive).
+      addressRangeMap.put(Range.closedOpen(start, end), curR);
+    }
+  }
+
+  /* Returns the address range map. */
+  static RangeMap<BigInteger, Region> getRangeMap() {
+    return addressRangeMap;
   }
 }

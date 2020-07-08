@@ -66,6 +66,10 @@ public class FileUpload extends HttpServlet {
       // charts/visualizations.
       Analyzer.makeRegionList("/tmp/smaps-upload.txt");
 
+      // Make the address range map that stores the address range as the key and the region
+      // occupying that address as the value.
+      Analyzer.makeRangeMap(Analyzer.getRegionList());
+
       // Resets the postFired flag in Histogram.java so that the slider and textboxes will start
       // with the min/max values of this file and not with any previously chosen bounds.
       Histogram.setNewUpload();

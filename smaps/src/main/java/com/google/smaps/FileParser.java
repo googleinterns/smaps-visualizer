@@ -40,7 +40,8 @@ class FileParser {
       // TODO(sophbohr22): implement logging to print exception to user.
       System.out.println("File has improper formatting.");
     }
-    return null; // FIXME: return null? what to do when broken?
+    // If an exception was caught, return null.
+    return null;
   }
 
   /* Parses the smaps file and returns a list of regions.*/

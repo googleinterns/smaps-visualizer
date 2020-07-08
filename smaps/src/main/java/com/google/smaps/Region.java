@@ -23,9 +23,9 @@ import java.util.List;
 abstract class Region {
   // The line number of the first line of the region print-out.
   abstract int lineNumber();
-  // The start of the address space.
+  // The start of the address space (inclusive).
   abstract String startLoc();
-  // The end of the address space.
+  // The end of the address space (exclusive).
   abstract String endLoc();
   // Permissions for the region: (R)ead, (W)rite, E(X)ecute, (S)hared, (P)rivate.
   abstract String permissions();

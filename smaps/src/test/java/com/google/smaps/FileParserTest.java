@@ -34,28 +34,27 @@ public class FileParserTest {
   private List<Region> regions;
 
   @Before
-  @Test
   public void createRegionsList() throws Exception {
     // Creates regions list from smaps-full.txt file.
-    String filePathname = "../smaps-full.txt";
-    regions = FileParser.getRegionList(filePathname);
+    Analyzer.makeRegionList("../smaps-full.txt");
+    regions = Analyzer.getRegionList();
   }
 
   @Test
   public void fileNotFound() {
     // Tests that an empty list is successfully returned with nonexistent file.
-    String nonexistentFilePathname = "../fake-file.txt";
-    List<Region> list = FileParser.getRegionList(nonexistentFilePathname);
-    assertEquals(0, list.size());
+    Analyzer.makeRegionList("../fake-file.txt");
+    List<Region> list = Analyzer.getRegionList();
+    assertNull(list);
   }
 
   @Test
   public void wrongFileFormat() {
     // Tests that an empty list is successfully returned with a file that has too few parameters on
     // first line.
-    String wrongFormatFilePathname = "../smaps-wrong-format.txt";
-    List<Region> list = FileParser.getRegionList(wrongFormatFilePathname);
-    assertEquals(0, list.size());
+    Analyzer.makeRegionList("../smaps-wrong-format.txt");
+    List<Region> list = Analyzer.getRegionList();
+    asserNull(list);
   }
 
   @Test

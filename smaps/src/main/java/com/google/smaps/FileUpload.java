@@ -58,9 +58,17 @@ public class FileUpload extends HttpServlet {
       // Gets the InputStream to eventually store the file in tmp directory.
       InputStream fileInputStream = filePart.getInputStream();
 
-      // Copies the uploaded file to the server and rename it smaps-upload.txt.
+      // Copies the uploaded file to the server and renames it smaps-upload.txt.
       File fileToSave = new File("/tmp/smaps-upload.txt");
       Files.copy(fileInputStream, fileToSave.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+      // Make the list of regions from this file that will be utilized for various
+      // charts/visualizations.
+      Analyzer.makeRegionList("/tmp/smaps-upload.txt");
+
+      // Make the address range map that stores the address range as the key and the region
+      // occupying that address as the value.
+      Analyzer.makeRangeMap(Analyzer.getRegionList());
 
       // Resets the postFired flag in Histogram.java so that the slider and textboxes will start
       // with the min/max values of this file and not with any previously chosen bounds.

@@ -53,7 +53,7 @@ class Analyzer {
       // Parse the addresses with base 16 because they are hexadecimal.
       BigInteger start = new BigInteger(curR.startLoc(), 16);
       BigInteger end = new BigInteger(curR.endLoc(), 16);
-      // Put the region into the range map with the address range (inclusive, exclusive).
+      // Put the region into the range map with the address range [inclusive, exclusive).
       addressRangeMap.put(Range.closedOpen(start, end), curR);
     }
   }

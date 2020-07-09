@@ -45,7 +45,7 @@ public class FileParserTest {
     // Tests that an empty list is successfully returned with nonexistent file.
     Analyzer.makeRegionList("../fake-file.txt");
     List<Region> list = Analyzer.getRegionList();
-    assertEquals(null, list);
+    assertNull(list);
   }
 
   @Test
@@ -54,7 +54,7 @@ public class FileParserTest {
     // first line.
     Analyzer.makeRegionList("../smaps-wrong-format.txt");
     List<Region> list = Analyzer.getRegionList();
-    assertEquals(null, list);
+    asserNull(list);
   }
 
   @Test

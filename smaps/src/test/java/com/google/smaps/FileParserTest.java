@@ -54,7 +54,7 @@ public class FileParserTest {
     // first line.
     Analyzer.makeRegionList("../smaps-wrong-format.txt");
     List<Region> list = Analyzer.getRegionList();
-    asserNull(list);
+    assertNull(list);
   }
 
   @Test

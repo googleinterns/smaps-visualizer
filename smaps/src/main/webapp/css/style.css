@@ -46,6 +46,10 @@ p {
     margin-bottom: 1em;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 /* Buttons */
 .btn {
     cursor: pointer;
@@ -105,8 +109,9 @@ a.btn.btn-blue.active {
     font-size: 1.5em;
 }
 
-#submit-address-search {
+#submit-address-btn {
     margin-left: 0.5em;
+    margin-right: 0.5em;
 }
 
 /* Fonts */

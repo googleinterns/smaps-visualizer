@@ -14,6 +14,34 @@
  * limitations under the License.
  */
 
+var address;
+var scrollPosition;
+
+/*
+ * Scrolls the page back up to the top and empties the test box.
+ */
+function resetScroll() {
+  document.getElementById('address-input').value = null;
+  window.scrollTo(0, 0);
+}
+
+/* Scrolls the page to the region that is occupying the address that the user
+ * entered in the search box.
+ */
+function scrollToRegion() {
+  fetch('/searchaddress')
+      .then((response) => {
+        return response.json();
+      })
+      .then((searchAddressJson) => {
+        console.log(searchAddressJson);
+        document.getElementById('address-input').value = searchAddressJson[0];
+
+        // Scroll to the region that occupies the region the user entered.
+        window.scrollTo(0, searchAddressJson[1]);
+      });
+}
+
 /* Creates the memory map visualization from the regions list, and colors them
  * based on the permissions.
  */
@@ -77,6 +105,7 @@ function drawText(width) {
         return response.json();
       })
       .then((memoryMapJson) => {
+        var idName = 0;
         for (var i = memoryMapJson.length - 1; i >= 0; i--) {
           // Get this region's address range and permissions.
           var address = memoryMapJson[i][0];
@@ -91,7 +120,10 @@ function drawText(width) {
           // Get the div from memory-map.html and populate it with the
           // addresses.
           var textDiv = document.getElementById('memory-map-div');
-          drawTextHelper(width, address, textDiv);
+          drawTextHelper(width, address, textDiv, idName);
+
+          // Increment the id name.
+          idName += 1;
         }
       });
 }
@@ -99,7 +131,7 @@ function drawText(width) {
 /* Helps the drawText function, takes in the width of the region, the text to
  * print, and the name of the div, and prints to that div.
  */
-function drawTextHelper(width, text, div) {
+function drawTextHelper(width, text, div, idName) {
   // Create new <p> tag.
   var paragraph = document.createElement('p');
 

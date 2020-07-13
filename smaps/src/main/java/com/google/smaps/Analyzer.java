@@ -31,8 +31,6 @@ class Analyzer {
   static List<Region> regions;
   // Holds the range map for the address ranges.
   static RangeMap<BigInteger, Region> addressRangeMap;
-  // Holds the hashtable for the regions and their location on memory-map.html in pixels.
-  static Hashtable<Region, Integer> pixelHashtable;
 
   /* Creates the list of regions in this class using FileParser's method so it can be accessed by
    * multiple visualizations. */
@@ -64,25 +62,5 @@ class Analyzer {
   /* Returns the address range map. */
   static RangeMap<BigInteger, Region> getRangeMap() {
     return addressRangeMap;
-  }
-
-  /* Creates a hash table that uses a region as the key and it's location on the page of
-   * memory-map.html in pixels as the value. */
-  static void makePixelHashtable(List<Region> regionsList) {
-    pixelHashtable = new Hashtable<Region, Integer>();
-    // Start with 100 pixels down the page to scroll a little past the buttons/header.
-    int location = 100;
-    // Go through each region and add it to the hashtable with it's pixel value.
-    for (int i = regionsList.size() - 1; i >= 0; i--) {
-      Region curR = regionsList.get(i);
-      pixelHashtable.put(curR, location);
-      // Increase the location by 40 because each region is 40 pixels tall.
-      location += 40;
-    }
-  }
-
-  /* Returns the region/pixel hashtable. */
-  static Hashtable<Region, Integer> getPixelHashtable() {
-    return pixelHashtable;
   }
 }

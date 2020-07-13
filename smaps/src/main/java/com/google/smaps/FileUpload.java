@@ -70,10 +70,6 @@ public class FileUpload extends HttpServlet {
       // occupying that address as the value.
       Analyzer.makeRangeMap(Analyzer.getRegionList());
 
-      // Make the hashtable that uses regions as keys and their position in pixels on
-      // memory-map.html as values.
-      Analyzer.makePixelHashtable(Analyzer.getRegionList());
-
       // Resets the postFired flag in Histogram.java so that the slider and textboxes will start
       // with the min/max values of this file and not with any previously chosen bounds.
       Histogram.setNewUpload();

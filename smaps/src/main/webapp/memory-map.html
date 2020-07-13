@@ -26,7 +26,7 @@ limitations under the License.
     <title>Memory Map</title>
 </head>
 
-<body onload="drawMemoryMap(); drawMemoryMapKey();">
+<body onload="drawRegions(); drawMemoryMapKey();">
     <a id="top"></a>
     <div class="row justify-content-md-center smaps-height">
         <div class="col-md-2">
@@ -76,8 +76,7 @@ limitations under the License.
                     <form action="/searchaddress" method="POST" class="form-inline">
                         <input type="text" class="form-control" name="address-input" id="address-input"
                             placeholder="ex: 7fd158371000">
-                        <input type="submit" class="btn btn-blue" id="submit-address-btn" name="submit-address-btn"
-                            value="GO">
+                        <input class="btn btn-blue" type="submit" id="submit-address-btn" value="GO">
                     </form>
                 </div>
                 <div class="row">

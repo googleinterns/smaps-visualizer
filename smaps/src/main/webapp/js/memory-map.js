@@ -14,34 +14,6 @@
  * limitations under the License.
  */
 
-var address;
-var scrollPosition;
-
-/*
- * Scrolls the page back up to the top and empties the test box.
- */
-function resetScroll() {
-  document.getElementById('address-input').value = null;
-  window.scrollTo(0, 0);
-}
-
-/* Scrolls the page to the region that is occupying the address that the user
- * entered in the search box.
- */
-function scrollToRegion() {
-  fetch('/searchaddress')
-      .then((response) => {
-        return response.json();
-      })
-      .then((searchAddressJson) => {
-        console.log(searchAddressJson);
-        document.getElementById('address-input').value = searchAddressJson[0];
-
-        // Scroll to the region that occupies the region the user entered.
-        window.scrollTo(0, searchAddressJson[1]);
-      });
-}
-
 /* Creates the memory map visualization from the regions list, and colors them
  * based on the permissions.
  */
@@ -96,6 +68,11 @@ function drawMemoryMap() {
         // Print all the addresses on top of the colored region rectangles.
         drawText(c.width);
       });
+
+  // Once the regions and text have been drawn, take the user to the proper
+  // scroll position. If there has been no address entered, the textbox stays
+  // empty and the screen will reload at the top.
+  scrollToRegion();
 }
 
 /* Creates the address range text to overlay on the region rectangles. */
@@ -146,6 +123,31 @@ function drawTextHelper(width, text, div, idName) {
 
   // Add the <p> tag to the div.
   div.appendChild(paragraph);
+}
+
+/*
+ * Scrolls the page back up to the top and empties the test box.
+ */
+function resetScroll() {
+  document.getElementById('address-input').value = null;
+  window.scrollTo(0, 0);
+}
+
+/* Scrolls the page to the region that is occupying the address that the user
+ * entered in the search box.
+ */
+function scrollToRegion() {
+  fetch('/searchaddress')
+      .then((response) => {
+        return response.json();
+      })
+      .then((searchAddressJson) => {
+        // Refill the textbox with the user-entered number.
+        document.getElementById('address-input').value = searchAddressJson[0];
+
+        // Scroll to the region that occupies the region the user entered.
+        window.scrollTo(0, searchAddressJson[1]);
+      });
 }
 
 /* Creates the key to indicate which color corresponds to which permissions. */

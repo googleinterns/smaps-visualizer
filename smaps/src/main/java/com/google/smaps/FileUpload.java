@@ -74,10 +74,6 @@ public class FileUpload extends HttpServlet {
       // with the min/max values of this file and not with any previously chosen bounds.
       Histogram.setNewUpload();
 
-      // Resets the search box to be empty and the scroll location on the memory map to be at the
-      // top of the screen and not at any previously chosen location.
-      SearchAddress.initializeAddress();
-
       // Send user to the histogram page.
       response.sendRedirect("/interactive-histogram.html");
     }

@@ -180,7 +180,12 @@ div.sticky-map-key {
     font-size: 1em;
 }
 
-#memory-map-div canvas {
-    position: absolute;
+.region {
+    width: 25em;
+    height: 3em;
     z-index: -1;
+    position: relative;
+    border-width: 0.05em;
+    border-color: black;
+    pointer-events: none;
 }

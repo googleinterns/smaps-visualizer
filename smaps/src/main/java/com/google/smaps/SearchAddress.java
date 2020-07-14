@@ -22,22 +22,20 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Retrieves the address entered by the user on memory-map.html and calculates it's pixel location,
- * and sends that number as a Json to memory-map.js.
+ * Retrieves the address entered by the user on memory-map.html, calculates which region occupies
+ * that address, and sends that region's index in the regions list to memory-map.js.
  */
-@MultipartConfig
 @WebServlet(name = "SearchAddress", value = "/searchaddress")
 public class SearchAddress extends HttpServlet {
-  // Stores the string representation of the hex address as the user entered it.
-  static String addressString;
-  // Stores the address that will be used to find the region occupying it.
+  // Stores the String representation of the hex address as the user entered it.
+  static String address;
+  // Stores the address as a BigInteger that will be used to find the region occupying it.
   static BigInteger addressBigInt;
 
   @Override
@@ -45,26 +43,22 @@ public class SearchAddress extends HttpServlet {
     // Check whether the reset button was clicked or not.
     String resetButton = request.getParameter("reset-address-btn");
     if (resetButton != null) {
-      // Reset was clicked, so remove the address from the searchbox.
-      addressString = "";
+      // Reset was clicked, so remove the address from the searchbox and set addressBigInt to null.
+      address = "";
       addressBigInt = null;
     } else {
-      // Get the address the user entered and convert it to a BigInteger.
-      String address = request.getParameter("address-input");
+      // Get the address the user entered.
+      address = request.getParameter("address-input");
 
-      // Set the address to the global addressString.
-      addressString = address;
-
-      // Check to make sure the user actually entered an address into the textbox before clicking
-      // "go".
-      if (address != null && !address.equals("")) {
+      // Check that the address actually hexadecimal, so that there isn't a NumberFormatException.
+      // If there are characters in the address that aren't in a valid hex number, set addressBigInt
+      // to null.
+      if (address.matches("-?[0-9a-fA-F]+")) {
         // Convert the address to a BigInteger and set it to the global addressBigInt.
         addressBigInt = new BigInteger(address, 16);
+      } else {
+        addressBigInt = null;
       }
-
-      System.out.println("POST!----------------");
-      System.out.println("address string: " + addressString);
-      System.out.println("big int: " + addressBigInt);
     }
 
     // Reload the interactive-histogram.html.
@@ -76,28 +70,36 @@ public class SearchAddress extends HttpServlet {
     // Response will be a Json.
     response.setContentType("application/json");
 
+    // Stores the index in the regions list that the region is in, if the address searched doesn't
+    // match a region then index is set to -1.
     int index;
-    // If address is empty, set index to -1 so that the index check in memory-map.json will simply
-    // set the screen to the top and not to a region.
-    if (addressString == "") {
+
+    // If there isn't an address to find (because the search box was blank, reset was clicked, or
+    // the address wasn't a valid hex number), set index to -1.
+    if (addressBigInt == null) {
       index = -1;
     } else {
-      // TODO(@sophhbohr22): Error checking.
+      // Get the list of regions and the range map from the Analyzer.
       List<Region> regions = Analyzer.getRegionList();
       RangeMap<BigInteger, Region> addressRangeMap = Analyzer.getRangeMap();
 
-      // Use the range map to get the region occupying the address the user entered.
+      // Use the range map to get the region occupying the address the user entered, if there is no
+      // match, r is set to null.
       Region r = addressRangeMap.get(addressBigInt);
 
       // Get the index of the region in the list, which is also the ID of the region in the memory
-      // map.
-      index = regions.indexOf(r);
+      // map. If r is null, then set index to -1.
+      if (r != null) {
+        index = regions.indexOf(r);
+      } else {
+        index = -1;
+      }
     }
 
-    // Transfer the information to a Json list.
+    // Transfer the region information into Jsons.
     Gson addressGson = new Gson();
     Gson indexGson = new Gson();
-    String addressJson = addressGson.toJson(addressString);
+    String addressJson = addressGson.toJson(address);
     String indexJson = indexGson.toJson(index);
 
     // Create a list of the two Jsons.
@@ -105,21 +107,7 @@ public class SearchAddress extends HttpServlet {
     jsonList.add(addressJson);
     jsonList.add(indexJson);
 
-    System.out.println("GET!----------------");
-    System.out.println("address string: " + addressString);
-    System.out.println("big int: " + addressBigInt);
-    System.out.println("index: " + indexJson);
-
     // Write Json to memory-map.js
     response.getWriter().println(jsonList);
-  }
-
-  /* This method is called with each new file upload, and resets the search box to be empty and the
-   * scroll location to be at the top of the page.
-   */
-  public static void initializeAddress() {
-    addressString = "";
-    addressBigInt = null;
-    return;
   }
 }

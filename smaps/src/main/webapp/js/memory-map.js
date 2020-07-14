@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-/* Creates the memory map visualization from the regions list, and colors them
- * based on the permissions.
+/* Creates the memory map visualization from the regions list, colors the
+ * regions based on the permissions, and if the user entered an address for a
+ * specific region, scrolls to that region and highlights it.
  */
 function drawRegions() {
   fetch('/memorymap')
@@ -23,11 +24,13 @@ function drawRegions() {
         return response.json();
       })
       .then((memoryMapJson) => {
-        // Get the div that'll hold the regions.
+        // Get the div that'll hold all the regions.
         var memMapDiv = document.getElementById('memory-map-div');
+
+        // Go through each region in the list of regions Json.
         for (var i = memoryMapJson.length - 1; i >= 0; i--) {
-          // Get attributes from the memory map json.
-          var text = memoryMapJson[i][0];
+          // Get attributes for this region from the memory map json.
+          var addressRange = memoryMapJson[i][0];
           var permissions = memoryMapJson[i][1];
 
           // Create a new div for this region to go in.
@@ -36,50 +39,43 @@ function drawRegions() {
           // Create the region as a button object.
           var region = document.createElement('button');
 
-          // Set an ID for the region as it's location in the list.
+          // Set an ID for the region that is the same as it's location in the
+          // list.
           region.id = i;
 
-          // Style the region.
-          region.style['width'] = '25em';
-          region.style['height'] = '3em';
-          region.style['zIndex'] = '-1';
-          region.style['position'] = 'relative';
-          region.style['backgroundColor'] = getColor(permissions);
-          region.style['borderLeftWidth'] = '0.05em';
-          region.style['borderRightWidth'] = '0.05em';
-          region.style['borderTopWidth'] = '0.05em';
+          // Style the region with the class called region in style.css.
+          region.className = 'region';
+
+          // Adjust the style so that only the last region has a bottom border
+          // (because they overlap otherwise and double the width), and also
+          // color the region based on permissions.
           if (i == 0) {
             region.style['borderBottomWidth'] = '0.05em';
           } else {
             region.style['borderBottomWidth'] = '0em';
           }
-          region.style['borderColor'] = 'black';
-          region.style['pointerEvents'] = 'none';
+          region.style['backgroundColor'] = getColor(permissions);
 
-          // Creating the address range text that'll be on the regions.
-          var addressRange = document.createTextNode(text);
+          // Create the address range text that'll be on the region as a text
+          // node.
+          var addressRangeText = document.createTextNode(addressRange);
 
-          // Add the text to the region, and the region to the region div, and
-          // add the region div to the memory map div.
-          region.appendChild(addressRange);
+          // Add the text node to the region, add the region to the region div,
+          // and add the region div to the memory map div.
+          region.appendChild(addressRangeText);
           regDiv.appendChild(region);
           memMapDiv.appendChild(regDiv);
         }
-      });
-  scrollToRegion();
-}
 
-/*
- * Scrolls the page back up to the top and empties the text box.
- */
-function resetScroll() {
-  document.getElementById('address-input').value = null;
-  window.scrollTo(0, 0);
-  // TODO(@sophbohr22): the yellow glow doesn't go away on reset.
+        // Scroll the page to the specified region; if one has not been selected
+        // or the reset button was clicked, the page will stay at the top.
+        scrollToRegion();
+      });
 }
 
 /* Scrolls the page to the region that is occupying the address that the user
- * entered in the search box.
+ * entered in the search box; if the address is invalid, the search box was
+ * empty, or the reset button was clicked, the page will be set at the top.
  */
 function scrollToRegion() {
   fetch('/searchaddress')
@@ -87,29 +83,30 @@ function scrollToRegion() {
         return response.json();
       })
       .then((searchAddressJson) => {
-        // Get the address as a string.
+        // Get the address the user entered, and the index in the region list
+        // that the region occupies, which is the same as that region's ID in
+        // the memory map.
         var address = searchAddressJson[0];
-        console.log(address);
-
-        // Scroll to the region that occupies the address the user entered, if
-        // the address is invalid or the search box was blank then just scroll
-        // to top.
-        // Refill the textbox with the user-entered number.
-        document.getElementById('address-input').value = address;
-
-        // Get the region's index in the list, which correspond's to that
-        // region's ID in the memory map.
         var index = searchAddressJson[1];
 
-        // If the index is set to -1 it means there wasn't a matching region
-        // found, so just reset the scroll to the top.
-        if (index == -1) {
-          resetScroll();
-        } else {
-          console.log(index);
+        // If the index is -1 it means there wasn't a matching region
+        // found or no address was entered, so just reset the scroll to the top.
+        // If the index isn't -1, it's valid, so scroll to that region.
+        if (index != -1) {
+          // Refill the textbox with the user-entered number.
+          document.getElementById('address-input').value = address;
+
+          // Get the region that has the index as it's ID.
           var region = document.getElementById(index);
+
+          // Give the region a glow to highlight it by giving it a yellow box
+          // shadow, adding a bottom border that it didn't have before, and
+          // bringing it forward with it's z-index.
           region.style['boxShadow'] = '0 0 1.5em 1em rgba(252, 201, 52, 1)';
+          region.style['borderBottomWidth'] = '0.05em';
           region.style['zIndex'] = '1';
+
+          // Scroll the region to the center of the screen.
           region.scrollIntoView({behavior: 'smooth', block: 'center'});
         }
       });

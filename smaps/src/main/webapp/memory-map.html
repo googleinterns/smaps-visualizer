@@ -51,13 +51,8 @@ limitations under the License.
         <div id="visualizer-title" class="ggray">Visualizer</div>
     </div>
     <div class="row">
-        <div class="col-md-auto" id="memory-map-div">
-            <div class="row">
-                <canvas id="memory-map-canvas">
-                    Your browser does not support the HTML5 canvas tag.</canvas>
-            </div>
-        </div>
-        <div class="col-md-3">
+        <div class="col-md-auto" id="memory-map-div"></div>
+        <div class="col-md-5">
             <div class="sticky-map-key">
                 <div class="row">
                     <div class="mini-title">PERMISSIONS KEY</div>
@@ -76,11 +71,10 @@ limitations under the License.
                     <form action="/searchaddress" method="POST" class="form-inline">
                         <input type="text" class="form-control" name="address-input" id="address-input"
                             placeholder="ex: 7fd158371000">
-                        <input class="btn btn-blue" type="submit" id="submit-address-btn" value="GO">
+                        <input type="submit" class="btn btn-blue" id="submit-address-btn" value="GO">
+                        <input type="submit" class="btn btn-blue" id="reset-address-btn" name="reset-address-btn"
+                            value="RESET">
                     </form>
-                </div>
-                <div class="row">
-                    <button class="btn btn-blue" id="reset-address-btn" onclick="resetScroll();">RESET</button>
                 </div>
             </div>
         </div>

@@ -37,9 +37,14 @@ public class SearchAddress extends HttpServlet {
   static String address;
   // Stores the address as a BigInteger that will be used to find the region occupying it.
   static BigInteger addressBigInt;
+  // Stores the error message to display on memory-map.html.
+  static String errorMessage;
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    // Reset the error message to be blank.
+    errorMessage = "";
+
     // Check whether the reset button was clicked or not.
     String resetButton = request.getParameter("reset-address-btn");
     if (resetButton != null) {
@@ -50,13 +55,15 @@ public class SearchAddress extends HttpServlet {
       // Get the address the user entered.
       address = request.getParameter("address-input");
 
-      // Check that the address actually hexadecimal, so that there isn't a NumberFormatException.
-      // If there are characters in the address that aren't in a valid hex number, set addressBigInt
-      // to null.
-      if (address.matches("-?[0-9a-fA-F]+")) {
+      // Use this regular expression to check that the address is actually hexadecimal, so that
+      // there isn't a NumberFormatException. If there are characters in the address that aren't in
+      // a valid hex number, set addressBigInt to null, and set errorMessage to proper error
+      // message.
+      if (address.matches("^[0-9a-fA-F]+$")) {
         // Convert the address to a BigInteger and set it to the global addressBigInt.
         addressBigInt = new BigInteger(address, 16);
       } else {
+        errorMessage = "Address " + address + " is not a valid hexadecimal number.";
         addressBigInt = null;
       }
     }
@@ -88,10 +95,11 @@ public class SearchAddress extends HttpServlet {
       Region r = addressRangeMap.get(addressBigInt);
 
       // Get the index of the region in the list, which is also the ID of the region in the memory
-      // map. If r is null, then set index to -1.
+      // map. If r is null, then set errorMessage to the proper error message and index to -1.
       if (r != null) {
         index = regions.indexOf(r);
       } else {
+        errorMessage = "Address " + address + " is not present in this memory map.";
         index = -1;
       }
     }
@@ -99,13 +107,16 @@ public class SearchAddress extends HttpServlet {
     // Transfer the region information into Jsons.
     Gson addressGson = new Gson();
     Gson indexGson = new Gson();
+    Gson errorGson = new Gson();
     String addressJson = addressGson.toJson(address);
     String indexJson = indexGson.toJson(index);
+    String errorJson = errorGson.toJson(errorMessage);
 
     // Create a list of the two Jsons.
     List<String> jsonList = new ArrayList<String>();
     jsonList.add(addressJson);
     jsonList.add(indexJson);
+    jsonList.add(errorJson);
 
     // Write Json to memory-map.js
     response.getWriter().println(jsonList);

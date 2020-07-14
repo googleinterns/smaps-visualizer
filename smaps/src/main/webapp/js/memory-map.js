@@ -14,6 +14,28 @@
  * limitations under the License.
  */
 
+// Prints error to memory-map.html if there is one.
+printError();
+
+/* Sets the error message on memory-map.html if one is sent by
+ * SearchAddress.java.
+ */
+function printError() {
+  fetch('/searchaddress')
+      .then((response) => {
+        return response.json();
+      })
+      .then((searchAddressJson) => {
+        // The error message is the third item in the json list, and if the
+        // message isn't an empty String, get the error-message tag from
+        // memory-map.html and set it to the message.
+        errorJson = searchAddressJson[2];
+        if (errorJson != '') {
+          document.getElementById('error-message').innerHTML = errorJson;
+        }
+      });
+}
+
 /* Creates the memory map visualization from the regions list, colors the
  * regions based on the permissions, and if the user entered an address for a
  * specific region, scrolls to that region and highlights it.

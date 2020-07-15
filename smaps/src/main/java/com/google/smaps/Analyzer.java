@@ -20,7 +20,6 @@ import com.google.common.collect.RangeMap;
 import com.google.common.collect.TreeRangeMap;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
 
 /**

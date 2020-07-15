@@ -72,6 +72,7 @@ public class SearchAddressTest {
 
   @Test
   public void findRegionSuccess() throws Exception {
+    // Tests that the servlet returns the proper Json information on a valid address search.
     // Create a valid address for this memory map.
     String address = "16ec0000009";
 
@@ -98,6 +99,7 @@ public class SearchAddressTest {
 
   @Test
   public void findRegionFailure() throws Exception {
+    // Tests that the servlet returns the proper Json information on an invalid address search.
     // Create an address that isn't present in this memory map.
     String address = "ff6789";
 

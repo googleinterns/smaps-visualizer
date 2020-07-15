@@ -86,13 +86,12 @@ public class SearchAddress extends HttpServlet {
     if (addressBigInt == null) {
       index = -1;
     } else {
-      // Get the list of regions and the range map from the Analyzer.
+      // Get the list of regions.
       List<Region> regions = Analyzer.getRegionList();
-      RangeMap<BigInteger, Region> addressRangeMap = Analyzer.getRangeMap();
 
-      // Use the range map to get the region occupying the address the user entered, if there is no
+      // Get the region occupying the address the user entered; if there is no
       // match, r is set to null.
-      Region r = addressRangeMap.get(addressBigInt);
+      Region r = findRegion();
 
       // Get the index of the region in the list, which is also the ID of the region in the memory
       // map. If r is null, then set errorMessage to the proper error message and index to -1.
@@ -118,7 +117,20 @@ public class SearchAddress extends HttpServlet {
     jsonList.add(indexJson);
     jsonList.add(errorJson);
 
-    // Write Json to memory-map.js
+    // Write Json to memory-map.js.
     response.getWriter().println(jsonList);
+  }
+
+  /* Returns the region occupying the address the user entered if there is one, otherwise returns
+   * null.
+   */
+  static Region findRegion() {
+    // Get the range map from the Analyzer, which is able to take in a number, figure out which
+    // range of numbers it lies within, and return the region corresponding to that range.
+    RangeMap<BigInteger, Region> addressRangeMap = Analyzer.getRangeMap();
+
+    // Use the range map to get the region occupying the address the user entered, if there is no
+    // match, r is set to null.
+    return addressRangeMap.get(addressBigInt);
   }
 }

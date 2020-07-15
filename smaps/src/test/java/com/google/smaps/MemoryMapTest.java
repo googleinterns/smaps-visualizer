@@ -84,7 +84,7 @@ public class MemoryMapTest {
     List<Object[]> dataArray = servletUnderTest.makeDataArray(regions);
 
     // Checks first entry.
-    assertEquals("16ec0000000 - 16efa600000", dataArray.get(0)[0]);
+    assertEquals("0000016ec0000000 - 0000016efa600000", dataArray.get(0)[0]);
     assertEquals("---p", dataArray.get(0)[1]);
 
     // Checks last entry.

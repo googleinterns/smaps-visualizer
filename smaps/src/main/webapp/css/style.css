@@ -183,6 +183,9 @@ div.sticky-map-key {
 .region {
     width: 25em;
     height: 3em;
+    text-align-last: center;
+    font-family: monospace;
+    font-size: 1.3em;
     z-index: -1;
     position: relative;
     border-width: 0.05em;

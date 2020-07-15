@@ -172,7 +172,7 @@ function drawMemoryMapKey() {
 
     // Use black to draw the text on the swatch indicating the permission.
     swatch.fillStyle = 'black';
-    swatch.font = '16px Roboto';
+    swatch.font = '14px Monospace';
     swatch.fillText(permsSpaced[i], 15, y + (h / 2) + 5);
     y = y + h;
   }

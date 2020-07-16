@@ -58,29 +58,7 @@ public class SearchAddress extends HttpServlet {
     } else {
       // Get the address the user entered and convert it to lowercase.
       originalAddress = request.getParameter("address-input");
-      address = originalAddress.toLowerCase();
-
-      // Check if the address starts with any leading zeroes followed by an x, and remove everything
-      // up to and including the x from the address.
-      if (address.contains("x")) {
-        int x = address.indexOf("x");
-        address = address.substring(x + 1);
-      }
-
-      // Check if the address contains an h, and remove it.
-      if (address.contains("h")) {
-        address = address.replaceAll("h", "");
-      }
-
-      // Check if the address contains any underscores, and remove them.
-      if (address.contains("_")) {
-        address = address.replaceAll("_", "");
-      }
-
-      // Check if the address contains any spaces, and remove them.
-      if (address.contains(" ")) {
-        address = address.replaceAll(" ", "");
-      }
+      address = addressParser();
 
       // Use this regular expression to check that the address is actually hexadecimal, so that
       // there isn't a NumberFormatException. If there are characters in the address that aren't in
@@ -141,6 +119,38 @@ public class SearchAddress extends HttpServlet {
 
     // Write Json to memory-map.js.
     response.getWriter().println(jsonList);
+  }
+
+  /* Parses the address the user entered by removing a leading 0x, h, underscores, and spaces, so
+   * that later in the doPost when there's a check for it being a valid hex it won't mistakenly
+   * break because of these scenarios.*/
+  static String addressParser() {
+    // Convert the address to be all lowercase.
+    String formattedAddress = originalAddress.toLowerCase();
+
+    // Check if the address starts with any leading zeroes followed by an x, and remove everything
+    // up to and including the x from the address.
+    if (formattedAddress.contains("x")) {
+      int x = formattedAddress.indexOf("x");
+      formattedAddress = formattedAddress.substring(x + 1);
+    }
+
+    // Check if the address contains an h, and remove it.
+    if (formattedAddress.contains("h")) {
+      formattedAddress = formattedAddress.replaceAll("h", "");
+    }
+
+    // Check if the address contains any underscores, and remove them.
+    if (formattedAddress.contains("_")) {
+      formattedAddress = formattedAddress.replaceAll("_", "");
+    }
+
+    // Check if the address contains any spaces, and remove them.
+    if (formattedAddress.contains(" ")) {
+      formattedAddress = formattedAddress.replaceAll(" ", "");
+    }
+
+    return formattedAddress;
   }
 
   /* Returns the region in which the address the user entered is in if there is one, otherwise

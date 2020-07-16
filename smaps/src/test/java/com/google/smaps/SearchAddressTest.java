@@ -129,12 +129,32 @@ public class SearchAddressTest {
     // meaning all the fields are reset to either empty strings or null.
     servletUnderTest.setNewUpload();
 
-    // Test that the doGet function returns the Json list containing the address, -1 as the index,
-    // and the proper error message.
+    // Test that the doGet function returns the Json list containing the empty address, -1 as the
+    // index, and no error message.
     servletUnderTest.doGet(mockRequest, mockResponse);
     assertThat(responseWriter.toString())
         .named("SearchAddress response")
         .contains("[\"\", -1, \"\"]");
+  }
+
+  @Test
+  public void addressParserFunctionality() throws Exception {
+    // Tests that addressParser returns the proper address when given a hex address
+    // with capital letters, 0x, h, underscores, and/or spaces.
+    SearchAddress.originalAddress = "0x7FfE_A689 4000h";
+    String address = SearchAddress.addressParser();
+    SearchAddress.address = address;
+    SearchAddress.addressBigInt = new BigInteger(address, 16);
+    SearchAddress.errorMessage = "";
+
+    assertEquals("7ffea6894000", address);
+
+    // Test that the doGet function returns the Json list containing the reformatted address, 1070
+    // as the index, and no error message.
+    servletUnderTest.doGet(mockRequest, mockResponse);
+    assertThat(responseWriter.toString())
+        .named("SearchAddress response")
+        .contains("[\"7ffea6894000\", 1070, \"\"]");
   }
 
   @After

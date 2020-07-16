@@ -123,6 +123,20 @@ public class SearchAddressTest {
         .contains("[\"ff6789\", -1, \"Address [ff6789] is not present in this memory map.\"]");
   }
 
+  @Test
+  public void setNewUploadReset() throws Exception {
+    // Tests that the servlet returns the proper Json information after setting a new file upload,
+    // meaning all the fields are reset to either empty strings or null.
+    servletUnderTest.setNewUpload();
+
+    // Test that the doGet function returns the Json list containing the address, -1 as the index,
+    // and the proper error message.
+    servletUnderTest.doGet(mockRequest, mockResponse);
+    assertThat(responseWriter.toString())
+        .named("SearchAddress response")
+        .contains("[\"\", -1, \"\"]");
+  }
+
   @After
   public void tearDown() {
     // Tears down the Servlet after tests are done.

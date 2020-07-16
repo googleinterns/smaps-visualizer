@@ -155,4 +155,15 @@ public class SearchAddress extends HttpServlet {
     // is no match, r is set to null.
     return addressRangeMap.get(addressBigInt);
   }
+
+  /* Resets all the fields when there is a new file upload from FileUpload.java, to ensure that the
+   * text box is empty and there are no leftover errors from previous uploads.
+   */
+  static void setNewUpload() {
+    originalAddress = "";
+    address = "";
+    addressBigInt = null;
+    errorMessage = "";
+    return;
+  }
 }

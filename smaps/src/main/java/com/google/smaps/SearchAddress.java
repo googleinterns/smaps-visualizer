@@ -62,7 +62,7 @@ public class SearchAddress extends HttpServlet {
 
       // Check if the address starts with any leading zeroes followed by an x, and remove everything
       // up to and including the x from the address.
-      if (address.contains("x") || address.contains("X")) {
+      if (address.contains("x")) {
         int x = address.indexOf("x");
         address = address.substring(x + 1);
       }

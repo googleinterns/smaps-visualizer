@@ -14,106 +14,137 @@
  * limitations under the License.
  */
 
-/* Creates the memory map visualization from the regions list, and colors them
- * based on the permissions.
+// Prints error to memory-map.html if there is one.
+printError();
+
+/* Sets the error message on memory-map.html if one is sent by
+ * SearchAddress.java.
  */
-function drawMemoryMap() {
-  // Fetches the Json object from the MemoryMap servlet.
-  fetch('/memorymap')
+function printError() {
+  fetch('/searchaddress')
       .then((response) => {
         return response.json();
       })
-      .then((memoryMapJson) => {
-        // Set the rectangle size values.
-        var x = 5;    // X-coordinate of the upper-left corner of the rectangle.
-        var y = 5;    // Y-coordinate of the upper-left corner of the rectangle.
-        var w = 450;  // Width of the rectangle (pixels).
-        var h = 40;   // Height of the rectangle (pixels).
-
-        // Get the number of regions.
-        var numRegs = memoryMapJson.length;
-
-        // Get the canvas for putting the region rectangles on.
-        var c = document.getElementById('memory-map-canvas');
-
-        // Set the canvas height to be tall enough to display all regions, plus
-        // five more for a buffer.
-        c.width = 500;
-        c.height = h * (numRegs + 5);
-
-        // Draw all the region rectangles.
-        var reg = c.getContext('2d');
-        for (var i = memoryMapJson.length - 1; i >= 0; i--) {
-          // Get this region's address range and permissions.
-          var text = memoryMapJson[i][0];
-          var perms = memoryMapJson[i][1];
-
-          // Use black to draw the border of the rectangle with line width of 2.
-          reg.beginPath();
-          reg.lineWidth = '2';
-          reg.strokeStyle = 'black';
-          reg.rect(x, y, w, h);
-          reg.stroke();
-
-          // Use permissions to determine color to fill in the region rectangle.
-          var color = getColor(perms);
-          reg.fillStyle = color;
-          reg.fill();
-
-          // Increase the y-coordiate to draw the next region rectangle directly
-          // below this one.
-          y = y + h;
+      .then((searchAddressJson) => {
+        // The error message is the third item in the json list, and if the
+        // message isn't an empty String, get the error-message tag from
+        // memory-map.html and set it to the message.
+        errorJson = searchAddressJson[2];
+        if (errorJson != '') {
+          document.getElementById('error-message').innerHTML = errorJson;
         }
-
-        // Print all the addresses on top of the colored region rectangles.
-        drawText(c.width);
       });
 }
 
-/* Creates the address range text to overlay on the region rectangles. */
-function drawText(width) {
+/* Creates the memory map visualization from the regions list, colors the
+ * regions based on the permissions, and if the user entered an address for a
+ * specific region, scrolls to that region and highlights it.
+ */
+function drawRegions() {
   fetch('/memorymap')
       .then((response) => {
         return response.json();
       })
       .then((memoryMapJson) => {
-        for (var i = memoryMapJson.length - 1; i >= 0; i--) {
-          // Get this region's address range and permissions.
-          var address = memoryMapJson[i][0];
-          var perms = memoryMapJson[i][1];
+        // Get the div that'll hold all the regions.
+        var memMapDiv = document.getElementById('memory-map-div');
 
-          // If the region has permission ---p, add an annotation for Guard
-          // Band.
-          if (perms == '---p') {
-            address = address + ' (Guard Band)';
+        // Go through each region in the list of regions Json.
+        for (var i = memoryMapJson.length - 1; i >= 0; i--) {
+          // Get attributes for this region from the memory map json.
+          var addressRange = memoryMapJson[i][0];
+          var addressArray = addressRange.split(' ');
+          var permissions = memoryMapJson[i][1];
+
+          // Create a new div for this region to go in.
+          var regDiv = document.createElement('div');
+
+          // Create the region as a button object.
+          var region = document.createElement('button');
+
+          // Set an ID for the region that is the same as it's location in the
+          // list.
+          region.id = i;
+
+          // Style the region with the class called region in style.css.
+          region.className = 'region';
+
+          // Adjust the style so that only the last region has a bottom border
+          // (because they overlap otherwise and double the width), and also
+          // color the region based on permissions.
+          if (i == 0) {
+            region.style['borderBottomWidth'] = '0.05em';
+          } else {
+            region.style['borderBottomWidth'] = '0em';
+          }
+          region.style['backgroundColor'] = getColor(permissions);
+
+          // Create the address range text that'll be on the region as a text
+          // node.
+          var startRange = document.createTextNode(addressArray[0]);
+          var dash = document.createTextNode(addressArray[1]);
+          var endRange = document.createTextNode(addressArray[2]);
+
+          // Add the text nodes to the region line by line going backwards
+          // because we want to print the end address first (at the top of the
+          // button), and print a line break after each word so they stack
+          // within the button.
+          for (var j = addressArray.length - 1; j >= 0; j--) {
+            var text = document.createTextNode(addressArray[j]);
+            region.appendChild(text);
+            var br = document.createElement('br');
+            region.appendChild(br);
           }
 
-          // Get the div from memory-map.html and populate it with the
-          // addresses.
-          var textDiv = document.getElementById('memory-map-div');
-          drawTextHelper(width, address, textDiv);
+          // Add the new region to the region div, and add the new region div to
+          // the memory map div.
+          regDiv.appendChild(region);
+          memMapDiv.appendChild(regDiv);
         }
+
+        // Scroll the page to the specified region; if one has not been selected
+        // or the reset button was clicked, the page will stay at the top.
+        scrollToRegion();
       });
 }
 
-/* Helps the drawText function, takes in the width of the region, the text to
- * print, and the name of the div, and prints to that div.
+/* Scrolls the page to the region in which the address that the user
+ * entered is in; if the address is invalid, the search box was
+ * empty, or the reset button was clicked, the page will be set at the top.
  */
-function drawTextHelper(width, text, div) {
-  // Create new <p> tag.
-  var paragraph = document.createElement('p');
+function scrollToRegion() {
+  fetch('/searchaddress')
+      .then((response) => {
+        return response.json();
+      })
+      .then((searchAddressJson) => {
+        // Get the address the user entered, and the index in the region list
+        // that the region occupies, which is the same as that region's ID in
+        // the memory map.
+        var address = searchAddressJson[0];
+        var index = searchAddressJson[1];
 
-  // Set the width to be the same width as the region.
-  paragraph.style.width = width;
+        // If the index is -1 it means there wasn't a matching region
+        // found or no address was entered, so just reset the scroll to the top.
+        // If the index isn't -1, it's valid, so scroll to that region.
+        if (index != -1) {
+          // Refill the textbox with the user-entered number.
+          document.getElementById('address-input').value = address;
 
-  // Create a text node with the address.
-  var textNode = document.createTextNode(text);
+          // Get the region that has the index as it's ID.
+          var region = document.getElementById(index);
 
-  // Add the text node to the <p> tag.
-  paragraph.appendChild(textNode);
+          // Give the region a glow to highlight it by giving it a yellow box
+          // shadow, adding a bottom border that it didn't have before, and
+          // bringing it forward with it's z-index.
+          region.style['boxShadow'] = '0 0 1.5em 1em rgba(252, 201, 52, 1)';
+          region.style['borderBottomWidth'] = '0.05em';
+          region.style['zIndex'] = '1';
 
-  // Add the <p> tag to the div.
-  div.appendChild(paragraph);
+          // Scroll the region to the center of the screen.
+          region.scrollIntoView({behavior: 'smooth', block: 'center'});
+        }
+      });
 }
 
 /* Creates the key to indicate which color corresponds to which permissions. */
@@ -154,7 +185,7 @@ function drawMemoryMapKey() {
 
     // Use black to draw the text on the swatch indicating the permission.
     swatch.fillStyle = 'black';
-    swatch.font = '16px Roboto';
+    swatch.font = '14px Monospace';
     swatch.fillText(permsSpaced[i], 15, y + (h / 2) + 5);
     y = y + h;
   }

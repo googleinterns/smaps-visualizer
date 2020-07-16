@@ -67,8 +67,12 @@ public class FileUpload extends HttpServlet {
       Analyzer.makeRegionList("/tmp/smaps-upload.txt");
 
       // Make the address range map that stores the address range as the key and the region
-      // occupying that address as the value.
+      // in which it can be found as the value.
       Analyzer.makeRangeMap(Analyzer.getRegionList());
+
+      // Resets the fields in SearchAddress.java so that the textbox will start blank and the class
+      // will not contain any information from previous searches.
+      SearchAddress.setNewUpload();
 
       // Resets the postFired flag in Histogram.java so that the slider and textboxes will start
       // with the min/max values of this file and not with any previously chosen bounds.

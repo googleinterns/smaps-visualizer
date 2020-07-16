@@ -26,7 +26,7 @@ limitations under the License.
     <title>Memory Map</title>
 </head>
 
-<body onload="drawMemoryMap(); drawMemoryMapKey();">
+<body onload="drawRegions(); drawMemoryMapKey();">
     <a id="top"></a>
     <div class="row justify-content-md-center smaps-height">
         <div class="col-md-2">
@@ -51,13 +51,8 @@ limitations under the License.
         <div id="visualizer-title" class="ggray">Visualizer</div>
     </div>
     <div class="row">
-        <div class="col-md-auto" id="memory-map-div">
-            <div class="row">
-                <canvas id="memory-map-canvas">
-                    Your browser does not support the HTML5 canvas tag.</canvas>
-            </div>
-        </div>
-        <div class="col-md-3">
+        <div class="col-md-auto" id="memory-map-div"></div>
+        <div class="col-md-5">
             <div class="sticky-map-key">
                 <div class="row">
                     <div class="mini-title">PERMISSIONS KEY</div>
@@ -73,13 +68,16 @@ limitations under the License.
                     <div class="mini-title">HEX ADDRESS SEARCH</div>
                 </div>
                 <div class="row">
-                    <form class="form-inline">
-                        <div class="form-group">
-                            <input type="text" class="form-control" placeholder="ex: 7fd158371000">
-                        </div>
-                        <input type="submit" class="btn btn-blue" id="submit-address-search"
-                            name="submit-address-search" value="GO">
+                    <form action="/searchaddress" method="POST" class="form-inline">
+                        <input type="text" class="form-control" name="address-input" id="address-input"
+                            placeholder="ex: 7fd158371000">
+                        <input type="submit" class="btn btn-blue" id="submit-address-btn" value="GO">
+                        <input type="submit" class="btn btn-blue" id="reset-address-btn" name="reset-address-btn"
+                            value="RESET">
                     </form>
+                </div>
+                <div class="row">
+                    <p id="error-message" name="error-message"></p>
                 </div>
             </div>
         </div>

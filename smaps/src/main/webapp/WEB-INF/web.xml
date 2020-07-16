@@ -42,4 +42,15 @@ limitations under the License.
 		<servlet-name>FileUpload</servlet-name>
 		<url-pattern>/fileupload</url-pattern>
 	</servlet-mapping>
+
+  <servlet>
+		<servlet-name>SearchAddress</servlet-name>
+		<servlet-class>SearchAddress</servlet-class>
+		<multipart-config />
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>SearchAddress</servlet-name>
+		<url-pattern>/searchaddress</url-pattern>
+	</servlet-mapping>
 </web-app>

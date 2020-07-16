@@ -58,11 +58,25 @@ public class MemoryMap extends HttpServlet {
     // Go through the regions and add range/permissions pairs to the list.
     for (int i = 0; i < regions.size(); i++) {
       Region curR = regions.get(i);
-      String range = curR.startLoc() + " - " + curR.endLoc();
+      String start = formatAddress(curR.startLoc());
+      String end = formatAddress(curR.endLoc());
+      String range = start + " - " + end;
       Object permissions = (Object) curR.permissions();
       Object[] pair = {range, permissions};
       dataArray.add(pair);
     }
     return dataArray;
+  }
+
+  /**
+   * Formats the address string to be 16 characters long by adding zeroes to the beginning of the
+   * address to fill it.
+   */
+  static String formatAddress(String address) {
+    String formattedString = address;
+    while (formattedString.length() < 16) {
+      formattedString = "0" + formattedString;
+    }
+    return formattedString;
   }
 }

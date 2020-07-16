@@ -42,8 +42,8 @@ class Analyzer {
     return regions;
   }
 
-  /* Creates the address range map (interval map) with addresses as keys and the region occupying
-   * that address as the value. */
+  /* Creates the address range map (interval map) with addresses as keys and the region in which it
+   * can be found as the value. */
   static void makeRangeMap(List<Region> regionsList) {
     // Create the range map.
     addressRangeMap = TreeRangeMap.create();

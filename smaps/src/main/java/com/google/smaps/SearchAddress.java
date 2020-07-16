@@ -34,8 +34,11 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "SearchAddress", value = "/searchaddress")
 public class SearchAddress extends HttpServlet {
   // Stores the String representation of the hex address as the user entered it.
+  static String originalAddress;
+  // Stores the originalAddress as lowercase to use for parsing.
   static String address;
-  // Stores the address as a BigInteger that will be used to find the region occupying it.
+  // Stores the address as a BigInteger that will be used to find the region in which it can be
+  // found.
   static BigInteger addressBigInt;
   // Stores the error message to display on memory-map.html.
   static String errorMessage;
@@ -50,10 +53,34 @@ public class SearchAddress extends HttpServlet {
     if (resetButton != null) {
       // Reset was clicked, so remove the address from the searchbox and set addressBigInt to null.
       address = "";
+      originalAddress = "";
       addressBigInt = null;
     } else {
-      // Get the address the user entered.
-      address = request.getParameter("address-input");
+      // Get the address the user entered and convert it to lowercase.
+      originalAddress = request.getParameter("address-input");
+      address = originalAddress.toLowerCase();
+
+      // Check if the address starts with any leading zeroes followed by an x, and remove everything
+      // up to and including the x from the address.
+      if (address.contains("x") || address.contains("X")) {
+        int x = address.indexOf("x");
+        address = address.substring(x + 1);
+      }
+
+      // Check if the address contains an h, and remove it.
+      if (address.contains("h")) {
+        address = address.replaceAll("h", "");
+      }
+
+      // Check if the address contains any underscores, and remove them.
+      if (address.contains("_")) {
+        address = address.replaceAll("_", "");
+      }
+
+      // Check if the address contains any spaces, and remove them.
+      if (address.contains(" ")) {
+        address = address.replaceAll(" ", "");
+      }
 
       // Use this regular expression to check that the address is actually hexadecimal, so that
       // there isn't a NumberFormatException. If there are characters in the address that aren't in
@@ -63,7 +90,7 @@ public class SearchAddress extends HttpServlet {
         // Convert the address to a BigInteger and set it to the global addressBigInt.
         addressBigInt = new BigInteger(address, 16);
       } else {
-        errorMessage = "Address " + address + " is not a valid hexadecimal number.";
+        errorMessage = "Address [" + originalAddress + "] is not a valid hexadecimal number.";
         addressBigInt = null;
       }
     }
@@ -77,29 +104,24 @@ public class SearchAddress extends HttpServlet {
     // Response will be a Json.
     response.setContentType("application/json");
 
-    // Stores the index in the regions list that the region is in, if the address searched doesn't
-    // match a region then index is set to -1.
-    int index;
-
-    // If there isn't an address to find (because the search box was blank, reset was clicked, or
-    // the address wasn't a valid hex number), set index to -1.
-    if (addressBigInt == null) {
-      index = -1;
-    } else {
+    // Index is set to -1, and changed to a valid index if the address is a valid address for this
+    // memory map. If addressBigInt is null, it means the search box was blank, reset was clicked,
+    // or the address wasn't a valid hex number.
+    int index = -1;
+    if (addressBigInt != null) {
       // Get the list of regions.
       List<Region> regions = Analyzer.getRegionList();
 
-      // Get the region occupying the address the user entered; if there is no
-      // match, r is set to null.
+      // Get the region in which the address the user entered is in; if there is no
+      // match, it returns null.
       Region r = findRegion();
 
       // Get the index of the region in the list, which is also the ID of the region in the memory
-      // map. If r is null, then set errorMessage to the proper error message and index to -1.
+      // map. If r is null, then set errorMessage to the proper error message.
       if (r != null) {
         index = regions.indexOf(r);
       } else {
-        errorMessage = "Address " + address + " is not present in this memory map.";
-        index = -1;
+        errorMessage = "Address [" + originalAddress + "] is not present in this memory map.";
       }
     }
 
@@ -121,16 +143,16 @@ public class SearchAddress extends HttpServlet {
     response.getWriter().println(jsonList);
   }
 
-  /* Returns the region occupying the address the user entered if there is one, otherwise returns
-   * null.
+  /* Returns the region in which the address the user entered is in if there is one, otherwise
+   * returns null.
    */
   static Region findRegion() {
     // Get the range map from the Analyzer, which is able to take in a number, figure out which
     // range of numbers it lies within, and return the region corresponding to that range.
     RangeMap<BigInteger, Region> addressRangeMap = Analyzer.getRangeMap();
 
-    // Use the range map to get the region occupying the address the user entered, if there is no
-    // match, r is set to null.
+    // Use the range map to get the region in which the address the user entered is in, if there
+    // is no match, r is set to null.
     return addressRangeMap.get(addressBigInt);
   }
 }

@@ -54,14 +54,14 @@ public class SearchAddressTest {
     MockitoAnnotations.initMocks(this);
     helper.setUp();
 
-    //  Sets up some fake HTTP requests
+    //  Sets up some fake HTTP requests.
     when(mockRequest.getRequestURI()).thenReturn(FAKE_URL);
 
     // Sets up a fake HTTP response.
     responseWriter = new StringWriter();
     when(mockResponse.getWriter()).thenReturn(new PrintWriter(responseWriter));
 
-    // Create an instance of t
+    // Create an instance of the SearchAddress servlet.
     servletUnderTest = new SearchAddress();
 
     // Make the regions list and range map.
@@ -81,6 +81,7 @@ public class SearchAddressTest {
 
     // Set the fields in the SearchAddress class (which would normally be set by doPost).
     SearchAddress.address = address;
+    SearchAddress.originalAddress = "16ec0000009";
     SearchAddress.addressBigInt = new BigInteger(address, 16);
 
     // Use the findRegion() method to retrieve the region based on this address.
@@ -105,6 +106,7 @@ public class SearchAddressTest {
 
     // Set the fields in the SearchAddress class (which would normally be set by doPost).
     SearchAddress.address = address;
+    SearchAddress.originalAddress = "ff6789";
     SearchAddress.addressBigInt = new BigInteger(address, 16);
 
     // Use the findRegion() method to retrieve the region based on this address.
@@ -118,7 +120,7 @@ public class SearchAddressTest {
     servletUnderTest.doGet(mockRequest, mockResponse);
     assertThat(responseWriter.toString())
         .named("SearchAddress response")
-        .contains("[\"ff6789\", -1, \"Address ff6789 is not present in this memory map.\"]");
+        .contains("[\"ff6789\", -1, \"Address [ff6789] is not present in this memory map.\"]");
   }
 
   @After

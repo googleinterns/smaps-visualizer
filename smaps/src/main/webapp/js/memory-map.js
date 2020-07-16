@@ -53,6 +53,7 @@ function drawRegions() {
         for (var i = memoryMapJson.length - 1; i >= 0; i--) {
           // Get attributes for this region from the memory map json.
           var addressRange = memoryMapJson[i][0];
+          var addressArray = addressRange.split(' ');
           var permissions = memoryMapJson[i][1];
 
           // Create a new div for this region to go in.
@@ -80,11 +81,23 @@ function drawRegions() {
 
           // Create the address range text that'll be on the region as a text
           // node.
-          var addressRangeText = document.createTextNode(addressRange);
+          var startRange = document.createTextNode(addressArray[0]);
+          var dash = document.createTextNode(addressArray[1]);
+          var endRange = document.createTextNode(addressArray[2]);
 
-          // Add the text node to the region, add the region to the region div,
-          // and add the region div to the memory map div.
-          region.appendChild(addressRangeText);
+          // Add the text nodes to the region line by line going backwards
+          // because we want to print the end address first (at the top of the
+          // button), and print a line break after each word so they stack
+          // within the button.
+          for (var j = addressArray.length - 1; j >= 0; j--) {
+            var text = document.createTextNode(addressArray[j]);
+            region.appendChild(text);
+            var br = document.createElement('br');
+            region.appendChild(br);
+          }
+
+          // Add the new region to the region div, and add the new region div to
+          // the memory map div.
           regDiv.appendChild(region);
           memMapDiv.appendChild(regDiv);
         }
@@ -95,8 +108,8 @@ function drawRegions() {
       });
 }
 
-/* Scrolls the page to the region that is occupying the address that the user
- * entered in the search box; if the address is invalid, the search box was
+/* Scrolls the page to the region in which the address that the user
+ * entered is in; if the address is invalid, the search box was
  * empty, or the reset button was clicked, the page will be set at the top.
  */
 function scrollToRegion() {

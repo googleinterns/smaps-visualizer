@@ -104,8 +104,14 @@ a.btn.btn-blue.active {
     margin-bottom: 1em;
 }
 
-.up-down-btn {
-    margin-right: 2.5em;
+.up-btn {
+    margin-top: 1em;
+    margin-bottom: 0.8em;
+    font-size: 1.5em;
+}
+
+.down-btn {
+    margin-bottom: 1em;
     font-size: 1.5em;
 }
 
@@ -171,12 +177,12 @@ a.btn.btn-blue.active {
 
 /* Memory Map */
 div.sticky-map-key {
+    padding-top: 2em;
     position: sticky;
     top: 0;
 }
 
 .mini-title {
-    padding-top: 2em;
     font-size: 1em;
 }
 

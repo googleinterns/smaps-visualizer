@@ -91,7 +91,8 @@ function drawHistogramCust() {
           colors: ['#4285F4'],
           legend: {position: 'none'},
           hAxis: {title: 'Size in KiB'},
-          vAxis: {title: 'Number of Regions'}
+          vAxis: {title: 'Number of Regions'},
+          tooltip: {trigger: 'both'}
         };
 
         // Sets the settings for the histogram.

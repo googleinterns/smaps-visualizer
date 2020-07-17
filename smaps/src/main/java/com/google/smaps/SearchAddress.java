@@ -82,17 +82,19 @@ public class SearchAddress extends HttpServlet {
     // Response will be a Json.
     response.setContentType("application/json");
 
-    // Index is set to -1, and changed to a valid index if the address is a valid address for this
-    // memory map. If addressBigInt is null, it means the search box was blank, reset was clicked,
-    // or the address wasn't a valid hex number.
+    // Index is set to -1 and r is set to null, and changed to a valid index and region if the
+    // address is a valid address for this memory map. If addressBigInt is null, it means the search
+    // box was blank, reset was clicked, or the address wasn't a valid hex number.
     int index = -1;
+    Region r = null;
+
     if (addressBigInt != null) {
       // Get the list of regions.
       List<Region> regions = Analyzer.getRegionList();
 
       // Get the region in which the address the user entered is in; if there is no
       // match, it returns null.
-      Region r = findRegion();
+      r = findRegion();
 
       // Get the index of the region in the list, which is also the ID of the region in the memory
       // map. If r is null, then set errorMessage to the proper error message.
@@ -107,15 +109,18 @@ public class SearchAddress extends HttpServlet {
     Gson addressGson = new Gson();
     Gson indexGson = new Gson();
     Gson errorGson = new Gson();
+    Gson regionGson = new Gson();
     String addressJson = addressGson.toJson(address);
     String indexJson = indexGson.toJson(index);
     String errorJson = errorGson.toJson(errorMessage);
+    String regionJson = regionGson.toJson(r);
 
     // Create a list of the two Jsons.
     List<String> jsonList = new ArrayList<String>();
     jsonList.add(addressJson);
     jsonList.add(indexJson);
     jsonList.add(errorJson);
+    jsonList.add(regionJson);
 
     // Write Json to memory-map.js.
     response.getWriter().println(jsonList);

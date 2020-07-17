@@ -79,12 +79,6 @@ function drawRegions() {
           }
           region.style['backgroundColor'] = getColor(permissions);
 
-          // Create the address range text that'll be on the region as a text
-          // node.
-          var startRange = document.createTextNode(addressArray[0]);
-          var dash = document.createTextNode(addressArray[1]);
-          var endRange = document.createTextNode(addressArray[2]);
-
           // Add the text nodes to the region line by line going backwards
           // because we want to print the end address first (at the top of the
           // button), and print a line break after each word so they stack
@@ -143,6 +137,9 @@ function scrollToRegion() {
 
           // Scroll the region to the center of the screen.
           region.scrollIntoView({behavior: 'smooth', block: 'center'});
+
+          // Display the selected region to focus on the right.
+          drawRegionFocus(searchAddressJson[3])
         }
       });
 }
@@ -211,4 +208,67 @@ function getColor(permissions) {
     default:
       return 'White';  // White.
   }
+}
+
+/* Creates the box of information displayed at the right of the screen with the
+ * specified region's fields.
+ */
+function drawRegionFocus(region) {
+  // Get the button object that the region info will go in.
+  var regionFocusContainer = document.getElementById('region-focus-container');
+
+  // Create a button object to put all the region info in.
+  var regionFocusBtn = document.createElement('button');
+
+  // Style the button.
+  regionFocusBtn.className = 'region-focus';
+
+  // Create a json object with key value pairs for the field name and how it
+  // will be displayed to the user.
+  var fieldNames = createFieldNames();
+
+  for (field in region) {
+    var textNode =
+        document.createTextNode(fieldNames[field] + ': ' + region[field]);
+    regionFocusBtn.appendChild(textNode);
+    var br = document.createElement('br');
+    regionFocusBtn.appendChild(br);
+  }
+  regionFocusContainer.appendChild(regionFocusBtn);
+}
+
+function createFieldNames() {
+  var fieldNames = {
+    'lineNumber': 'Line Number in Smaps File',
+    'startLoc': 'Address Start (inclusive)',
+    'endLoc': 'Address End (exclusive)',
+    'permissions': 'Permissions',
+    'offset': 'Offset',
+    'device': 'Device',
+    'inode': 'inode',
+    'pathname': 'File Backing Pathname',
+    'size': 'Size',
+    'kernelPageSize': 'KernelPageSize',
+    'mmuPageSize': 'MMUPageSize',
+    'rss': 'Rss',
+    'pss': 'Pss',
+    'sharedClean': 'Shared_Clean',
+    'sharedDirty': 'Shared_Dirty',
+    'privateClean': 'Private_Clean',
+    'privateDirty': 'Private_Dirty',
+    'referenced': 'Referenced',
+    'anonymous': 'Anonymous',
+    'lazyFree': 'LazyFree',
+    'anonHugePages': 'AnonHugePages',
+    'shmemHugePages': 'ShmemHugePages',
+    'shmemPmdMapped': 'ShmemPmdMapped',
+    'sharedHugetlb': 'Shared_Hugetlb',
+    'privateHugetlb': 'Private_Hugetlb',
+    'hugePFNMap': 'HugePFNMap',
+    'swap': 'Swap',
+    'swapPss': 'SwapPss',
+    'locked': 'Locked',
+    'vmFlags': 'VmFlags'
+  };
+  return fieldNames;
 }

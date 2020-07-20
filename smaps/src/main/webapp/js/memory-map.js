@@ -227,16 +227,33 @@ function drawRegionFocus(region) {
   // will be displayed to the user.
   var fieldNames = createFieldNames();
 
+  // Go through every field in the region.
   for (field in region) {
-    var textNode =
-        document.createTextNode(fieldNames[field] + ': ' + region[field]);
+    // Print the proper label, the value, and if the field is one that is
+    // represented in kB, add a kB to the end of the string, otherwise don't.
+    if (isKiB(field)) {
+      var textNode = document.createTextNode(
+          fieldNames[field] + ': ' + region[field] + ' kB');
+    } else {
+      var textNode =
+          document.createTextNode(fieldNames[field] + ': ' + region[field]);
+    }
+
+    // Add the text to the focused region with a line break so the next line
+    // will be on a newline.
     regionFocusBtn.appendChild(textNode);
     var br = document.createElement('br');
     regionFocusBtn.appendChild(br);
   }
+
+  // Add the focused region to the container on memory-map.html.
   regionFocusContainer.appendChild(regionFocusBtn);
 }
 
+/* Creates an object fieldNames that contains key/value pairs for the name of
+ * the variable and how it will be displayed to the user when printed out with a
+ * focused region.
+ */
 function createFieldNames() {
   var fieldNames = {
     'lineNumber': 'Line Number in Smaps File',
@@ -271,4 +288,39 @@ function createFieldNames() {
     'vmFlags': 'VmFlags'
   };
   return fieldNames;
+}
+
+/* Return whether a field should have a kB concatenated to the end after the
+ * value, all of the fields listed here are in kB.
+ */
+function isKiB(field) {
+  var kiBFields = [
+    'size',
+    'kernelPageSize',
+    'mmuPageSize',
+    'rss',
+    'pss',
+    'sharedClean',
+    'sharedDirty',
+    'privateClean',
+    'privateDirty',
+    'referenced',
+    'anonymous',
+    'lazyFree',
+    'anonHugePages',
+    'shmemHugePages',
+    'shmemPmdMapped',
+    'sharedHugetlb',
+    'privateHugetlb',
+    'hugePFNMap',
+    'swap',
+    'swapPss',
+    'swapPss',
+    'locked'
+  ];
+
+  if (kiBFields.includes(field)) {
+    return true;
+  }
+  return false;
 }

@@ -47,20 +47,20 @@ function drawRegions() {
       })
       .then((memoryMapJson) => {
         // Get the div that'll hold all the regions.
-        var memMapDiv = document.getElementById('memory-map-div');
+        const memMapDiv = document.getElementById('memory-map-div');
 
         // Go through each region in the list of regions Json.
-        for (var i = memoryMapJson.length - 1; i >= 0; i--) {
+        for (let i = memoryMapJson.length - 1; i >= 0; i--) {
           // Get attributes for this region from the memory map json.
-          var addressRange = memoryMapJson[i][0];
-          var addressArray = addressRange.split(' ');
-          var permissions = memoryMapJson[i][1];
+          let addressRange = memoryMapJson[i][0];
+          let addressArray = addressRange.split(' ');
+          let permissions = memoryMapJson[i][1];
 
           // Create a new div for this region to go in.
-          var regDiv = document.createElement('div');
+          let regDiv = document.createElement('div');
 
           // Create the region as a button object.
-          var region = document.createElement('button');
+          let region = document.createElement('button');
 
           // Set an ID for the region that is the same as it's location in the
           // list.
@@ -83,10 +83,10 @@ function drawRegions() {
           // because we want to print the end address first (at the top of the
           // button), and print a line break after each word so they stack
           // within the button.
-          for (var j = addressArray.length - 1; j >= 0; j--) {
-            var text = document.createTextNode(addressArray[j]);
+          for (let j = addressArray.length - 1; j >= 0; j--) {
+            let text = document.createTextNode(addressArray[j]);
             region.appendChild(text);
-            var br = document.createElement('br');
+            let br = document.createElement('br');
             region.appendChild(br);
           }
 
@@ -115,8 +115,8 @@ function scrollToRegion() {
         // Get the address the user entered, and the index in the region list
         // that the region occupies, which is the same as that region's ID in
         // the memory map.
-        var address = searchAddressJson[0];
-        var index = searchAddressJson[1];
+        const address = searchAddressJson[0];
+        const index = searchAddressJson[1];
 
         // If the index is -1 it means there wasn't a matching region
         // found or no address was entered, so just reset the scroll to the top.
@@ -126,7 +126,7 @@ function scrollToRegion() {
           document.getElementById('address-input').value = address;
 
           // Get the region that has the index as it's ID.
-          var region = document.getElementById(index);
+          const region = document.getElementById(index);
 
           // Give the region a glow to highlight it by giving it a yellow box
           // shadow, adding a bottom border that it didn't have before, and
@@ -147,27 +147,27 @@ function scrollToRegion() {
 /* Creates the key to indicate which color corresponds to which permissions. */
 function drawMemoryMapKey() {
   // Get the canvas for putting the key on.
-  var c = document.getElementById('key-canvas');
+  const c = document.getElementById('key-canvas');
 
   // Set the canvas width and height.
   c.width = 300;
   c.height = 220;
 
   // All permissions.
-  var perms = ['---p', 'rw-p', 'r-xp', 'r--s', 'r--p', 'rw-s', 'r-xs'];
-  var permsSpaced = [
+  const perms = ['---p', 'rw-p', 'r-xp', 'r--s', 'r--p', 'rw-s', 'r-xs'];
+  const permsSpaced = [
     '- - - p', 'r w - p', 'r - x p', 'r - - s', 'r - - p', 'r w - s', 'r - x s'
   ];
 
   // Set the swatch size values.
-  var x = 1;    // X-coordinate of the upper-left corner of the swatch.
-  var y = 1;    // Y-coordinate of the upper-left corner of the swatch.
-  var w = 135;  // Width of the swatch (pixels).
-  var h = 30;   // Height of the swatch (pixels).
+  const x = 1;    // X-coordinate of the upper-left corner of the swatch.
+  let y = 1;      // Y-coordinate of the upper-left corner of the swatch.
+  const w = 135;  // Width of the swatch (pixels).
+  const h = 30;   // Height of the swatch (pixels).
 
   // Draw all the color swatches indicating permission.
-  var swatch = c.getContext('2d');
-  for (var i = 0; i < perms.length; i++) {
+  const swatch = c.getContext('2d');
+  for (let i = 0; i < perms.length; i++) {
     // Use black to draw the border of the swatch with line width of 2.
     swatch.beginPath();
     swatch.lineWidth = '1';
@@ -176,7 +176,7 @@ function drawMemoryMapKey() {
     swatch.stroke();
 
     // Use color at index i to make the swatch for permission at index i.
-    var color = getColor(perms[i]);
+    let color = getColor(perms[i]);
     swatch.fillStyle = color;
     swatch.fill();
 
@@ -215,34 +215,36 @@ function getColor(permissions) {
  */
 function drawRegionFocus(region) {
   // Get the button object that the region info will go in.
-  var regionFocusContainer = document.getElementById('region-focus-container');
+  const regionFocusContainer =
+      document.getElementById('region-focus-container');
 
   // Create a button object to put all the region info in.
-  var regionFocusBtn = document.createElement('button');
+  const regionFocusBtn = document.createElement('button');
 
   // Style the button.
   regionFocusBtn.className = 'region-focus';
 
   // Create a json object with key value pairs for the field name and how it
   // will be displayed to the user.
-  var fieldNames = createFieldNames();
+  const fieldNames = createFieldNames();
 
   // Go through every field in the region.
   for (field in region) {
     // Print the proper label, the value, and if the field is one that is
     // represented in kB, add a kB to the end of the string, otherwise don't.
-    if (isKiB(field)) {
-      var textNode = document.createTextNode(
+    let textNode;
+    if (isKB(field)) {
+      textNode = document.createTextNode(
           fieldNames[field] + ': ' + region[field] + ' kB');
     } else {
-      var textNode =
+      textNode =
           document.createTextNode(fieldNames[field] + ': ' + region[field]);
     }
 
     // Add the text to the focused region with a line break so the next line
     // will be on a newline.
     regionFocusBtn.appendChild(textNode);
-    var br = document.createElement('br');
+    const br = document.createElement('br');
     regionFocusBtn.appendChild(br);
   }
 
@@ -255,7 +257,7 @@ function drawRegionFocus(region) {
  * focused region.
  */
 function createFieldNames() {
-  var fieldNames = {
+  const fieldNames = {
     'lineNumber': 'Line Number in Smaps File',
     'startLoc': 'Address Start (inclusive)',
     'endLoc': 'Address End (exclusive)',
@@ -293,8 +295,8 @@ function createFieldNames() {
 /* Return whether a field should have a kB concatenated to the end after the
  * value, all of the fields listed here are in kB.
  */
-function isKiB(field) {
-  var kiBFields = [
+function isKB(field) {
+  const kBFields = [
     'size',
     'kernelPageSize',
     'mmuPageSize',
@@ -319,7 +321,7 @@ function isKiB(field) {
     'locked'
   ];
 
-  if (kiBFields.includes(field)) {
+  if (kBFields.includes(field)) {
     return true;
   }
   return false;

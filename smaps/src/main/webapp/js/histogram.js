@@ -21,8 +21,8 @@ setBounds();
 // Set a callback to run when the Google Visualization API is loaded.
 google.charts.setOnLoadCallback(drawHistogramCust);
 
-var lowerBound;  // Lower bound of size that will be sent to histogram.
-var upperBound;  // Upper bound of size that will be sent to histogram.
+let lowerBound;  // Lower bound of size that will be sent to histogram.
+let upperBound;  // Upper bound of size that will be sent to histogram.
 
 /*
  * Sets the global variables lowerBound and upperBound to be the
@@ -59,14 +59,14 @@ function drawHistogramCust() {
         // Converts histogram Json 2D array into a data table for histogram. The
         // histogram data is in the second index of the Json, so
         // histogramJson[1].
-        var data = google.visualization.arrayToDataTable(histogramJson[1]);
+        const data = google.visualization.arrayToDataTable(histogramJson[1]);
 
         // Creates the dashboard.
-        var dashboard = new google.visualization.Dashboard(
+        const dashboard = new google.visualization.Dashboard(
             document.getElementById('dashboard-div'));
 
         // Creates the range slider, passing in some options.
-        var histogramRangeSlider = new google.visualization.ControlWrapper({
+        const histogramRangeSlider = new google.visualization.ControlWrapper({
           'controlType': 'NumberRangeFilter',
           'containerId': 'filter-div',
           'options': {
@@ -84,7 +84,7 @@ function drawHistogramCust() {
         });
 
         // Sets the chart options.
-        var options = {
+        const options = {
           title: 'Histogram of Region Sizes',
           titleTextStyle: {color: '#5F6368', fontName: 'Roboto', fontSize: 18},
           height: 900,
@@ -96,7 +96,7 @@ function drawHistogramCust() {
         };
 
         // Sets the settings for the histogram.
-        var histogram = new google.visualization.ChartWrapper({
+        const histogram = new google.visualization.ChartWrapper({
           chartType: 'Histogram',
           dataTable: data,
           options: options,

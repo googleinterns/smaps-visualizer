@@ -82,17 +82,19 @@ public class SearchAddress extends HttpServlet {
     // Response will be a Json.
     response.setContentType("application/json");
 
-    // Index is set to -1, and changed to a valid index if the address is a valid address for this
-    // memory map. If addressBigInt is null, it means the search box was blank, reset was clicked,
-    // or the address wasn't a valid hex number.
+    // Index is set to -1 and r is set to null, and changed to a valid index and region if the
+    // address is a valid address for this memory map. If addressBigInt is null, it means the search
+    // box was blank, reset was clicked, or the address wasn't a valid hex number.
     int index = -1;
+    Region r = null;
+
     if (addressBigInt != null) {
       // Get the list of regions.
       List<Region> regions = Analyzer.getRegionList();
 
       // Get the region in which the address the user entered is in; if there is no
       // match, it returns null.
-      Region r = findRegion();
+      r = findRegion();
 
       // Get the index of the region in the list, which is also the ID of the region in the memory
       // map. If r is null, then set errorMessage to the proper error message.
@@ -103,21 +105,20 @@ public class SearchAddress extends HttpServlet {
       }
     }
 
-    // Transfer the region information into Jsons.
-    Gson addressGson = new Gson();
-    Gson indexGson = new Gson();
-    Gson errorGson = new Gson();
-    String addressJson = addressGson.toJson(address);
-    String indexJson = indexGson.toJson(index);
-    String errorJson = errorGson.toJson(errorMessage);
+    // Put all the fields that will be turned into Jsons into an array.
+    Object[] fields = {address, index, errorMessage, r};
 
-    // Create a list of the two Jsons.
+    // Create a list that all the Json objects will go into.
     List<String> jsonList = new ArrayList<String>();
-    jsonList.add(addressJson);
-    jsonList.add(indexJson);
-    jsonList.add(errorJson);
 
-    // Write Json to memory-map.js.
+    // Go through each field and turn it into a Json, and add it to the list of Jsons.
+    for (Object field : fields) {
+      Gson gson = new Gson();
+      String json = gson.toJson(field);
+      jsonList.add(json);
+    }
+
+    // Write Json list to memory-map.js.
     response.getWriter().println(jsonList);
   }
 

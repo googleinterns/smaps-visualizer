@@ -53,11 +53,10 @@ function drawRegions() {
         for (let i = memoryMapJson.length - 1; i >= 0; i--) {
           // Get attributes for this region from the memory map json.
           let addressRange = memoryMapJson[i][0];
-          let addressArray = addressRange.split(' ');
           let permissions = memoryMapJson[i][1];
 
           // Create a new div for this region to go in.
-          let regDiv = document.createElement('div');
+          const regDiv = document.createElement('div');
 
           // Create the region as a button object.
           let region = document.createElement('button');
@@ -88,14 +87,6 @@ function drawRegions() {
             region.appendChild(document.createTextNode(part));
             region.appendChild(document.createElement('br'));
           }
-          /*
-          for (let j = addressArray.length - 1; j >= 0; j--) {
-            let text = document.createTextNode(addressArray[j]);
-            region.appendChild(text);
-            let br = document.createElement('br');
-            region.appendChild(br);
-          }
-          */
 
           // Add the new region to the region div, and add the new region div to
           // the memory map div.

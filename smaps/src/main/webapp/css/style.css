@@ -42,8 +42,8 @@ body {
 }
 
 p {
-    margin-top: 1em;
     margin-bottom: 1em;
+    margin-top: 1em;
 }
 
 html {
@@ -56,14 +56,14 @@ html {
 }
 
 .btn-gray{
-    color: #5F6368;
     border-color: #5F6368;
+    color: #5F6368;
 }
 
 .btn-gray:hover {
-    color: #FFFFFF;
     background-color: #5F6368;
     border-color: #5F6368;
+    color: #FFFFFF;
 }
 
 .btn-gray:focus {
@@ -71,32 +71,31 @@ html {
 }
 
 a.btn.btn-gray.active {
-    color: #FFFFFF;
     background-color: #5F6368;
     border-color: #5F6368;
+    color: #FFFFFF;
     cursor: not-allowed;
 }
 
 .btn-blue {
-    color: #4285F4;
     border-color: #4285F4;
+    color: #4285F4;
 }
 
 .btn-blue:hover {
-    color: #FFFFFF;
     background-color: #4285F4;
     border-color: #4285F4;
+    color: #FFFFFF;
 }
 
 .btn-blue:focus {
     box-shadow: 0 0 0 0.2rem rgba(66, 133, 244, .25);
-
 }
 
 a.btn.btn-blue.active {
-    color: #FFFFFF;
     background-color: #4285F4;
     border-color: #4285F4;
+    color: #FFFFFF;
     cursor: not-allowed;
 }
 
@@ -105,14 +104,14 @@ a.btn.btn-blue.active {
 }
 
 .up-btn {
-    margin-top: 1em;
-    margin-bottom: 0.8em;
     font-size: 1.5em;
+    margin-bottom: 0.8em;
+    margin-top: 1em;
 }
 
 .down-btn {
-    margin-bottom: 1em;
     font-size: 1.5em;
+    margin-bottom: 1em;
 }
 
 #submit-address-btn {
@@ -171,8 +170,8 @@ a.btn.btn-blue.active {
 }
 
 .hist-slider .google-visualization-controls-slider-thumb {
-    width: 8px;
     background-color: #4285F4;
+    width: 8px;
 }
 
 /* Memory Map */
@@ -193,22 +192,22 @@ div.sticky-region-focus {
 }
 
 .region {
-    width: 18em;
-    text-align-last: right;
+    border-color: black;
+    border-width: 0.05em;
     font-family: monospace;
     font-size: 1.2em;
-    z-index: -1;
-    position: relative;
-    border-width: 0.05em;
-    border-color: black;
     pointer-events: none;
+    position: relative;
+    text-align-last: right;
+    width: 18em;
+    z-index: -1;
 }
 
 .region-focus {
     background-color: #3C4043;
-    color: white;
     border-color: black;
     border-width: 0.1em;
+    color: white;
     font-family: 'Source Code Pro', monospace;
     font-size: 0.8em;
     text-align-last: left;

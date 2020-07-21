@@ -83,12 +83,19 @@ function drawRegions() {
           // because we want to print the end address first (at the top of the
           // button), and print a line break after each word so they stack
           // within the button.
+          const addressParts = addressRange.split(' ').reverse();
+          for (const part of addressParts) {
+            region.appendChild(document.createTextNode(part));
+            region.appendChild(document.createElement('br'));
+          }
+          /*
           for (let j = addressArray.length - 1; j >= 0; j--) {
             let text = document.createTextNode(addressArray[j]);
             region.appendChild(text);
             let br = document.createElement('br');
             region.appendChild(br);
           }
+          */
 
           // Add the new region to the region div, and add the new region div to
           // the memory map div.
@@ -144,6 +151,25 @@ function scrollToRegion() {
       });
 }
 
+// Holds all of the possible permissions that a region could have.
+const perms = ['---p', 'rw-p', 'r-xp', 'r--s', 'r--p', 'rw-s', 'r-xs'];
+
+// Maps the permission as it is stored in the region to the display version
+// which has a space between every character for better readability.
+const displayPerms = new Map(perms.map((permission) => {
+  return [permission, getSpaced(permission)];
+}));
+
+/* Takes in text and adds a space between each character, helps with readability
+ * for certain attributes.*/
+function getSpaced(text) {
+  let spacedText = '';
+  for (let i = 0; i < text.length; i++) {
+    spacedText += text.charAt(i) + ' ';
+  }
+  return spacedText;
+}
+
 /* Creates the key to indicate which color corresponds to which permissions. */
 function drawMemoryMapKey() {
   // Get the canvas for putting the key on.
@@ -152,12 +178,6 @@ function drawMemoryMapKey() {
   // Set the canvas width and height.
   c.width = 300;
   c.height = 220;
-
-  // All permissions.
-  const perms = ['---p', 'rw-p', 'r-xp', 'r--s', 'r--p', 'rw-s', 'r-xs'];
-  const permsSpaced = [
-    '- - - p', 'r w - p', 'r - x p', 'r - - s', 'r - - p', 'r w - s', 'r - x s'
-  ];
 
   // Set the swatch size values.
   const x = 1;    // X-coordinate of the upper-left corner of the swatch.
@@ -183,7 +203,7 @@ function drawMemoryMapKey() {
     // Use black to draw the text on the swatch indicating the permission.
     swatch.fillStyle = 'black';
     swatch.font = '14px Monospace';
-    swatch.fillText(permsSpaced[i], 15, y + (h / 2) + 5);
+    swatch.fillText(displayPerms.get(perms[i]), 15, y + (h / 2) + 5);
     y = y + h;
   }
 }
@@ -265,7 +285,7 @@ function createFieldNames() {
     'offset': 'Offset',
     'device': 'Device',
     'inode': 'inode',
-    'pathname': 'File Backing Pathname',
+    'pathname': 'Pathname',
     'size': 'Size',
     'kernelPageSize': 'KernelPageSize',
     'mmuPageSize': 'MMUPageSize',

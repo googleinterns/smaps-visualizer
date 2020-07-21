@@ -241,15 +241,13 @@ function drawRegionFocus(region) {
 
   // Go through every field in the region.
   for (field in region) {
-    // Print the proper label, the value, and if the field is one that is
-    // represented in kB, add a kB to the end of the string, otherwise don't.
-    let textNode;
+    // Set the text node to the proper label and the field, and if the field
+    // needs a kB at the end recreate it with the kB.
+    let textNode =
+        document.createTextNode(fieldNames[field] + ': ' + region[field]);
     if (isKB(field)) {
       textNode = document.createTextNode(
           fieldNames[field] + ': ' + region[field] + ' kB');
-    } else {
-      textNode =
-          document.createTextNode(fieldNames[field] + ': ' + region[field]);
     }
 
     // Add the text to the focused region with a line break so the next line

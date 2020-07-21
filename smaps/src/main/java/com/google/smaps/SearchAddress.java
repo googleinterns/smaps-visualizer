@@ -105,24 +105,20 @@ public class SearchAddress extends HttpServlet {
       }
     }
 
-    // Transfer the region information into Jsons.
-    Gson addressGson = new Gson();
-    Gson indexGson = new Gson();
-    Gson errorGson = new Gson();
-    Gson regionGson = new Gson();
-    String addressJson = addressGson.toJson(address);
-    String indexJson = indexGson.toJson(index);
-    String errorJson = errorGson.toJson(errorMessage);
-    String regionJson = regionGson.toJson(r);
+    // Put all the fields that will be turned into Jsons into an array.
+    Object[] fields = {address, index, errorMessage, r};
 
-    // Create a list of the two Jsons.
+    // Create a list that all the Json objects will go into.
     List<String> jsonList = new ArrayList<String>();
-    jsonList.add(addressJson);
-    jsonList.add(indexJson);
-    jsonList.add(errorJson);
-    jsonList.add(regionJson);
 
-    // Write Json to memory-map.js.
+    // Go through each field and turn it into a Json, and add it to the list of Jsons.
+    for (Object field : fields) {
+      Gson gson = new Gson();
+      String json = gson.toJson(field);
+      jsonList.add(json);
+    }
+
+    // Write Json list to memory-map.js.
     response.getWriter().println(jsonList);
   }
 

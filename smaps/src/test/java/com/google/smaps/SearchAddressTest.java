@@ -94,11 +94,9 @@ public class SearchAddressTest {
     // in the list, and the error message, which in this case should be null.
     servletUnderTest.doGet(mockRequest, mockResponse);
 
-    /*
     assertThat(responseWriter.toString())
         .named("SearchAddress response")
-        .contains("[\"16ec0000009\", 0, null]");
-        */
+        .contains("[\"16ec0000009\", 0, null,");
   }
 
   @Test
@@ -122,11 +120,10 @@ public class SearchAddressTest {
     // and the proper error message.
     servletUnderTest.doGet(mockRequest, mockResponse);
 
-    /*
     assertThat(responseWriter.toString())
         .named("SearchAddress response")
-        .contains("[\"ff6789\", -1, \"Address [ff6789] is not present in this memory map.\"]");
-        */
+        .contains(
+            "[\"ff6789\", -1, \"Address [ff6789] is not present in this memory map.\", null]");
   }
 
   @Test
@@ -139,11 +136,9 @@ public class SearchAddressTest {
     // index, and no error message.
     servletUnderTest.doGet(mockRequest, mockResponse);
 
-    /*
     assertThat(responseWriter.toString())
         .named("SearchAddress response")
-        .contains("[\"\", -1, \"\"]");
-        */
+        .contains("[\"\", -1, \"\", null]");
   }
 
   @Test
@@ -162,11 +157,9 @@ public class SearchAddressTest {
     // as the index, and no error message.
     servletUnderTest.doGet(mockRequest, mockResponse);
 
-    /*
     assertThat(responseWriter.toString())
         .named("SearchAddress response")
-        .contains("[\"7ffea6894000\", 1070, \"\"]");
-        */
+        .contains("[\"7ffea6894000\", 1070, \"\",");
   }
 
   @After

@@ -47,7 +47,7 @@ public class FileUpload extends HttpServlet {
     errorMessage = "";
 
     // Check whether example mode was selected, if it wasn't selected the string will be null.
-    String exampleButton = request.getParameter("example-btn");
+    String exampleButton = request.getParameter("exampleMode");
     if (exampleButton != null) {
       // Create an example input stream from the smaps-full file, and upload it.
       File exampleFile = new File("../smaps-full.txt");

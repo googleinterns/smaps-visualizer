@@ -88,7 +88,8 @@ public class FileUpload extends HttpServlet {
     response.getWriter().println(errorJson);
   }
 
-  /* Takes in the file's input stream and saves it to the tmp directory, and creates the necessary
+  /**
+   * Takes in the file's input stream and saves it to the tmp directory, and creates the necessary
    * data structures and sets the necessary fields.
    */
   public void uploadFile(InputStream fileInputStream) throws IOException {

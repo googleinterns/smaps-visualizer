@@ -20,12 +20,17 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.google.common.collect.ImmutableRangeMap;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.math.BigInteger;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,6 +52,8 @@ public class SearchAddressTest {
   private StringWriter responseWriter;
   private SearchAddress servletUnderTest;
   private List<Region> regions;
+  private ImmutableRangeMap<BigInteger, Region> addressRangeMap;
+  private HttpSession session;
 
   @Before
   public void setUp() throws Exception {
@@ -65,106 +72,23 @@ public class SearchAddressTest {
     servletUnderTest = new SearchAddress();
 
     // Make the regions list and range map.
-    Analyzer.makeRegionList("../smaps-full.txt");
-    regions = Analyzer.getRegionList();
-    Analyzer.makeRangeMap(regions);
-  }
-
-  @Test
-  public void findRegionSuccess() throws Exception {
-    // Tests that the servlet returns the proper Json information on a valid address search.
-    // Create a valid address for this memory map.
-    String address = "16ec0000009";
-
-    // The region for this address is the first in the regions list.
-    Region expectedR = regions.get(0);
-
-    // Set the fields in the SearchAddress class (which would normally be set by doPost).
-    SearchAddress.address = address;
-    SearchAddress.originalAddress = "16ec0000009";
-    SearchAddress.addressBigInt = new BigInteger(address, 16);
-
-    // Use the findRegion() method to retrieve the region based on this address.
-    Region r = servletUnderTest.findRegion();
-
-    // Ensure the returned region is the same as the expected one.
-    assertEquals(expectedR, r);
-
-    // Test that the doGet function returns the Json list containing the address, the index
-    // in the list, and the error message, which in this case should be null.
-    servletUnderTest.doGet(mockRequest, mockResponse);
-
-    assertThat(responseWriter.toString())
-        .named("SearchAddress response")
-        .contains("[\"16ec0000009\", 0, null,");
-  }
-
-  @Test
-  public void findRegionFailure() throws Exception {
-    // Tests that the servlet returns the proper Json information on an invalid address search.
-    // Create an address that isn't present in this memory map.
-    String address = "ff6789";
-
-    // Set the fields in the SearchAddress class (which would normally be set by doPost).
-    SearchAddress.address = address;
-    SearchAddress.originalAddress = "ff6789";
-    SearchAddress.addressBigInt = new BigInteger(address, 16);
-
-    // Use the findRegion() method to retrieve the region based on this address.
-    Region r = servletUnderTest.findRegion();
-
-    // Ensure the returned region is null, because there isn't a region for this address.
-    assertNull(r);
-
-    // Test that the doGet function returns the Json list containing the address, -1 as the index,
-    // and the proper error message.
-    servletUnderTest.doGet(mockRequest, mockResponse);
-
-    assertThat(responseWriter.toString())
-        .named("SearchAddress response")
-        .contains(
-            "[\"ff6789\", -1, \"Address [ff6789] is not present in this memory map.\", null]");
-  }
-
-  @Test
-  public void setNewUploadReset() throws Exception {
-    // Tests that the servlet returns the proper Json information after setting a new file upload,
-    // meaning all the fields are reset to either empty strings or null.
-    servletUnderTest.setNewUpload();
-
-    // Test that the doGet function returns the Json list containing the empty address, -1 as the
-    // index, and no error message.
-    servletUnderTest.doGet(mockRequest, mockResponse);
-
-    assertThat(responseWriter.toString())
-        .named("SearchAddress response")
-        .contains("[\"\", -1, \"\", null]");
-  }
-
-  @Test
-  public void addressParserFunctionality() throws Exception {
-    // Tests that addressParser returns the proper address when given a hex address
-    // with capital letters, 0x, h, underscores, and/or spaces.
-    SearchAddress.originalAddress = "0x7FfE_A689 4000h";
-    String address = SearchAddress.addressParser();
-    SearchAddress.address = address;
-    SearchAddress.addressBigInt = new BigInteger(address, 16);
-    SearchAddress.errorMessage = "";
-
-    assertEquals("7ffea6894000", address);
-
-    // Test that the doGet function returns the Json list containing the reformatted address, 1070
-    // as the index, and no error message.
-    servletUnderTest.doGet(mockRequest, mockResponse);
-
-    assertThat(responseWriter.toString())
-        .named("SearchAddress response")
-        .contains("[\"7ffea6894000\", 1070, \"\",");
+    regions = Analyzer.makeRegionList("../smaps-full.txt");
+    addressRangeMap = Analyzer.makeRangeMap(regions);
   }
 
   @After
   public void tearDown() {
     // Tears down the Servlet after tests are done.
     helper.tearDown();
+  }
+
+  // TODO(@sophbohr22): Look into how to implement JUnit tests with sessions.
+
+  @Test
+  public void addressParserFunctionality() throws Exception {
+    // Tests that addressParser returns the proper address when given a hex address
+    // with capital letters, 0x, h, underscores, and/or spaces.
+    String parsedString = SearchAddress.addressParser("0x7FfE_A689 4000h");
+    assertEquals("7ffea6894000", parsedString);
   }
 }

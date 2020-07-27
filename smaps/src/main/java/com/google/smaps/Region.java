@@ -16,11 +16,12 @@
 package com.google.smaps;
 
 import com.google.auto.value.AutoValue;
+import java.io.Serializable;
 import java.util.List;
 
 /** Represents a region of memory from the dump. */
 @AutoValue
-abstract class Region {
+abstract class Region implements Serializable {
   // The line number of the first line of the region print-out.
   abstract int lineNumber();
   // The start of the address space (inclusive).

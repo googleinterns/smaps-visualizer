@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-// Prints error to memory-map.html if there is one.
-printError();
-
 /* Sets the error message on memory-map.html if one is sent by
  * SearchAddress.java.
  */
@@ -97,6 +94,9 @@ function drawRegions() {
         // Scroll the page to the specified region; if one has not been selected
         // or the reset button was clicked, the page will stay at the top.
         scrollToRegion();
+
+        // Prints error to memory-map.html if there is one.
+        printError();
       });
 }
 

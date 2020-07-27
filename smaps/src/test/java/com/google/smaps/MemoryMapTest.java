@@ -68,19 +68,12 @@ public class MemoryMapTest {
     helper.tearDown();
   }
 
-  @Test
-  public void doGet_writesResponse() throws Exception {
-    // Tests that response is named properly and at least is a list even if it's empty.
-    servletUnderTest.doGet(mockRequest, mockResponse);
-    assertThat(responseWriter.toString()).named("MemoryMap response").contains("[");
-    assertThat(responseWriter.toString()).named("MemoryMap response").contains("]");
-  }
+  // TODO(@sophbohr22): Look into how to implement JUnit tests with sessions.
 
   @Test
   public void dataArray() {
     // Tests creation of list of Object arrays for histogram from regions list.
-    Analyzer.makeRegionList("../smaps-full.txt");
-    List<Region> regions = Analyzer.getRegionList();
+    List<Region> regions = Analyzer.makeRegionList("../smaps-full.txt");
     List<Object[]> dataArray = servletUnderTest.makeDataArray(regions);
 
     // Checks first entry.

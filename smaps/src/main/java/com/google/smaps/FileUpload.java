@@ -70,6 +70,7 @@ public class FileUpload extends HttpServlet {
 
       // Send user to the histogram page.
       response.sendRedirect("/interactive-histogram.html");
+      return;
 
     } else {
       // Get the file chosen by the user.
@@ -83,17 +84,19 @@ public class FileUpload extends HttpServlet {
         session.setAttribute("fileErrorMessage", fileErrorMessage);
         // Send user back to the index.html page with error message printed with doGet.
         response.sendRedirect("/index.html");
-      } else {
-        // Create an input stream from the file the user uploaded.
-        InputStream fileInputStream = filePart.getInputStream();
-
-        // Get the randomized filename from uploadFile and set the filename to the session.
-        filename = uploadFile(session, fileInputStream);
-        session.setAttribute("filename", filename);
-
-        // Send user to the histogram page.
-        response.sendRedirect("/interactive-histogram.html");
+        return;
       }
+
+      // Create an input stream from the file the user uploaded.
+      InputStream fileInputStream = filePart.getInputStream();
+
+      // Get the randomized filename from uploadFile and set the filename to the session.
+      filename = uploadFile(session, fileInputStream);
+      session.setAttribute("filename", filename);
+
+      // Send user to the histogram page.
+      response.sendRedirect("/interactive-histogram.html");
+      return;
     }
   }
 
@@ -121,8 +124,8 @@ public class FileUpload extends HttpServlet {
   public String uploadFile(HttpSession session, InputStream fileInputStream) throws IOException {
     // Generate a random filename for this user's file.
     Random rand = new Random();
-    int randomInt = rand.nextInt(1000000);
-    String filename = "/tmp/smaps-upload" + randomInt + ".txt";
+    int randomInt = rand.nextInt();
+    String filename = "/tmp/smaps-upload-" + randomInt + ".txt";
 
     // Copy the uploaded file to the server and rename it to the generated filename.
     File fileToSave = new File(filename);

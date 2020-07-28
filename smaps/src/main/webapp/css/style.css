@@ -160,6 +160,10 @@ a.btn.btn-blue.active {
 }
 
 /* Histogram */
+#chart-div {
+    padding-top: 2em;
+}
+
 .hist-slider {
     color: #4285F4;
     white-space: nowrap;
@@ -175,6 +179,10 @@ a.btn.btn-blue.active {
 }
 
 /* Memory Map */
+#mem-map-tools {
+    padding-top: 3em;
+}
+
 div.sticky-map-key {
     padding-top: 2em;
     position: sticky;

@@ -15,6 +15,7 @@
  */
 package com.google.smaps;
 
+import com.google.common.collect.ImmutableRangeMap;
 import com.google.common.collect.Range;
 import com.google.common.collect.RangeMap;
 import com.google.common.collect.TreeRangeMap;
@@ -23,43 +24,60 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Takes in the data from the smaps file upload and analyzes and converts it into useful structures.
+ * Takes in the data from the smaps file upload, analyzes it, and converts it into useful
+ * structures.
  */
 class Analyzer {
-  // Holds all regions of the smaps dump.
-  static List<Region> regions;
-  // Holds the range map for the address ranges.
-  static RangeMap<BigInteger, Region> addressRangeMap;
-
-  /* Creates the list of regions in this class using FileParser's method so it can be accessed by
-   * multiple visualizations. */
-  static void makeRegionList(String filePathname) {
-    regions = FileParser.parseRegionList(filePathname);
-  }
-
-  /* Returns the list of regions. */
-  static List<Region> getRegionList() {
-    return regions;
+  /* Creates the list of regions from the file path using the parseRegionList method in the
+   * FileParser class. */
+  static List<Region> makeRegionList(String filePathname) {
+    return FileParser.parseRegionList(filePathname);
   }
 
   /* Creates the address range map (interval map) with addresses as keys and the region in which it
    * can be found as the value. */
-  static void makeRangeMap(List<Region> regionsList) {
-    // Create the range map.
-    addressRangeMap = TreeRangeMap.create();
+  static ImmutableRangeMap<BigInteger, Region> makeRangeMap(List<Region> regionList) {
+    // Create the range map from a tree range map.
+    RangeMap<BigInteger, Region> addressRangeMap = TreeRangeMap.create();
+
     // Go through every region and add it to the range map.
-    for (int i = 0; i < regionsList.size(); i++) {
-      Region curR = regionsList.get(i);
+    for (int i = 0; i < regionList.size(); i++) {
+      Region curR = regionList.get(i);
+
       // Parse the addresses with base 16 because they are hexadecimal.
       BigInteger start = new BigInteger(curR.startLoc(), 16);
       BigInteger end = new BigInteger(curR.endLoc(), 16);
+
       // Put the region into the range map with the address range [inclusive, exclusive).
       addressRangeMap.put(Range.closedOpen(start, end), curR);
     }
+
+    // Return the range map in the form of an immutable range map, so that it is
+    // serializable and able to be saved to an http session.
+    return ImmutableRangeMap.copyOf(addressRangeMap);
   }
 
-  /* Returns the address range map. */
-  static RangeMap<BigInteger, Region> getRangeMap() {
-    return addressRangeMap;
+  /* Calculates the extrema of the sizes of the regions in the list, and returns them in an
+   * array. */
+  static long[] getMinMax(List<Region> regionList) {
+    // Initialize the min and max to both be the first size in the list.
+    long min = regionList.get(0).size();
+    long max = regionList.get(0).size();
+
+    // Go through every region in the list and check if its size is smaller than the min or greater
+    // than the max.
+    for (int i = 0; i < regionList.size(); i++) {
+      long curSize = regionList.get(i).size();
+      if (curSize < min) {
+        min = curSize;
+      }
+      if (curSize > max) {
+        max = curSize;
+      }
+    }
+
+    // Set the variables for the extrema, and return them in an array.
+    long[] extrema = {min, max};
+    return extrema;
   }
 }

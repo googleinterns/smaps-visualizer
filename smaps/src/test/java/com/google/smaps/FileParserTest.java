@@ -34,17 +34,15 @@ public class FileParserTest {
   private List<Region> regions;
 
   @Before
-  public void createRegionsList() throws Exception {
+  public void createRegionList() throws Exception {
     // Creates regions list from smaps-full.txt file.
-    Analyzer.makeRegionList("../smaps-full.txt");
-    regions = Analyzer.getRegionList();
+    regions = Analyzer.makeRegionList("../smaps-full.txt");
   }
 
   @Test
   public void fileNotFound() {
     // Tests that an empty list is successfully returned with nonexistent file.
-    Analyzer.makeRegionList("../fake-file.txt");
-    List<Region> list = Analyzer.getRegionList();
+    List<Region> list = Analyzer.makeRegionList("../fake-file.txt");
     assertNull(list);
   }
 
@@ -52,8 +50,7 @@ public class FileParserTest {
   public void wrongFileFormat() {
     // Tests that an empty list is successfully returned with a file that has too few parameters on
     // first line.
-    Analyzer.makeRegionList("../smaps-wrong-format.txt");
-    List<Region> list = Analyzer.getRegionList();
+    List<Region> list = Analyzer.makeRegionList("../smaps-wrong-format.txt");
     assertNull(list);
   }
 

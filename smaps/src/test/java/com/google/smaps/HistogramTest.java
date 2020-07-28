@@ -68,20 +68,12 @@ public class HistogramTest {
     helper.tearDown();
   }
 
-  @Test
-  public void doGet_writesResponse() throws Exception {
-    // Tests that response is named properly and holds at least the labels for the Json.
-    servletUnderTest.doGet(mockRequest, mockResponse);
-    assertThat(responseWriter.toString())
-        .named("Histogram response")
-        .contains("[\"Range\",\"Size\"]");
-  }
+  // TODO(@sophbohr22): Look into how to implement JUnit tests with sessions.
 
   @Test
   public void dataArray() {
     // Tests creation of list of Object arrays for histogram from regions list.
-    Analyzer.makeRegionList("../smaps-full.txt");
-    List<Region> regions = Analyzer.getRegionList();
+    List<Region> regions = Analyzer.makeRegionList("../smaps-full.txt");
     List<Object[]> dataArray = servletUnderTest.makeDataArray(regions);
 
     // Checks labels.

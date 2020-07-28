@@ -24,6 +24,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Retrieves memory map information and formats it into a Json array for creating the memory map and
@@ -36,8 +37,11 @@ public class MemoryMap extends HttpServlet {
     // Response will be a Json.
     response.setContentType("application/json");
 
-    // Get the region list from the analyzer, since it was already made during file upload.
-    List<Region> regionList = Analyzer.getRegionList();
+    // Get this user's session.
+    HttpSession session = request.getSession();
+
+    // Get the region list from the session, which was set when the file was uploaded.
+    List<Region> regionList = (List<Region>) session.getAttribute("regionList");
 
     // Parse the memory map data.
     List<Object[]> memoryMapData = makeDataArray(regionList);

@@ -71,33 +71,32 @@ public class FileUpload extends HttpServlet {
       // Send user to the histogram page.
       response.sendRedirect("/interactive-histogram.html");
       return;
+    }
 
-    } else {
-      // Get the file chosen by the user.
-      Part filePart = request.getPart("smapsFile");
+    // Get the file chosen by the user.
+    Part filePart = request.getPart("smapsFile");
 
-      // TODO(@sophbohr): Add more error checking.
-      // Check if the file part is empty (meaning no file was selected or the file was empty).
-      if (filePart.getSize() == 0) {
-        // Set the error message.
-        fileErrorMessage = "Error: No file chosen or file was empty.";
-        session.setAttribute("fileErrorMessage", fileErrorMessage);
-        // Send user back to the index.html page with error message printed with doGet.
-        response.sendRedirect("/index.html");
-        return;
-      }
-
-      // Create an input stream from the file the user uploaded.
-      InputStream fileInputStream = filePart.getInputStream();
-
-      // Get the randomized filename from uploadFile and set the filename to the session.
-      filename = uploadFile(session, fileInputStream);
-      session.setAttribute("filename", filename);
-
-      // Send user to the histogram page.
-      response.sendRedirect("/interactive-histogram.html");
+    // TODO(@sophbohr): Add more error checking.
+    // Check if the file part is empty (meaning no file was selected or the file was empty).
+    if (filePart.getSize() == 0) {
+      // Set the error message.
+      fileErrorMessage = "Error: No file chosen or file was empty.";
+      session.setAttribute("fileErrorMessage", fileErrorMessage);
+      // Send user back to the index.html page with error message printed with doGet.
+      response.sendRedirect("/index.html");
       return;
     }
+
+    // Create an input stream from the file the user uploaded.
+    InputStream fileInputStream = filePart.getInputStream();
+
+    // Get the randomized filename from uploadFile and set the filename to the session.
+    filename = uploadFile(session, fileInputStream);
+    session.setAttribute("filename", filename);
+
+    // Send user to the histogram page.
+    response.sendRedirect("/interactive-histogram.html");
+    return;
   }
 
   @Override

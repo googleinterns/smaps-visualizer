@@ -52,7 +52,19 @@ limitations under the License.
         <div id="visualizer-title" class="ggray">Visualizer</div>
     </div>
     <div class="row" id="mem-map-tools">
-        <div class="col-md-auto" id="memory-map-div"></div>
+        <div class="col-md-auto no-padding">
+            <div id="arrow-nav" class="sticky-map-key">
+                <a href="#top" class="btn btn-gray up-down-btn">&#8593</a>
+                <p class="vertical-text">HIGHER ADDRESSES</p>
+                <br />
+                <br />
+                <p class="vertical-text">LOWER ADDRESSES</p>
+                <a href="#bottom" class="btn btn-gray up-down-btn">&#8595</a>
+            </div>
+        </div>
+        <div class="col-md-auto">
+            <div id="memory-map-div"></div>
+        </div>
         <div class="col-md-auto">
             <div class="sticky-map-key">
                 <div class="row">
@@ -60,12 +72,6 @@ limitations under the License.
                 </div>
                 <div class="row">
                     <canvas id="key-canvas">Your browser does not support the HTML5 canvas tag.</canvas>
-                </div>
-                <div class="row">
-                    <a href="#top" class="btn btn-gray up-btn">&#8593</a>
-                </div>
-                <div class="row">
-                    <a href="#bottom" class="btn btn-gray down-btn">&#8595</a>
                 </div>
                 <div class="row">
                     <div class="mini-title">HEX ADDRESS SEARCH</div>
@@ -84,7 +90,7 @@ limitations under the License.
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-3">
             <div class="sticky-region-focus">
                 <div id="region-focus-container"></div>
             </div>

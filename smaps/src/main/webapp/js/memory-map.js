@@ -78,8 +78,11 @@ function drawRegions() {
           // Add the text nodes to the region line by line going backwards
           // because we want to print the end address first (at the top of the
           // button), and print a line break after each word so they stack
-          // within the button.
+          // within the button. Add a'[' and ')' to signify inclusion and
+          // exclusion.
           const addressParts = addressRange.split(' ').reverse();
+          addressParts[0] = addressParts[0] + ')';
+          addressParts[2] = '[' + addressParts[2] + ' ';
           for (const part of addressParts) {
             region.appendChild(document.createTextNode(part));
             region.appendChild(document.createElement('br'));
@@ -233,7 +236,7 @@ function drawRegionFocus(region) {
   const regionFocusBtn = document.createElement('button');
 
   // Style the button.
-  regionFocusBtn.className = 'region-focus';
+  regionFocusBtn.className = 'region-focus btn-block';
 
   // Create a json object with key value pairs for the field name and how it
   // will be displayed to the user.

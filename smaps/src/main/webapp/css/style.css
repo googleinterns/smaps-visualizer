@@ -103,14 +103,9 @@ a.btn.btn-blue.active {
     margin-bottom: 1em;
 }
 
-.up-btn {
-    font-size: 1.5em;
-    margin-bottom: 0.8em;
+.up-down-btn {
+    font-size: 1em;
     margin-top: 1em;
-}
-
-.down-btn {
-    font-size: 1.5em;
     margin-bottom: 1em;
 }
 
@@ -154,6 +149,10 @@ a.btn.btn-blue.active {
     height: 3.1em;
 }
 
+.no-padding {
+    padding: 0em 0em 0em 0em;
+}
+
 .header-container {
     margin-left: 3em;
     margin-right: 3em;
@@ -181,6 +180,18 @@ a.btn.btn-blue.active {
 /* Memory Map */
 #mem-map-tools {
     padding-top: 3em;
+}
+
+#arrow-nav {
+    text-align: center;
+}
+
+.vertical-text {
+    writing-mode: vertical-lr;
+    transform: rotate(-180deg);
+    margin-top: 0em;
+    margin-bottom: 0em;
+    font-size: 1em;
 }
 
 div.sticky-map-key {
@@ -218,5 +229,7 @@ div.sticky-region-focus {
     color: white;
     font-family: 'Source Code Pro', monospace;
     font-size: 0.8em;
+    pointer-events: none;
     text-align-last: left;
+    word-wrap: break-word;
 }

@@ -166,39 +166,39 @@ function getSpaced(text) {
 
 /* Creates the key to indicate which color corresponds to which permissions. */
 function drawMemoryMapKey() {
-  // Get the canvas for putting the key on.
-  const c = document.getElementById('key-canvas');
+  // Get the div that'll hold the permissions key.
+  const permKeyDiv = document.getElementById('permissions-key-div');
 
-  // Set the canvas width and height.
-  c.width = 300;
-  c.height = 220;
-
-  // Set the swatch size values.
-  const x = 1;    // X-coordinate of the upper-left corner of the swatch.
-  let y = 1;      // Y-coordinate of the upper-left corner of the swatch.
-  const w = 135;  // Width of the swatch (pixels).
-  const h = 30;   // Height of the swatch (pixels).
-
-  // Draw all the color swatches indicating permission.
-  const swatch = c.getContext('2d');
+  // Go through each permissions string in the list.
   for (let i = 0; i < perms.length; i++) {
-    // Use black to draw the border of the swatch with line width of 2.
-    swatch.beginPath();
-    swatch.lineWidth = '1';
-    swatch.strokeStyle = 'black';
-    swatch.rect(x, y, w, h);
-    swatch.stroke();
+    // Create a new div for this permissions swatch to go in.
+    const permDiv = document.createElement('div');
 
-    // Use color at index i to make the swatch for permission at index i.
-    let color = getColor(perms[i]);
-    swatch.fillStyle = color;
-    swatch.fill();
+    // Create the permissions swatch as a button object.
+    let permSwatch = document.createElement('button');
 
-    // Use black to draw the text on the swatch indicating the permission.
-    swatch.fillStyle = 'black';
-    swatch.font = '14px Monospace';
-    swatch.fillText(displayPerms.get(perms[i]), 15, y + (h / 2) + 5);
-    y = y + h;
+    // Style the permissions swatch with the class called permissions in
+    // style.css.
+    permSwatch.className = 'permissions';
+
+    // Adjust the style so that only the last permissions swatch has a bottom
+    // border (because they overlap otherwise and double the width), and also
+    // color the swatch based on which permissions it is.
+    if (i == perms.length - 1) {
+      permSwatch.style['borderBottomWidth'] = '0.05em';
+    } else {
+      permSwatch.style['borderBottomWidth'] = '0em';
+    }
+    permSwatch.style['backgroundColor'] = getColor(perms[i]);
+
+    // Add the text node to the swatch indicating which permissions go with
+    // which color, and space the text so that it's easier to read.
+    permSwatch.appendChild(document.createTextNode(displayPerms.get(perms[i])));
+
+    // Add the new swatch to the perm div, and add the new perm div to
+    // the permKey div.
+    permDiv.appendChild(permSwatch);
+    permKeyDiv.appendChild(permDiv);
   }
 }
 

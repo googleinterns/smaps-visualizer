@@ -233,3 +233,14 @@ div.sticky-region-focus {
     text-align-last: left;
     word-wrap: break-word;
 }
+
+.permissions {
+    width: 8.5em;
+    height: 1.8em;
+    border-color: black;
+    border-width: 0.05em;
+    font-family: monospace;
+    font-size: 1.2em;
+    pointer-events: none;
+    text-align-last: right;
+}

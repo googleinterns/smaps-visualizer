@@ -22,6 +22,7 @@ import com.google.common.collect.TreeRangeMap;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpSession;
 
 /**
  * Takes in the data from the smaps file upload, analyzes it, and converts it into useful
@@ -30,8 +31,8 @@ import java.util.List;
 class Analyzer {
   /* Creates the list of regions from the file path using the parseRegionList method in the
    * FileParser class. */
-  static List<Region> makeRegionList(String filePathname) {
-    return FileParser.parseRegionList(filePathname);
+  static List<Region> makeRegionList(String filePathname, HttpSession session) {
+    return FileParser.parseRegionList(filePathname, session);
   }
 
   /* Creates the address range map (interval map) with addresses as keys and the region in which it

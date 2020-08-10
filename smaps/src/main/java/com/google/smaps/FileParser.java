@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import javax.servlet.http.HttpSession;
 
 /**
  * Takes in an smaps dump text file and produces a list of the {@link Region} objects of that file.
@@ -29,15 +30,14 @@ import java.util.Scanner;
  * TODO(sophbohr22): implement data integrity check for all fields.
  */
 class FileParser {
-  static List<Region> parseRegionList(String filePathname) {
+  static List<Region> parseRegionList(String filePathname, HttpSession session) {
     try {
-      List<Region> regions = parseFile(filePathname);
+      List<Region> regions = parseFile(filePathname, session);
       return regions;
     } catch (FileNotFoundException e) {
-      // TODO(sophbohr22): implement logging to print exception to user.
+      session.setAttribute("fileErrorMessage", "File not found.");
       System.out.println("File not found.");
     } catch (IllegalArgumentException e) {
-      // TODO(sophbohr22): implement logging to print exception to user.
       System.out.println("File has improper formatting.");
     }
     // If an exception was caught, return null.
@@ -45,7 +45,7 @@ class FileParser {
   }
 
   /* Parses the smaps file and returns a list of regions.*/
-  static List<Region> parseFile(String filePathname)
+  static List<Region> parseFile(String filePathname, HttpSession session)
       throws FileNotFoundException, IllegalArgumentException {
     // Holds all regions of smaps dump.
     List<Region> regions = new ArrayList<Region>();
@@ -57,14 +57,31 @@ class FileParser {
     // TODO(@sophbohr22): Add a defense to the parser so that files with extremely large region
     // counts aren't allowed.
 
-    // Indicates whether a new region is being evaluated at each iteration.
-    boolean nextRegion = true;
+    // Indicates whether there is a previous region to be built (will only be false for the first
+    // region).
+    boolean prevRegion = false;
 
+    // Initialize lineNumber, and loop through the file while there's still a new line.
     int lineNumber = 0;
     while (sc.hasNextLine()) {
       lineNumber++;
       String line = sc.nextLine();
-      if (nextRegion) {
+      if (checkNewRegion(line)) {
+        // Build the previous region (if there is one) and add it to the list.
+        if (prevRegion) {
+          // Ensure that a valid size was set for this region.
+          Region r = region.build();
+          if (r.size() == -1) {
+            session.setAttribute("fileErrorMessage",
+                "One or more regions does not contain a 'size' field, see go/smaps-vis/smaps-example.txt to view properly formatted smaps file.");
+            throw new IllegalArgumentException();
+          }
+          regions.add(r);
+        }
+
+        // Set prevRegion to be true because we're making a new region.
+        prevRegion = true;
+
         // Make a new region builder for every region.
         region = Region.builder();
 
@@ -75,6 +92,8 @@ class FileParser {
         String[] attributes = spaceLine.split(" ");
 
         if (attributes.length < 5) {
+          session.setAttribute("fileErrorMessage",
+              "First line for each region not formatted properly, see go/smaps-vis/smaps-example.txt to view properly formatted smaps file.");
           throw new IllegalArgumentException();
         }
 
@@ -114,22 +133,12 @@ class FileParser {
         region.setInode(inode);
         region.setPathname(pathname);
 
-        // No longer a new region for the next iteration.
-        nextRegion = false;
-      } else if (line.contains("VmFlags")) { // The last line of the parser is always VmFlags, so a
-                                             // special case.
+      } else if (line.contains("VmFlags")) { // VmFlags is a special case, so is parsed differently.
         // ex: rd ex mr mw me lo sd
         String flagsLine = line.substring(9);
         String[] flagsArray = flagsLine.split(" ");
         List<String> flags = Arrays.asList(flagsArray);
         region.setVmFlags(flags);
-
-        // This is the last line in region, so build the region.
-        Region r = region.build();
-
-        // Add region to regions list.
-        regions.add(r);
-        nextRegion = true;
 
       } else { // This isn't the last line of the region, so continue normally.
         // Get the name of the field.
@@ -146,8 +155,25 @@ class FileParser {
         fillField(field, value, region);
       }
     }
+
+    // Build the final region.
+    Region r = region.build();
+    regions.add(r);
+
+    // Close the scanner and return the list.
     sc.close();
     return regions;
+  }
+
+  /* Checks whether the line that is being passed is the first line in a new region, with the format
+   * having at least the address range. This address range being present in a line is the indication
+   * of a new region. */
+  static boolean checkNewRegion(String line) {
+    // Check the beginning of line matches this format, for example: 16ec0000000-16efa600000
+    if (line.matches("^[0-9a-fA-F]+[-][0-9a-fA-F]+.*")) {
+      return true;
+    }
+    return false;
   }
 
   static void fillField(String field, long value, Region.Builder region) {

@@ -16,10 +16,12 @@
 package com.google.smaps;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import com.google.common.collect.ImmutableRangeMap;
 import java.math.BigInteger;
 import java.util.List;
+import javax.servlet.http.HttpSession;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,18 +32,21 @@ import org.junit.runners.JUnit4;
  */
 @RunWith(JUnit4.class)
 public class AnalyzerTest {
-  List<Region> regionList;
+  private List<Region> regionList;
+  private HttpSession session;
 
   @Before
   public void createRegionList() {
+    // Creates a session.
+    session = mock(HttpSession.class);
     // Creates the regions list from smaps-full.txt file.
-    regionList = Analyzer.makeRegionList("../smaps-full.txt");
+    regionList = Analyzer.makeRegionList("../smaps-full.txt", session);
   }
 
   @Test
   public void retrieveRegionList() {
     // Tests that the list Analyzer is returning is the same list that is created in FileParser.
-    List<Region> regions = FileParser.parseRegionList("../smaps-full.txt");
+    List<Region> regions = FileParser.parseRegionList("../smaps-full.txt", session);
     assertEquals(regions, regionList);
   }
 

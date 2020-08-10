@@ -90,8 +90,16 @@ public class FileUpload extends HttpServlet {
     // Create an input stream from the file the user uploaded.
     InputStream fileInputStream = filePart.getInputStream();
 
-    // Get the randomized filename from uploadFile and set the filename to the session.
+    // Get the randomized filename from uploadFile.
     filename = uploadFile(session, fileInputStream);
+
+    // If filename is null, there was an error with parsing, so return to homepage.
+    if (filename == null) {
+      response.sendRedirect("/index.html");
+      return;
+    }
+
+    // Set the filename to the session.
     session.setAttribute("filename", filename);
 
     // Send user to the histogram page.
@@ -132,8 +140,18 @@ public class FileUpload extends HttpServlet {
 
     // Make the list of regions from this file that will be utilized for various
     // charts/visualizations, and set the list to the session.
-    List<Region> regionList = Analyzer.makeRegionList(filename);
-    session.setAttribute("regionList", regionList);
+    List<Region> regionList = Analyzer.makeRegionList(filename, session);
+
+    // Check if there were any issues with file upload. If there were, fileErrorMessage in the
+    // session would have been set, so return to index. If not, set the region list to the session
+    // and continue.
+    if (!(((String) session.getAttribute("fileErrorMessage")).equals(""))) {
+      // Immediately return null, so that the file with upload issues will not continue to be
+      // parsed.
+      return null;
+    } else {
+      session.setAttribute("regionList", regionList);
+    }
 
     // Make the range map that will allow for the address search feature on the memory map page, and
     // set the range map to the session.

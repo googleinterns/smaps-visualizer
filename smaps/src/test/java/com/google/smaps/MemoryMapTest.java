@@ -17,7 +17,7 @@ package com.google.smaps;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import java.io.PrintWriter;
@@ -25,6 +25,7 @@ import java.io.StringWriter;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,6 +46,7 @@ public class MemoryMapTest {
   @Mock private HttpServletResponse mockResponse;
   private StringWriter responseWriter;
   private MemoryMap servletUnderTest;
+  private HttpSession session;
 
   @Before
   public void setUp() throws Exception {
@@ -59,7 +61,11 @@ public class MemoryMapTest {
     responseWriter = new StringWriter();
     when(mockResponse.getWriter()).thenReturn(new PrintWriter(responseWriter));
 
+    // Creates MemoryMap servlet.
     servletUnderTest = new MemoryMap();
+
+    // Creates a session.
+    session = mock(HttpSession.class);
   }
 
   @After
@@ -73,7 +79,7 @@ public class MemoryMapTest {
   @Test
   public void dataArray() {
     // Tests creation of list of Object arrays for histogram from regions list.
-    List<Region> regions = Analyzer.makeRegionList("../smaps-full.txt");
+    List<Region> regions = Analyzer.makeRegionList("../smaps-full.txt", session);
     List<Object[]> dataArray = servletUnderTest.makeDataArray(regions);
 
     // Checks first entry.

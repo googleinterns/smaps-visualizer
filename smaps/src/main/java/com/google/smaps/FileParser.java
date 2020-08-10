@@ -93,7 +93,7 @@ class FileParser {
 
         if (attributes.length < 5) {
           session.setAttribute("fileErrorMessage",
-              "First line for each region not formatted properly, see go/smaps-vis/smaps-example.txt to view properly formatted smaps file.");
+              "One or more regions does not have first line properly formatted, see go/smaps-vis/smaps-example.txt to view properly formatted smaps file.");
           throw new IllegalArgumentException();
         }
 

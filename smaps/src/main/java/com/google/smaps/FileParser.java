@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import javax.servlet.http.HttpSession;
 
 /**
  * Takes in an smaps dump text file and produces a list of the {@link Region} objects of that file.
@@ -29,24 +30,33 @@ import java.util.Scanner;
  * TODO(sophbohr22): implement data integrity check for all fields.
  */
 class FileParser {
-  static List<Region> parseRegionList(String filePathname) {
+  static List<Region> parseRegionList(String filePathname, HttpSession session) {
     try {
-      List<Region> regions = parseFile(filePathname);
+      List<Region> regions = parseFile(filePathname, session);
       return regions;
     } catch (FileNotFoundException e) {
-      // TODO(sophbohr22): implement logging to print exception to user.
-      System.out.println("File not found.");
+      // Set a file not found error.
+      session.setAttribute("fileErrorMessage", "File not found.");
     } catch (IllegalArgumentException e) {
-      // TODO(sophbohr22): implement logging to print exception to user.
-      System.out.println("File has improper formatting.");
+      // If a more specific fileErrorMessage wasn't already set, set a general one.
+      String message = (String) session.getAttribute("fileErrorMessage");
+      if (message == null || message.isEmpty()) {
+        session.setAttribute("fileErrorMessage",
+            "File was unable to be parsed due to improper formatting or file type.");
+      }
+    } catch (Exception e) {
+      // Set a general error.
+      session.setAttribute("fileErrorMessage",
+          "File was unable to be parsed due to improper formatting or file type.");
     }
+
     // If an exception was caught, return null.
     return null;
   }
 
   /* Parses the smaps file and returns a list of regions.*/
-  static List<Region> parseFile(String filePathname)
-      throws FileNotFoundException, IllegalArgumentException {
+  static List<Region> parseFile(String filePathname, HttpSession session)
+      throws FileNotFoundException, IllegalArgumentException, IllegalStateException {
     // Holds all regions of smaps dump.
     List<Region> regions = new ArrayList<Region>();
     // Create the file.
@@ -57,14 +67,33 @@ class FileParser {
     // TODO(@sophbohr22): Add a defense to the parser so that files with extremely large region
     // counts aren't allowed.
 
-    // Indicates whether a new region is being evaluated at each iteration.
-    boolean nextRegion = true;
+    // Indicates whether there is a previous region to be built (will only be false for the first
+    // region).
+    boolean prevRegion = false;
 
+    // Initialize lineNumber, and loop through the file while there's still a new line.
     int lineNumber = 0;
     while (sc.hasNextLine()) {
       lineNumber++;
       String line = sc.nextLine();
-      if (nextRegion) {
+      if (checkNewRegion(line)) {
+        // Build the previous region (if there is one) and add it to the list.
+        if (prevRegion) {
+          // Build region and add it to the list if it has a valid size field, if not throw an
+          // IllegalArgumentException.
+          Region r = region.build();
+          if (r.size() == -1) {
+            session.setAttribute("fileErrorMessage",
+                "Required 'size' field not found in region on line [" + r.lineNumber()
+                    + "] in smaps file.");
+            throw new IllegalArgumentException();
+          }
+          regions.add(r);
+        }
+
+        // Set prevRegion to be true because we're making a new region.
+        prevRegion = true;
+
         // Make a new region builder for every region.
         region = Region.builder();
 
@@ -75,6 +104,9 @@ class FileParser {
         String[] attributes = spaceLine.split(" ");
 
         if (attributes.length < 5) {
+          session.setAttribute("fileErrorMessage",
+              "Region on line [" + lineNumber
+                  + "] does not have proper first line formatting. EX: 7fd126400000-7fd12a400000 rw-s 00000000 00:05 30559");
           throw new IllegalArgumentException();
         }
 
@@ -114,22 +146,12 @@ class FileParser {
         region.setInode(inode);
         region.setPathname(pathname);
 
-        // No longer a new region for the next iteration.
-        nextRegion = false;
-      } else if (line.contains("VmFlags")) { // The last line of the parser is always VmFlags, so a
-                                             // special case.
+      } else if (line.contains("VmFlags")) { // VmFlags is a special case, so is parsed differently.
         // ex: rd ex mr mw me lo sd
         String flagsLine = line.substring(9);
         String[] flagsArray = flagsLine.split(" ");
         List<String> flags = Arrays.asList(flagsArray);
         region.setVmFlags(flags);
-
-        // This is the last line in region, so build the region.
-        Region r = region.build();
-
-        // Add region to regions list.
-        regions.add(r);
-        nextRegion = true;
 
       } else { // This isn't the last line of the region, so continue normally.
         // Get the name of the field.
@@ -146,8 +168,31 @@ class FileParser {
         fillField(field, value, region);
       }
     }
+
+    // Build the final region and add it to the list if it contains a valid size field.
+    Region r = region.build();
+    if (r.size() == -1) {
+      session.setAttribute("fileErrorMessage",
+          "Required 'size' field not found in region on line [" + r.lineNumber()
+              + "] in smaps file.");
+      throw new IllegalArgumentException();
+    }
+    regions.add(r);
+
+    // Close the scanner and return the list.
     sc.close();
     return regions;
+  }
+
+  /* Checks whether the line that is being passed is the first line in a new region, with the format
+   * having at least the address range. This address range being present in a line is the indication
+   * of a new region. */
+  static boolean checkNewRegion(String line) {
+    // Check the beginning of line matches this format, for example: 16ec0000000-16efa600000
+    if (line.matches("^[0-9a-fA-F]+[-][0-9a-fA-F]+.*")) {
+      return true;
+    }
+    return false;
   }
 
   static void fillField(String field, long value, Region.Builder region) {

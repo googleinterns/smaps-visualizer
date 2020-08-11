@@ -17,7 +17,7 @@ package com.google.smaps;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.common.collect.ImmutableRangeMap;
@@ -71,8 +71,11 @@ public class SearchAddressTest {
     // Create an instance of the SearchAddress servlet.
     servletUnderTest = new SearchAddress();
 
+    // Creates a session.
+    session = mock(HttpSession.class);
+
     // Make the regions list and range map.
-    regions = Analyzer.makeRegionList("../smaps-full.txt");
+    regions = Analyzer.makeRegionList("../smaps-full.txt", session);
     addressRangeMap = Analyzer.makeRangeMap(regions);
   }
 

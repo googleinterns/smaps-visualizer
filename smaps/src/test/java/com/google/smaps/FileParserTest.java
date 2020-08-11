@@ -16,11 +16,13 @@
 package com.google.smaps;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.servlet.http.HttpSession;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,17 +34,20 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class FileParserTest {
   private List<Region> regions;
+  private HttpSession session;
 
   @Before
   public void createRegionList() throws Exception {
+    // Creates a session.
+    session = mock(HttpSession.class);
     // Creates regions list from smaps-full.txt file.
-    regions = Analyzer.makeRegionList("../smaps-full.txt");
+    regions = Analyzer.makeRegionList("../smaps-full.txt", session);
   }
 
   @Test
   public void fileNotFound() {
     // Tests that an empty list is successfully returned with nonexistent file.
-    List<Region> list = Analyzer.makeRegionList("../fake-file.txt");
+    List<Region> list = Analyzer.makeRegionList("../fake-file.txt", session);
     assertNull(list);
   }
 
@@ -50,7 +55,7 @@ public class FileParserTest {
   public void wrongFileFormat() {
     // Tests that an empty list is successfully returned with a file that has too few parameters on
     // first line.
-    List<Region> list = Analyzer.makeRegionList("../smaps-wrong-format.txt");
+    List<Region> list = Analyzer.makeRegionList("../smaps-wrong-format.txt", session);
     assertNull(list);
   }
 

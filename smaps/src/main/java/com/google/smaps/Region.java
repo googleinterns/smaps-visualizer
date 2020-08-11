@@ -17,6 +17,7 @@ package com.google.smaps;
 
 import com.google.auto.value.AutoValue;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /** Represents a region of memory from the dump. */
@@ -90,9 +91,37 @@ abstract class Region implements Serializable {
   // share a variety of details about a memory segment.
   abstract List<String> vmFlags();
 
+  // Initializes all fields such that if they are not included in an smaps file, the app can
+  // still function properly. This does not include any of the fields in the first line of a region
+  // (startLoc, endLoc, permissions, offset, device, inode), because an error will occur
+  // if the file doesn't contain those fields.
+  // Size is set to -1, so that each region can be checked to ensure a valid size has been set,
+  // otherwise another error will occur.
   static Builder builder() {
-    // TODO(sophbohr22): Add these set initializations for all fields.
-    return new AutoValue_Region.Builder().setShmemHugePages(0).setHugePFNMap(0);
+    return new AutoValue_Region.Builder()
+        .setPathname("")
+        .setSize(-1)
+        .setKernelPageSize(0)
+        .setMmuPageSize(0)
+        .setRss(0)
+        .setPss(0)
+        .setSharedClean(0)
+        .setSharedDirty(0)
+        .setPrivateClean(0)
+        .setPrivateDirty(0)
+        .setReferenced(0)
+        .setAnonymous(0)
+        .setLazyFree(0)
+        .setAnonHugePages(0)
+        .setShmemHugePages(0)
+        .setShmemPmdMapped(0)
+        .setSharedHugetlb(0)
+        .setPrivateHugetlb(0)
+        .setHugePFNMap(0)
+        .setSwap(0)
+        .setSwapPss(0)
+        .setLocked(0)
+        .setVmFlags(new ArrayList<String>());
   }
 
   @AutoValue.Builder

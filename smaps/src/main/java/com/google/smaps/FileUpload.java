@@ -80,7 +80,7 @@ public class FileUpload extends HttpServlet {
     // Check if the file part is empty (meaning no file was selected or the file was empty).
     if (filePart.getSize() == 0) {
       // Set the error message.
-      fileErrorMessage = "Error: No file chosen or file was empty.";
+      fileErrorMessage = "No file chosen or file was empty.";
       session.setAttribute("fileErrorMessage", fileErrorMessage);
       // Send user back to the index.html page with error message printed with doGet.
       response.sendRedirect("/index.html");

@@ -35,18 +35,28 @@ class FileParser {
       List<Region> regions = parseFile(filePathname, session);
       return regions;
     } catch (FileNotFoundException e) {
+      // Set a file not found error.
       session.setAttribute("fileErrorMessage", "File not found.");
-      System.out.println("File not found.");
     } catch (IllegalArgumentException e) {
-      System.out.println("File has improper formatting.");
+      // If a more specific fileErrorMessage wasn't already set, set a general one.
+      String message = (String) session.getAttribute("fileErrorMessage");
+      if (message == null || message.isEmpty()) {
+        session.setAttribute("fileErrorMessage",
+            "File was unable to be parsed due to improper formatting or file type.");
+      }
+    } catch (Exception e) {
+      // Set a general error.
+      session.setAttribute("fileErrorMessage",
+          "File was unable to be parsed due to improper formatting or file type.");
     }
+
     // If an exception was caught, return null.
     return null;
   }
 
   /* Parses the smaps file and returns a list of regions.*/
   static List<Region> parseFile(String filePathname, HttpSession session)
-      throws FileNotFoundException, IllegalArgumentException {
+      throws FileNotFoundException, IllegalArgumentException, IllegalStateException {
     // Holds all regions of smaps dump.
     List<Region> regions = new ArrayList<Region>();
     // Create the file.

@@ -94,8 +94,9 @@ abstract class Region implements Serializable {
   // Initializes all fields such that if they are not included in an smaps file, the app can
   // still function properly. This does not include any of the fields in the first line of a region
   // (startLoc, endLoc, permissions, offset, device, inode), because an error will occur
-  // if the file doesn't contain those fields. Size is set to -1, so that each region can be
-  // checked to ensure a valid size has been set, otherwise another error will occur.
+  // if the file doesn't contain those fields.
+  // Size is set to -1, so that each region can be checked to ensure a valid size has been set,
+  // otherwise another error will occur.
   static Builder builder() {
     return new AutoValue_Region.Builder()
         .setPathname("")

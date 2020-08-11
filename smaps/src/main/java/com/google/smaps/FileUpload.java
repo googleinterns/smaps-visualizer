@@ -145,7 +145,8 @@ public class FileUpload extends HttpServlet {
     // Check if there were any issues with file upload. If there were, fileErrorMessage in the
     // session would have been set, so return to index. If not, set the region list to the session
     // and continue.
-    if (!(((String) session.getAttribute("fileErrorMessage")).equals(""))) {
+    String message = (String) session.getAttribute("fileErrorMessage");
+    if (!message.isEmpty()) {
       // Immediately return null, so that the file with upload issues will not continue to be
       // parsed.
       return null;

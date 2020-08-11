@@ -69,11 +69,13 @@ class FileParser {
       if (checkNewRegion(line)) {
         // Build the previous region (if there is one) and add it to the list.
         if (prevRegion) {
-          // Ensure that a valid size was set for this region.
+          // Build region and add it to the list if it has a valid size field, if not throw an
+          // IllegalArgumentException.
           Region r = region.build();
           if (r.size() == -1) {
             session.setAttribute("fileErrorMessage",
-                "One or more regions does not contain a 'size' field, see go/smaps-vis/smaps-example.txt to view properly formatted smaps file.");
+                "Required 'size' field not found in region on line [" + r.lineNumber()
+                    + "] in smaps file.");
             throw new IllegalArgumentException();
           }
           regions.add(r);
@@ -93,7 +95,8 @@ class FileParser {
 
         if (attributes.length < 5) {
           session.setAttribute("fileErrorMessage",
-              "One or more regions does not have first line properly formatted, see go/smaps-vis/smaps-example.txt to view properly formatted smaps file.");
+              "Region on line [" + lineNumber
+                  + "] does not have proper first line formatting. EX: 7fd126400000-7fd12a400000 rw-s 00000000 00:05 30559");
           throw new IllegalArgumentException();
         }
 
@@ -156,8 +159,14 @@ class FileParser {
       }
     }
 
-    // Build the final region.
+    // Build the final region and add it to the list if it contains a valid size field.
     Region r = region.build();
+    if (r.size() == -1) {
+      session.setAttribute("fileErrorMessage",
+          "Required 'size' field not found in region on line [" + r.lineNumber()
+              + "] in smaps file.");
+      throw new IllegalArgumentException();
+    }
     regions.add(r);
 
     // Close the scanner and return the list.

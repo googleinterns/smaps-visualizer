@@ -45,6 +45,7 @@ public class MemoryMapTest {
   @Mock private HttpServletRequest mockRequest;
   @Mock private HttpServletResponse mockResponse;
   private StringWriter responseWriter;
+  private List<Region> regions;
   private MemoryMap servletUnderTest;
   private HttpSession session;
 
@@ -66,6 +67,9 @@ public class MemoryMapTest {
 
     // Creates a session.
     session = mock(HttpSession.class);
+
+    // Create the regions list.
+    regions = Analyzer.makeRegionList("../smaps-small.txt", session);
   }
 
   @After
@@ -74,12 +78,34 @@ public class MemoryMapTest {
     helper.tearDown();
   }
 
-  // TODO(@sophbohr22): Look into how to implement JUnit tests with sessions.
+  @Test
+  public void doGet_writesResponse() throws Exception {
+    // Tests that the JSON response is what is expected with smaps-small as the file.
+
+    // Sets up the fake session for the request.
+    when(mockRequest.getSession()).thenReturn(session);
+
+    // Set the session variable for regionList that would normally be set by doPost in FileUpload.
+    when(session.getAttribute("regionList")).thenReturn(regions);
+
+    // Call doGet with the mockRequest and mockResponse.
+    servletUnderTest.doGet(mockRequest, mockResponse);
+
+    // Assert that the JSON response is what is expected for the smaps-small file, and contains an
+    // array of every region with its address range and permissions.
+    assertThat(responseWriter.toString())
+        .named("MemoryMap response")
+        .contains("[[\"0000016ec0000000 - 0000016efa600000\",\"---p\"],"
+            + "[\"0000016efa600000 - 0000016f00000000\",\"rw-p\"],"
+            + "[\"0000142580000000 - 00001425a8000000\",\"---p\"],"
+            + "[\"00001425a8000000 - 00001425c0000000\",\"rw-p\"],"
+            + "[\"00001425c0000000 - 00001425ce800000\",\"---p\"],"
+            + "[\"00001425ce800000 - 0000142ac6000000\",\"rw-p\"]]");
+  }
 
   @Test
   public void dataArray() {
     // Tests creation of list of Object arrays for histogram from regions list.
-    List<Region> regions = Analyzer.makeRegionList("../smaps-full.txt", session);
     List<Object[]> dataArray = servletUnderTest.makeDataArray(regions);
 
     // Checks first entry.
@@ -87,7 +113,25 @@ public class MemoryMapTest {
     assertEquals("---p", dataArray.get(0)[1]);
 
     // Checks last entry.
-    assertEquals("ffffffffff600000 - ffffffffff601000", dataArray.get(1071)[0]);
-    assertEquals("r-xp", dataArray.get(1071)[1]);
+    assertEquals("00001425ce800000 - 0000142ac6000000", dataArray.get(5)[0]);
+    assertEquals("rw-p", dataArray.get(5)[1]);
+  }
+
+  @Test
+  public void formatAddress() {
+    // Tests that the formatAddress function correctly appends zeroes to the beginning of an address
+    // until the address is 16 bits.
+    String address;
+    String formattedAddress;
+
+    // Address that needs zeroes appended to be 16 bits.
+    address = "5f";
+    formattedAddress = servletUnderTest.formatAddress(address);
+    assertEquals("000000000000005f", formattedAddress);
+
+    // Address that is already 16 bits.
+    address = "ffffffffffd56730";
+    formattedAddress = servletUnderTest.formatAddress(address);
+    assertEquals(address, formattedAddress);
   }
 }

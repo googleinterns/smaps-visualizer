@@ -129,7 +129,7 @@ public class SearchAddressTest {
     servletUnderTest.doGet(mockRequest, mockResponse);
 
     // Assert that the JSON response is what is expected, and contains the invalid address searched
-    // for, -1 for the index, the error message for no it not being a hex address, and null for the
+    // for, -1 for the index, the error message for it not being a hex address, and null for the
     // region.
     assertThat(responseWriter.toString())
         .named("SearchAddress response")

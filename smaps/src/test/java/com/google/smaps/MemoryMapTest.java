@@ -124,12 +124,12 @@ public class MemoryMapTest {
     String address;
     String formattedAddress;
 
-    // Address that needs zeroes appended.
+    // Address that needs zeroes appended to be 16 bits.
     address = "5f";
     formattedAddress = servletUnderTest.formatAddress(address);
     assertEquals("000000000000005f", formattedAddress);
 
-    // Address that is already 16 bits long.
+    // Address that is already 16 bits.
     address = "ffffffffffd56730";
     formattedAddress = servletUnderTest.formatAddress(address);
     assertEquals("ffffffffffd56730", formattedAddress);

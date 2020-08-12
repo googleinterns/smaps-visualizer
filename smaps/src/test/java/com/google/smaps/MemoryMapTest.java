@@ -132,6 +132,6 @@ public class MemoryMapTest {
     // Address that is already 16 bits.
     address = "ffffffffffd56730";
     formattedAddress = servletUnderTest.formatAddress(address);
-    assertEquals("ffffffffffd56730", formattedAddress);
+    assertEquals(address, formattedAddress);
   }
 }

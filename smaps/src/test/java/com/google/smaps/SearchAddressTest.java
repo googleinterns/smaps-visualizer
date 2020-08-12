@@ -21,9 +21,7 @@ import static org.mockito.Mockito.*;
 
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.common.collect.ImmutableRangeMap;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import com.google.gson.Gson;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.math.BigInteger;
@@ -85,10 +83,93 @@ public class SearchAddressTest {
     helper.tearDown();
   }
 
-  // TODO(@sophbohr22): Look into how to implement JUnit tests with sessions.
+  @Test
+  public void doGet_writesResponseNoRegion() throws Exception {
+    // Tests that the JSON response is what is expected with smaps-full as the file and a valid
+    // hexadecimal address is searched for that is not in any of the regions.
+
+    // Sets up the fake session for the request.
+    when(mockRequest.getSession()).thenReturn(session);
+
+    // Set the session variables for regionList that would normally be set by doPost.
+    when(session.getAttribute("address")).thenReturn("77fd");
+    when(session.getAttribute("addressErrorMessage")).thenReturn("");
+    when(session.getAttribute("addressBigInt")).thenReturn(new BigInteger("77fd", 16));
+    when(session.getAttribute("rangeMap")).thenReturn(addressRangeMap);
+    when(session.getAttribute("regionList")).thenReturn(regions);
+    when(session.getAttribute("originalAddress")).thenReturn("77fd");
+
+    // Call doGet with the mockRequest and mockResponse.
+    servletUnderTest.doGet(mockRequest, mockResponse);
+
+    // Assert that the JSON response is what is expected, and contains the address searched for, -1
+    // for the index, the error message for no region being found, and null for the region.
+    assertThat(responseWriter.toString())
+        .named("SearchAddress response")
+        .contains("[\"77fd\", -1, \"No region in which address [77fd] can be found.\", null]");
+  }
 
   @Test
-  public void addressParserFunctionality() throws Exception {
+  public void doGet_writesResponseInvalidHex() throws Exception {
+    // Tests that the JSON response is what is expected with smaps-full as the file and an invalid
+    // hexadecimal address is searched for.
+
+    // Sets up the fake session for the request.
+    when(mockRequest.getSession()).thenReturn(session);
+
+    // Set the session variables for regionList that would normally be set by doPost.
+    when(session.getAttribute("address")).thenReturn("not hex");
+    when(session.getAttribute("addressErrorMessage"))
+        .thenReturn("Address [not hex] is not a valid hexadecimal number.");
+    when(session.getAttribute("addressBigInt")).thenReturn(null);
+    when(session.getAttribute("regionList")).thenReturn(regions);
+    when(session.getAttribute("originalAddress")).thenReturn("not hex");
+
+    // Call doGet with the mockRequest and mockResponse.
+    servletUnderTest.doGet(mockRequest, mockResponse);
+
+    // Assert that the JSON response is what is expected, and contains the invalid address searched
+    // for, -1 for the index, the error message for no it not being a hex address, and null for the
+    // region.
+    assertThat(responseWriter.toString())
+        .named("SearchAddress response")
+        .contains(
+            "[\"not hex\", -1, \"Address [not hex] is not a valid hexadecimal number.\", null]");
+  }
+
+  @Test
+  public void doGet_writesResponseValidHex() throws Exception {
+    // Tests that the JSON response is what is expected with smaps-full as the file and a valid
+    // hexadecimal address is searched for.
+
+    // Sets up the fake session for the request.
+    when(mockRequest.getSession()).thenReturn(session);
+
+    // Set the session variables for regionList that would normally be set by doPost.
+    when(session.getAttribute("address")).thenReturn("16ec0000007");
+    when(session.getAttribute("addressErrorMessage")).thenReturn("");
+    when(session.getAttribute("addressBigInt")).thenReturn(new BigInteger("16ec0000007", 16));
+    when(session.getAttribute("regionList")).thenReturn(regions);
+    when(session.getAttribute("rangeMap")).thenReturn(addressRangeMap);
+    when(session.getAttribute("originalAddress")).thenReturn("16ec0000007");
+
+    // Call doGet with the mockRequest and mockResponse.
+    servletUnderTest.doGet(mockRequest, mockResponse);
+
+    // Get the region that should be returned and covert it to a json for checking later.
+    Region r = regions.get(0);
+    Gson gson = new Gson();
+    String jsonR = gson.toJson(r);
+
+    // Assert that the JSON response is what is expected, and contains the valid address searched
+    // for, 0 for the index, no error message, and the proper region.
+    assertThat(responseWriter.toString())
+        .named("SearchAddress response")
+        .contains("[\"16ec0000007\", 0, \"\", " + jsonR + "]");
+  }
+
+  @Test
+  public void addressParser() throws Exception {
     // Tests that addressParser returns the proper address when given a hex address
     // with capital letters, 0x, h, underscores, and/or spaces.
     String parsedString = SearchAddress.addressParser("0x7FfE_A689 4000h");

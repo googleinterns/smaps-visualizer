@@ -45,6 +45,7 @@ public class HistogramTest {
   @Mock private HttpServletRequest mockRequest;
   @Mock private HttpServletResponse mockResponse;
   private StringWriter responseWriter;
+  private List<Region> regions;
   private Histogram servletUnderTest;
   private HttpSession session;
 
@@ -54,7 +55,7 @@ public class HistogramTest {
     MockitoAnnotations.initMocks(this);
     helper.setUp();
 
-    //  Sets up some fake HTTP requests
+    //  Sets up some fake HTTP request.
     when(mockRequest.getRequestURI()).thenReturn(FAKE_URL);
 
     // Sets up a fake HTTP response.
@@ -66,6 +67,9 @@ public class HistogramTest {
 
     // Creates a session.
     session = mock(HttpSession.class);
+
+    // Create the regions list.
+    regions = Analyzer.makeRegionList("../smaps-full.txt", session);
   }
 
   @After
@@ -74,12 +78,59 @@ public class HistogramTest {
     helper.tearDown();
   }
 
-  // TODO(@sophbohr22): Look into how to implement JUnit tests with sessions.
+  @Test
+  public void doGet_writesResponseExtrema() throws Exception {
+    // Tests that the JSON response is what is expected when the bounds are the preset extrema for
+    // the histogram.
+
+    // Sets up the fake session for the request.
+    when(mockRequest.getSession()).thenReturn(session);
+
+    // Set the session variables that would normally be set by doPost.
+    when(session.getAttribute("regionList")).thenReturn(regions);
+    when(session.getAttribute("postFired")).thenReturn(false);
+    when(session.getAttribute("minBound")).thenReturn(4L);
+    when(session.getAttribute("maxBound")).thenReturn(20832256L);
+
+    // Call doGet with the mockRequest and mockResponse.
+    servletUnderTest.doGet(mockRequest, mockResponse);
+
+    // Assert that the JSON response is what is expected for the smaps-full file with postFired set
+    // to false, so the entire range should be displayed and the labels for the data should be range
+    // and size.
+    assertThat(responseWriter.toString())
+        .named("Histogram response")
+        .contains("[[4,20832256], [[\"Range\",\"Size\"]");
+  }
+
+  @Test
+  public void doGet_writesResponseCustomBounds() throws Exception {
+    // Tests that the JSON response is what is expected when the bounds are customized for the
+    // histogram.
+
+    // Sets up the fake session for the request.
+    when(mockRequest.getSession()).thenReturn(session);
+
+    // Set the session variables that would normally be set by doPost.
+    when(session.getAttribute("regionList")).thenReturn(regions);
+    when(session.getAttribute("postFired")).thenReturn(true);
+    when(session.getAttribute("lowerBound")).thenReturn(100L);
+    when(session.getAttribute("upperBound")).thenReturn(1000L);
+
+    // Call doGet with the mockRequest and mockResponse.
+    servletUnderTest.doGet(mockRequest, mockResponse);
+
+    // Assert that the JSON response is what is expected for the smaps-full file with postFired set
+    // to true, so the range is set to the custom bounds and the labels for the data should be range
+    // and size.
+    assertThat(responseWriter.toString())
+        .named("Histogram response")
+        .contains("[[100,1000], [[\"Range\",\"Size\"]");
+  }
 
   @Test
   public void dataArray() {
     // Tests creation of list of Object arrays for histogram from regions list.
-    List<Region> regions = Analyzer.makeRegionList("../smaps-full.txt", session);
     List<Object[]> dataArray = servletUnderTest.makeDataArray(regions);
 
     // Checks labels.

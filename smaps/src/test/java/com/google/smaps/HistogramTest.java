@@ -79,14 +79,9 @@ public class HistogramTest {
   }
 
   @Test
-  public void test() {
-    assertEquals("hi", "hi");
-  }
-
-  @Test
   public void doGet_writesResponseExtrema() throws Exception {
-    // Tests that the JSON response is what is expected when the bounds are the preset extrema for
-    // the histogram.
+    // Tests that the JSON response is what is expected when the bounds are the preset extrema and
+    // the path filter is blank for the histogram.
 
     // Sets up the fake session for the request.
     when(mockRequest.getSession()).thenReturn(session);
@@ -111,8 +106,8 @@ public class HistogramTest {
 
   @Test
   public void doGet_writesResponseCustomBounds() throws Exception {
-    // Tests that the JSON response is what is expected when the bounds are customized for the
-    // histogram.
+    // Tests that the JSON response is what is expected when the bounds and path filter name are
+    // customized for the histogram.
 
     // Sets up the fake session for the request.
     when(mockRequest.getSession()).thenReturn(session);

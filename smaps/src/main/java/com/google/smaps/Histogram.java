@@ -48,6 +48,9 @@ public class Histogram extends HttpServlet {
       // the entire range of sizes.
       lowerBound = (long) session.getAttribute("minBound");
       upperBound = (long) session.getAttribute("maxBound");
+
+      // Reset the field that searches for a specific string in a pathname.
+      session.setAttribute("name", "");
     } else {
       // Get user-chosen numbers from form in interactive-histogram.html.
       String lower = request.getParameter("lower-bound");
@@ -56,6 +59,13 @@ public class Histogram extends HttpServlet {
       // Parse the bound from user input and set the bounds to the chosen bounds.
       lowerBound = parseBound(lower);
       upperBound = parseBound(upper);
+
+      // Check the name field to see if a specific string in a pathname was searched for, and if so
+      // add it to the session.
+      String name = request.getParameter("path-filter");
+      if (name != null) {
+        session.setAttribute("name", name);
+      }
     }
 
     // Set the session's histogram bounds to the new bounds.
@@ -77,12 +87,6 @@ public class Histogram extends HttpServlet {
     // Get this user's session.
     HttpSession session = request.getSession();
 
-    // Get the region list from the session, which was set when the file was uploaded.
-    List<Region> regionList = (List<Region>) session.getAttribute("regionList");
-
-    // Parse histogram data.
-    List<Object[]> histogramData = makeDataArray(regionList);
-
     // Check whether doPost has been fired for the first time yet.
     boolean postFired = (boolean) session.getAttribute("postFired");
 
@@ -90,30 +94,49 @@ public class Histogram extends HttpServlet {
     long lowerBound;
     long upperBound;
 
+    // Will hold the pathname from path filter.
+    String name;
+
     // If the user hasn't entered custom bounds yet, use the initial min and max from regions list,
-    // otherwise use the ones that were submitted previously and set to the session.
+    // otherwise use the ones that were submitted previously and set to the session. If the user
+    // hasn't chosen a specific name in the pathname to filter, just make it an emprty string,
+    // otherwise get it from the session.
     if (!postFired) {
       lowerBound = (long) session.getAttribute("minBound");
       upperBound = (long) session.getAttribute("maxBound");
+      name = "";
+
+      // Set the new variables to the session.
       session.setAttribute("lowerBound", lowerBound);
       session.setAttribute("upperBound", upperBound);
+      session.setAttribute("name", "");
     } else {
       lowerBound = (long) session.getAttribute("lowerBound");
       upperBound = (long) session.getAttribute("upperBound");
+      name = (String) session.getAttribute("name");
     }
+
+    // Get the region list from the session, which was set when the file was uploaded.
+    List<Region> regionList = (List<Region>) session.getAttribute("regionList");
+
+    // Parse histogram data.
+    List<Object[]> histogramData = makeDataArray(regionList, name);
 
     // Construct 2D array to hold the bounds.
     long[] bounds = {lowerBound, upperBound};
 
     // Transfer the arrays into JavaScript Objects (Json).
     Gson boundsGson = new Gson();
+    Gson nameGson = new Gson();
     Gson histGson = new Gson();
-    String histogramDataJson = histGson.toJson(histogramData);
     String boundsJson = boundsGson.toJson(bounds);
+    String nameJson = nameGson.toJson(name);
+    String histogramDataJson = histGson.toJson(histogramData);
 
     // Put the two Json strings into a list to send to histogram.js.
     List<String> jsonList = new ArrayList<String>();
     jsonList.add(boundsJson);
+    jsonList.add(nameJson);
     jsonList.add(histogramDataJson);
 
     // Write Json to histogram.js
@@ -133,7 +156,7 @@ public class Histogram extends HttpServlet {
   }
 
   /** Creates list of 2D Object arrays of data for histogram. */
-  static ArrayList<Object[]> makeDataArray(List<Region> regions) {
+  static ArrayList<Object[]> makeDataArray(List<Region> regions, String name) {
     // List must contain both Strings and numbers, so must be of type Object.
     ArrayList<Object[]> dataArray = new ArrayList<Object[]>();
 
@@ -141,13 +164,22 @@ public class Histogram extends HttpServlet {
     Object[] labelPair = {"Range", "Size"};
     dataArray.add(labelPair);
 
-    // Go through the regions and add range/size pairs to the list.
+    // Add an array to init the data, but make range null and the size -1 so that it won't show up
+    // in the actual chart.
+    Object[] initPair = {null, -1};
+    dataArray.add(initPair);
+
+    // Go through the regions and add range/size pairs to the list, and check that it contains in
+    // its pathname the specific name that was searched for (if no name was searched, it will just
+    // be an empty string).
     for (int i = 0; i < regions.size(); i++) {
       Region curR = regions.get(i);
-      String range = curR.startLoc() + " - " + curR.endLoc();
-      Object val = (Object) curR.size();
-      Object[] pair = {range, val};
-      dataArray.add(pair);
+      if (curR.pathname().contains(name)) {
+        String range = curR.startLoc() + " - " + curR.endLoc();
+        Object val = (Object) curR.size();
+        Object[] pair = {range, val};
+        dataArray.add(pair);
+      }
     }
     return dataArray;
   }

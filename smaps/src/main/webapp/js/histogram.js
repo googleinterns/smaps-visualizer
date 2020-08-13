@@ -16,19 +16,26 @@
 
 // Load the Visualization API and the histogram package.
 google.charts.load('current', {'packages': ['corechart', 'controls']});
+
 // Set the bounds for the slider and text boxes.
 setBounds();
+
+// Set path filter name.
+setPathFilter();
+
 // Set a callback to run when the Google Visualization API is loaded.
 google.charts.setOnLoadCallback(drawHistogramCust);
 
-let lowerBound;  // Lower bound of size that will be sent to histogram.
-let upperBound;  // Upper bound of size that will be sent to histogram.
+let lowerBound;  // Lower bound of size for histogram.
+let upperBound;  // Upper bound of size for histogram.
+let name;        // Path name that filters the histogram.
 
 /*
  * Sets the global variables lowerBound and upperBound to be the
  * values sent in from the histogram servlet.
  */
 function setBounds() {
+  console.log('setBounds');
   // Fetches the Json object from the Histogram servlet.
   fetch('/histogram')
       .then((response) => {
@@ -46,10 +53,35 @@ function setBounds() {
 }
 
 /*
+ * Sets the global variable name to be the value sent in from the histogram
+ * servlet.
+ */
+function setPathFilter() {
+  console.log('setPathFilter');
+  // Fetches the Json object from the Histogram servlet.
+  fetch('/histogram')
+      .then((response) => {
+        return response.json();
+      })
+      .then((histogramJson) => {
+        // The name is the second item in json list.
+        name = histogramJson[1];
+
+        // Set the path filter textbox to be the chosen path name.
+        document.getElementById('path-filter').value = name;
+      });
+}
+
+/*
  * Callback that creates and populates the data table for region sizes,
  * instantiates the histogram, passes in the data, and draws it.
  */
 function drawHistogramCust() {
+  console.log('drawHistogramCust');
+  console.log(lowerBound);
+  console.log(upperBound);
+  console.log(name);
+
   // Fetches the Json object from the Histogram servlet.
   fetch('/histogram')
       .then((response) => {
@@ -57,9 +89,9 @@ function drawHistogramCust() {
       })
       .then((histogramJson) => {
         // Converts histogram Json 2D array into a data table for histogram. The
-        // histogram data is in the second index of the Json, so
-        // histogramJson[1].
-        const data = google.visualization.arrayToDataTable(histogramJson[1]);
+        // histogram data is in the third index of the Json, so
+        // histogramJson[2].
+        const data = google.visualization.arrayToDataTable(histogramJson[2]);
 
         // Creates the dashboard.
         const dashboard = new google.visualization.Dashboard(

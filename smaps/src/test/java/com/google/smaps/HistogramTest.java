@@ -80,8 +80,8 @@ public class HistogramTest {
 
   @Test
   public void doGet_writesResponseExtrema() throws Exception {
-    // Tests that the JSON response is what is expected when the bounds are the preset extrema for
-    // the histogram.
+    // Tests that the JSON response is what is expected when the bounds are the preset extrema and
+    // the path filter is blank for the histogram.
 
     // Sets up the fake session for the request.
     when(mockRequest.getSession()).thenReturn(session);
@@ -91,6 +91,7 @@ public class HistogramTest {
     when(session.getAttribute("postFired")).thenReturn(false);
     when(session.getAttribute("minBound")).thenReturn(4L);
     when(session.getAttribute("maxBound")).thenReturn(20832256L);
+    when(session.getAttribute("name")).thenReturn("");
 
     // Call doGet with the mockRequest and mockResponse.
     servletUnderTest.doGet(mockRequest, mockResponse);
@@ -100,13 +101,13 @@ public class HistogramTest {
     // and size.
     assertThat(responseWriter.toString())
         .named("Histogram response")
-        .contains("[[4,20832256], [[\"Range\",\"Size\"]");
+        .contains("[[4,20832256], \"\", [[\"Range\",\"Size\"]");
   }
 
   @Test
   public void doGet_writesResponseCustomBounds() throws Exception {
-    // Tests that the JSON response is what is expected when the bounds are customized for the
-    // histogram.
+    // Tests that the JSON response is what is expected when the bounds and path filter name are
+    // customized for the histogram.
 
     // Sets up the fake session for the request.
     when(mockRequest.getSession()).thenReturn(session);
@@ -114,35 +115,71 @@ public class HistogramTest {
     // Set the session variables that would normally be set by doPost.
     when(session.getAttribute("regionList")).thenReturn(regions);
     when(session.getAttribute("postFired")).thenReturn(true);
-    when(session.getAttribute("lowerBound")).thenReturn(100L);
-    when(session.getAttribute("upperBound")).thenReturn(1000L);
+    when(session.getAttribute("lowerBound")).thenReturn(1000L);
+    when(session.getAttribute("upperBound")).thenReturn(2000L);
+    when(session.getAttribute("name")).thenReturn("memfd");
 
     // Call doGet with the mockRequest and mockResponse.
     servletUnderTest.doGet(mockRequest, mockResponse);
 
     // Assert that the JSON response is what is expected for the smaps-full file with postFired set
-    // to true, so the range is set to the custom bounds and the labels for the data should be range
-    // and size.
+    // to true, so the range is set to the custom bounds, name is memfd, and the labels for the data
+    // should be range and size.
     assertThat(responseWriter.toString())
         .named("Histogram response")
-        .contains("[[100,1000], [[\"Range\",\"Size\"]");
+        .contains("[[1000,2000], \"memfd\", [[\"Range\",\"Size\"]");
   }
 
   @Test
-  public void dataArray() {
-    // Tests creation of list of Object arrays for histogram from regions list.
-    List<Object[]> dataArray = servletUnderTest.makeDataArray(regions);
+  public void dataArrayEmpty() {
+    // Tests creation of list of Object arrays for histogram from regions list when the path name
+    // filter field is a string that is not found in any region.
+    List<Object[]> dataArray = servletUnderTest.makeDataArray(regions, "not found");
 
     // Checks labels.
     assertEquals("Range", dataArray.get(0)[0]);
     assertEquals("Size", dataArray.get(0)[1]);
 
     // Checks first entry.
-    assertEquals("16ec0000000 - 16efa600000", dataArray.get(1)[0]);
-    assertEquals(956416L, dataArray.get(1)[1]);
+    assertEquals(null, dataArray.get(1)[0]);
+    assertEquals(-1, dataArray.get(1)[1]);
+  }
+
+  @Test
+  public void dataArraySomeData() {
+    // Tests creation of list of Object arrays for histogram from regions list when the path name
+    // filter is a string that is found in some regions.
+    List<Object[]> dataArray = servletUnderTest.makeDataArray(regions, "memfd");
+
+    // Checks labels.
+    assertEquals("Range", dataArray.get(0)[0]);
+    assertEquals("Size", dataArray.get(0)[1]);
+
+    // Checks first entry.
+    assertEquals("7fd126400000 - 7fd12a400000", dataArray.get(2)[0]);
+    assertEquals(65536L, dataArray.get(2)[1]);
 
     // Checks last entry.
-    assertEquals("ffffffffff600000 - ffffffffff601000", dataArray.get(1072)[0]);
-    assertEquals(4L, dataArray.get(1072)[1]);
+    assertEquals("7fd149292000 - 7fd149293000", dataArray.get(33)[0]);
+    assertEquals(4L, dataArray.get(33)[1]);
+  }
+
+  @Test
+  public void dataArrayFull() {
+    // Tests creation of list of Object arrays for histogram from regions list when the path name
+    // filter is not chosen, so all regions are included.
+    List<Object[]> dataArray = servletUnderTest.makeDataArray(regions, "");
+
+    // Checks labels.
+    assertEquals("Range", dataArray.get(0)[0]);
+    assertEquals("Size", dataArray.get(0)[1]);
+
+    // Checks first entry.
+    assertEquals("16ec0000000 - 16efa600000", dataArray.get(2)[0]);
+    assertEquals(956416L, dataArray.get(2)[1]);
+
+    // Checks last entry.
+    assertEquals("ffffffffff600000 - ffffffffff601000", dataArray.get(1073)[0]);
+    assertEquals(4L, dataArray.get(1073)[1]);
   }
 }

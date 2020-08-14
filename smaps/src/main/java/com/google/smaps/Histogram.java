@@ -99,7 +99,7 @@ public class Histogram extends HttpServlet {
 
     // If the user hasn't entered custom bounds yet, use the initial min and max from regions list,
     // otherwise use the ones that were submitted previously and set to the session. If the user
-    // hasn't chosen a specific name in the pathname to filter, just make it an emprty string,
+    // hasn't chosen a specific name in the pathname to filter, just make it an empty string,
     // otherwise get it from the session.
     if (!postFired) {
       lowerBound = (long) session.getAttribute("minBound");
